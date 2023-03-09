@@ -5,13 +5,20 @@ class User {
     private _birthdate: Date;
     private _password: string;
 
-    constructor(username: string, email: string, birthdate: Date, password: string) {
+    constructor(id:number,username: string, email: string, birthdate: Date, password: string) {
+        this.id=id;
         this.username = username;
         this.email = email;
         this.birthdate = birthdate;
         this.password = password;
     }
+    public get id(): number {
+        return this._id;
+    }
 
+    public set id(id: number) {
+        this._id = id;
+    }
 
     public get username(): string {
         return this._username;
@@ -71,4 +78,6 @@ class User {
         return this._password;
     }
 }
+export { User };
+
 

@@ -54,3 +54,4 @@ class Rating{
 
 
 }
+export { Rating };

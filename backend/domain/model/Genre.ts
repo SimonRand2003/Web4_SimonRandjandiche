@@ -39,3 +39,4 @@ class Genre {
     this._description = description;
   }
 }
+export { Genre };
