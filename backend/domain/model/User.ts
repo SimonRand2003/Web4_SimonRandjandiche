@@ -48,7 +48,7 @@ class User {
 
     public set birthdate(value: Date) {
         if (!value) {
-            throw new Error('gebdatum mag niet leeg zijn');
+            throw new Error('geboortedatum mag niet leeg zijn');
         }
 
         const now = new Date();

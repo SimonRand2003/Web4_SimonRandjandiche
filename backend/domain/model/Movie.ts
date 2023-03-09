@@ -6,8 +6,7 @@ class Movie {
     private _duration: number;
     private _ratings: Rating[];
 
-    constructor(id: number, name: string, genre: string, year: number, duration: number) {
-        this.id = id;
+    constructor(name: string, genre: string, year: number, duration: number) {
         this.name = name;
         this.genre = genre;
         this.year = year;
@@ -74,3 +73,5 @@ class Movie {
         this._ratings = ratings;
     }
 }
+
+export { Movie };
