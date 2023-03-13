@@ -1,3 +1,5 @@
+import { Rating } from "./Rating";
+
 class Movie {
     private _id: number;
     private _name: string;
