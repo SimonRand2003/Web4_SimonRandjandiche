@@ -5,106 +5,27 @@ import { RatingRepository } from '../domain/data-access/rating.db';
 
 
 /**
- * swagger: "2.0"
- * info:
- *   version: "1.0.0"
- *   title: "RatingController API"
- *   description: "RESTful API for managing ratings"
- *   host: "localhost:3000"
- *   basePath: "/api"
- *   schemes:
- *     - "http"
- *   consumes:
- *     - "application/json"
- *   produces:
- *     - "application/json"
- * paths:
- *   /ratings:
- *     get:
- *       summary: "Get all ratings"
- *       responses:
- *         "200":
- *           description: "Success"
- *           schema:
- *             type: "array"
- *             items:
- *               $ref: "#/definitions/Rating"
- *         "500":
- *           description: "Server Error"
- *     post:
- *       summary: "Create a new rating"
- *       parameters:
- *         - name: "rating"
- *           in: "body"
- *           description: "Rating object"
- *           required: true
- *           schema:
- *             $ref: "#/definitions/Rating"
- *       responses:
- *         "201":
- *           description: "Rating created successfully"
- *         "400":
- *           description: "Bad request"
- *   /ratings/{id}:
- *     get:
- *       summary: "Get a rating by id"
- *       parameters:
- *         - name: "id"
- *           in: "path"
- *           description: "ID of rating"
- *           required: true
- *           type: "integer"
- *       responses:
- *         "200":
- *           description: "Success"
- *           schema:
- *             $ref: "#/definitions/Rating"
- *         "404":
- *           description: "Rating not found"
- *     put:
- *       summary: "Update a rating by id"
- *       parameters:
- *         - name: "id"
- *           in: "path"
- *           description: "ID of rating"
- *           required: true
- *           type: "integer"
- *         - name: "rating"
- *           in: "body"
- *           description: "Rating object"
- *           required: true
- *           schema:
- *             $ref: "#/definitions/Rating"
- *       responses:
- *         "204":
- *           description: "Rating updated successfully"
- *         "400":
- *           description: "Bad request"
- *     delete:
- *       summary: "Delete a rating by id"
- *       parameters:
- *         - name: "id"
- *           in: "path"
- *           description: "ID of rating"
- *           required: true
- *           type: "integer"
- *       responses:
- *         "204":
- *           description: "Rating deleted successfully"
- *         "404":
- *           description: "Rating not found"
- * definitions:
- *   Rating:
- *     type: "object"
- *     required:
- *       - "value"
- *     properties:
- *       id:
- *         type: "integer"
- *       value:
- *         type: "integer"
- *       comment:
- *         type: "string"
+ * @swagger
+ *   components:
+ *    schemas:
+ *      Rating:
+ *          type: object
+ *          properties:
+ *            id:
+ *              type: number
+ *              description: The unique identifier for the rating.
+ *            movieId:
+ *              type: number
+ *              description: The ID of the movie that this rating is for.
+ *            userId:
+ *              type: number
+ *              description: The ID of the user who made the rating.
+ *            rating:
+ *              type: number
+ *              description: The numerical rating given by the user (between 0 and 10).
+ *            comment:
+ *              type: string
+ *              description: An optional comment left by the user when making the rating.
  */
 
 
@@ -113,7 +34,32 @@ export class RatingController {
     constructor(ratingService: RatingService) {
         this.ratingService = ratingService;
     }
-
+    /**
+     * @swagger
+     * /ratings:
+     *   get:
+     *     summary: Get all ratings
+     *     description: Retrieve a list of all ratings from the database
+     *     responses:
+     *       200:
+     *         description: A list of ratings retrieved successfully
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: array
+     *               items:
+     *                 $ref: '#/components/schemas/Rating'
+     *       500:
+     *         description: An error occurred while retrieving the ratings
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 error:
+     *                   type: string
+     *                   description: Description of the error that occurred
+     */
     public async getAllRatings(req: Request, res: Response): Promise<void> {
         try {
             const ratings: Rating[] = await this.ratingService.getAllRatings();
@@ -122,7 +68,39 @@ export class RatingController {
             res.status(500).json({ error: error.message });
         }
     }
-
+    /**
+     * @swagger
+     * /ratings/{id}:
+     *   get:
+     *     summary: Get a rating by ID
+     *     description: Get a rating from the database by its ID.
+     *     parameters:
+     *       - in: path
+     *         name: id
+     *         required: true
+     *         description: ID of the rating to retrieve.
+     *         schema:
+     *           type: integer
+     *     responses:
+     *       200:
+     *         description: Rating found
+     *         content:
+     *           application/json:
+     *             schema:
+     *               $ref: '#/components/schemas/Rating'
+     *       404:
+     *         description: Rating not found
+     *         content:
+     *           application/json:
+     *             example:
+     *               { "error": "Rating with id {id} not found" }
+     *       500:
+     *         description: Server error
+     *         content:
+     *           application/json:
+     *             example:
+     *               { "error": "Internal server error" }
+     */
     public async getRatingById(req: Request, res: Response): Promise<void> {
         const id: number = parseInt(req.params.id, 10);
         try {
@@ -136,7 +114,23 @@ export class RatingController {
             res.status(500).json({ error: error.message });
         }
     }
-
+    /**
+     * @swagger
+     *   post:
+     *     summary: Add a new rating
+     *     description: Add a new rating to the database.
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             $ref: '#/components/schemas/Rating'
+     *     responses:
+     *       '201':
+     *         description: Successfully added the rating
+     *       '500':
+     *         description: Internal server error
+     */
     public async addRating(req: Request, res: Response): Promise<void> {
         const rating: Rating = req.body;
         try {
@@ -146,7 +140,35 @@ export class RatingController {
             res.status(500).json({ error: error.message });
         }
     }
-
+    /**
+     * @swagger
+     * /ratings/update/{id}:
+     *   put:
+     *     summary: Update a rating by id
+     *     description: Update a rating with the specified id with the new values provided in the request body
+     *     parameters:
+     *       - in: path
+     *         name: id
+     *         description: ID of the rating to update
+     *         required: true
+     *         schema:
+     *           type: integer
+     *           format: int64
+     *     requestBody:
+     *       description: New rating object to replace the old rating
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             $ref: '#/components/schemas/Rating'
+     *     responses:
+     *       204:
+     *         description: Rating updated successfully
+     *       404:
+     *         description: Rating with specified id not found
+     *       500:
+     *         description: Internal server error
+     */
     public async updateRating(req: Request, res: Response): Promise<void> {
         const id: number = parseInt(req.params.id, 10);
         const rating: Rating = req.body;
@@ -158,7 +180,26 @@ export class RatingController {
             res.status(500).json({ error: error.message });
         }
     }
-
+    /**
+     * @swagger
+     * /ratings/delete/{id}:
+     *   delete:
+     *     summary: Delete a rating by ID
+     *     parameters:
+     *       - in: path
+     *         name: id
+     *         schema:
+     *           type: integer
+     *         required: true
+     *         description: Numeric ID of the rating to delete
+     *     responses:
+     *       204:
+     *         description: Rating successfully deleted
+     *       404:
+     *         description: Rating with the given ID not found
+     *       500:
+     *         description: Server error
+     */
     public async deleteRating(req: Request, res: Response): Promise<void> {
         const id: number = parseInt(req.params.id, 10);
         try {
@@ -178,13 +219,13 @@ export class RatingController {
 const ratingRepository = new RatingRepository();
 const ratingService = new RatingService(ratingRepository);
 const ratingController = new RatingController(ratingService);
-const router = express.Router();
+const ratingRouter = express.Router();
 
-router.get('/ratings', ratingController.getAllRatings.bind(ratingController));
-router.get('/ratings/:id', ratingController.getRatingById.bind(ratingController));
-router.post('/ratings', ratingController.addRating.bind(ratingController));
-router.put('/ratings/:id', ratingController.updateRating.bind(ratingController));
-router.delete('/ratings/:id', ratingController.deleteRating.bind(ratingController));
+ratingRouter.get('/ratings', ratingController.getAllRatings.bind(ratingController));
+ratingRouter.get('/ratings/:id', ratingController.getRatingById.bind(ratingController));
+ratingRouter.post('/ratings/add', ratingController.addRating.bind(ratingController));
+ratingRouter.put('/ratings/update/:id', ratingController.updateRating.bind(ratingController));
+ratingRouter.delete('/ratings/delete/:id', ratingController.deleteRating.bind(ratingController));
 
-export { router };
+export { ratingRouter };
 

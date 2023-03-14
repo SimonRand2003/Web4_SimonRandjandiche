@@ -4,108 +4,21 @@ import { Genre } from '../domain/model/genre';
 import {GenreRepository} from "../domain/data-access/genre.db";
 
 
-
 /**
- * swagger: "2.0"
- * info:
- *   version: "1.0.0"
- *   title: "GenreController API"
- *   description: "RESTful API for managing genres"
- *   host: "localhost:3000"
- *   basePath: "/api"
- *   schemes:
- *     - "http"
- *   consumes:
- *     - "application/json"
- *   produces:
- *     - "application/json"
- * paths:
- *   /genres:
- *     get:
- *       summary: "Get all genres"
- *       responses:
- *         "200":
- *           description: "Success"
- *           schema:
- *             type: "array"
- *             items:
- *               $ref: "#/definitions/Genre"
- *         "500":
- *           description: "Server Error"
- *     post:
- *       summary: "Create a new genre"
- *       parameters:
- *         - name: "genre"
- *           in: "body"
- *           description: "Genre object"
- *           required: true
- *           schema:
- *             $ref: "#/definitions/Genre"
- *       responses:
- *         "201":
- *           description: "Genre created successfully"
- *         "400":
- *           description: "Bad request"
- *   /genres/{id}:
- *     get:
- *       summary: "Get a genre by id"
- *       parameters:
- *         - name: "id"
- *           in: "path"
- *           description: "ID of genre"
- *           required: true
- *           type: "integer"
- *       responses:
- *         "200":
- *           description: "Success"
- *           schema:
- *             $ref: "#/definitions/Genre"
- *         "404":
- *           description: "Genre not found"
- *     put:
- *       summary: "Update a genre by id"
- *       parameters:
- *         - name: "id"
- *           in: "path"
- *           description: "ID of genre"
- *           required: true
- *           type: "integer"
- *         - name: "genre"
- *           in: "body"
- *           description: "Genre object"
- *           required: true
- *           schema:
- *             $ref: "#/definitions/Genre"
- *       responses:
- *         "200":
- *           description: "Genre updated successfully"
- *           schema:
- *             $ref: "#/definitions/Genre"
- *         "400":
- *           description: "Bad request"
- *     delete:
- *       summary: "Delete a genre by id"
- *       parameters:
- *         - name: "id"
- *           in: "path"
- *           description: "ID of genre"
- *           required: true
- *           type: "integer"
- *       responses:
- *         "204":
- *           description: "Genre deleted successfully"
- *         "404":
- *           description: "Genre not found"
- * definitions:
- *   Genre:
- *     type: "object"
- *     required:
- *       - "name"
- *     properties:
- *       id:
- *         type: "integer"
- *       name:
- *         type: "string"
+ * @swagger
+ *   components:
+ *    schemas:
+ *      Genre:
+ *          type: object
+ *          properties:
+ *            id:
+ *              type: number
+ *            name:
+ *              type: string
+ *              description: The name of the genre
+ *            description:
+ *              type: string
+ *              description: A description of the genre
  */
 
 
@@ -115,6 +28,21 @@ export class GenreController {
     constructor(genreService: GenreService) {
         this.genreService = genreService;
     }
+    /**
+     * @swagger
+     * /genres:
+     *   get:
+     *     summary: Get a list of all genres
+     *     responses:
+     *       200:
+     *         description: A list of genres
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: array
+     *               items:
+     *                 $ref: '#/components/schemas/Genre'
+     */
 
     public async getAllGenres(req: Request, res: Response): Promise<void> {
         try {
@@ -125,6 +53,38 @@ export class GenreController {
         }
     }
 
+
+    /**
+     * @swagger
+     * /genres/{id}:
+     *   get:
+     *      summary: Get a genre by ID
+     *      responses:
+     *         200:
+     *           description: A genre
+     *           content:
+     *              application/json:
+     *                  schema:
+     *                      $ref: '#/components/schemas/Genre'
+     *         404:
+     *           description: Genre not found
+     *           content:
+     *              application/json:
+     *                  schema:
+     *                      type: object
+     *                      properties:
+     *                          message:
+     *                              type: string
+     *                              example: Genre with id 123 not found.
+     *      parameters:
+     *        - name: id
+     *          in: path
+     *          description: Genre ID
+     *          required: true
+     *          schema:
+     *            type: integer
+     *            format: int64
+     */
     public async getGenreById(req: Request, res: Response): Promise<void> {
         try {
             const id: number = parseInt(req.params.id);
@@ -139,6 +99,35 @@ export class GenreController {
         }
     }
 
+
+
+    /**
+     * @swagger
+     * /genres/add:
+     *   post:
+     *      summary: Add a new genre
+     *      requestBody:
+     *         required: true
+     *         description: Genre object to be added
+     *         content:
+     *             application/json:
+     *                 schema:
+     *                     $ref: '#/components/schemas/Genre'
+     *      responses:
+     *         201:
+     *           description: Genre added successfully
+     *         500:
+     *           description: Error while adding genre
+     *           content:
+     *              application/json:
+     *                  schema:
+     *                      type: object
+     *                      properties:
+     *                          error:
+     *                              type: string
+     *                              example: An error occurred while adding the genre.
+     */
+
     public async addGenre(req: Request, res: Response): Promise<void> {
         try {
             const genre: Genre = req.body;
@@ -149,6 +138,41 @@ export class GenreController {
         }
     }
 
+    /**
+     * @swagger
+     * /genres/update/{id}:
+     *   put:
+     *      summary: Update an existing genre by ID
+     *      parameters:
+     *         - name: id
+     *           in: path
+     *           description: Genre ID
+     *           required: true
+     *           schema:
+     *              type: integer
+     *              format: int64
+     *      requestBody:
+     *         required: true
+     *         description: Updated genre object
+     *         content:
+     *            application/json:
+     *               schema:
+     *                  $ref: '#/components/schemas/Genre'
+     *      responses:
+     *         204:
+     *           description: Genre updated successfully
+     *         500:
+     *           description: Error while updating genre
+     *           content:
+     *              application/json:
+     *                  schema:
+     *                      type: object
+     *                      properties:
+     *                          error:
+     *                              type: string
+     *                              example: An error occurred while updating the genre.
+     */
+
     public async updateGenre(req: Request, res: Response): Promise<void> {
         try {
             const genre: Genre = req.body;
@@ -158,6 +182,34 @@ export class GenreController {
             res.status(500).json({ error: error.message });
         }
     }
+
+    /**
+     * @swagger
+     * /genres/delete/{id}:
+     *   delete:
+     *      summary: Delete an existing genre based on ID
+     *      parameters:
+     *         - name: id
+     *           in: path
+     *           description: ID of the genre to be deleted
+     *           required: true
+     *           schema:
+     *              type: integer
+     *              format: int64
+     *      responses:
+     *         204:
+     *           description: Genre successfully deleted
+     *         500:
+     *           description: Error deleting genre
+     *           content:
+     *              application/json:
+     *                  schema:
+     *                      type: object
+     *                      properties:
+     *                          error:
+     *                              type: string
+     *                              example: An error occurred while deleting the genre.
+     */
 
     public async deleteGenre(req: Request, res: Response): Promise<void> {
         try {
@@ -174,12 +226,12 @@ export class GenreController {
 const genreRepository = new GenreRepository();
 const genreService = new GenreService(genreRepository);
 const genreController = new GenreController(genreService);
-const router = express.Router();
+const genreRouter = express.Router();
 
-router.get('/genres', genreController.getAllGenres.bind(genreController));
-router.get('/genres/:id', genreController.getGenreById.bind(genreController));
-router.post('/genres', genreController.addGenre.bind(genreController));
-router.put('/genres/:id', genreController.updateGenre.bind(genreController));
-router.delete('/genres/:id', genreController.deleteGenre.bind(genreController));
+genreRouter.get('/genres', genreController.getAllGenres.bind(genreController));
+genreRouter.get('/genres/:id', genreController.getGenreById.bind(genreController));
+genreRouter.post('/genres/add', genreController.addGenre.bind(genreController));
+genreRouter.put('/genres/update/:id', genreController.updateGenre.bind(genreController));
+genreRouter.delete('/genres/delete/:id', genreController.deleteGenre.bind(genreController));
 
-export { router };
+export { genreRouter };

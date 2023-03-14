@@ -2,123 +2,75 @@ import express, { Request, Response } from 'express';
 import { MovieService } from '../service/movie.service';
 import { Movie } from '../domain/model/Movie';
 import {MovieRepository} from "../domain/data-access/movie.db";
+
 /**
- * swagger: "2.0"
- * info:
- *   version: "1.0.0"
- *   title: "MovieController API"
- *   description: "RESTful API for managing movies"
- *   host: "localhost:3000"
- *   basePath: "/api"
- *   schemes:
- *     - "http"
- *   consumes:
- *     - "application/json"
- *   produces:
- *     - "application/json"
- * paths:
- *   /movies:
- *     get:
- *       summary: "Get all movies"
- *       responses:
- *         "200":
- *           description: "Success"
- *           schema:
- *             type: "array"
- *             items:
- *               $ref: "#/definitions/Movie"
- *         "500":
- *           description: "Server Error"
- *     post:
- *       summary: "Create a new movie"
- *       parameters:
- *         - name: "movie"
- *           in: "body"
- *           description: "Movie object"
- *           required: true
- *           schema:
- *             $ref: "#/definitions/Movie"
- *       responses:
- *         "201":
- *           description: "Movie created successfully"
- *         "400":
- *           description: "Bad request"
- *   /movies/{id}:
- *     get:
- *       summary: "Get a movie by id"
- *       parameters:
- *         - name: "id"
- *           in: "path"
- *           description: "ID of movie"
- *           required: true
- *           type: "integer"
- *       responses:
- *         "200":
- *           description: "Success"
- *           schema:
- *             $ref: "#/definitions/Movie"
- *         "404":
- *           description: "Movie not found"
- *     put:
- *       summary: "Update a movie by id"
- *       parameters:
- *         - name: "id"
- *           in: "path"
- *           description: "ID of movie"
- *           required: true
- *           type: "integer"
- *         - name: "movie"
- *           in: "body"
- *           description: "Movie object"
- *           required: true
- *           schema:
- *             $ref: "#/definitions/Movie"
- *       responses:
- *         "200":
- *           description: "Movie updated successfully"
- *           schema:
- *             $ref: "#/definitions/Movie"
- *         "400":
- *           description: "Bad request"
- *     delete:
- *       summary: "Delete a movie by id"
- *       parameters:
- *         - name: "id"
- *           in: "path"
- *           description: "ID of movie"
- *           required: true
- *           type: "integer"
- *       responses:
- *         "204":
- *           description: "Movie deleted successfully"
- *         "404":
- *           description: "Movie not found"
- * definitions:
- *   Movie:
- *     type: "object"
- *     required:
- *       - "title"
- *       - "year"
- *     properties:
- *       id:
- *         type: "integer"
- *       title:
- *         type: "string"
- *       year:
- *         type: "integer"
- *       director:
- *         type: "string"
+ * @swagger
+ * components:
+ *   schemas:
+ *     Movie:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: number
+ *           description: Unique identifier for the movie.
+ *         name:
+ *           type: string
+ *           description: The title of the movie.
+ *         releaseYear:
+ *           type: number
+ *           description: The year the movie was released.
+ *         duration:
+ *           type: number
+ *           description: The runtime of the movie in minutes.
+ *         genre:
+ *           type: object
+ *           description: The genre of the movie.
+ *           $ref: '#/components/schemas/Genre'
+ *         rating:
+ *           type: array
+ *           description: The ratings for the movie.
+ *           items:
+ *             $ref: '#/components/schemas/Rating'
  */
 
 
 
- export class MovieController {
+export class MovieController {
     private movieService: MovieService;
 
     constructor(movieService: MovieService) {
         this.movieService = movieService;
     }
-
+    /**
+     * @swagger
+     * /movies:
+     *   get:
+     *     summary: Get a list of all movies.
+     *     responses:
+     *       200:
+     *         description: A list of movies.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: array
+     *               items:
+     *                 $ref: '#/components/schemas/Movie'
+     *   post:
+     *     summary: Add a new movie to the collection.
+     *     requestBody:
+     *       description: The movie object to be added to the collection.
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             $ref: '#/components/schemas/Movie'
+     *     responses:
+     *       201:
+     *         description: The movie was successfully added to the collection.
+     *       400:
+     *         description: Invalid request body.
+     *
+     */
     // Get all movies
     async getAll(req: Request, res: Response) {
         try {
@@ -128,7 +80,29 @@ import {MovieRepository} from "../domain/data-access/movie.db";
             res.status(500).send(error.message);
         }
     }
-
+    /**
+     * @swagger
+     * /movies/{id}:
+     *   get:
+     *     summary: Get a movie by ID.
+     *     parameters:
+     *       - name: id
+     *         in: path
+     *         description: The ID of the movie to retrieve.
+     *         required: true
+     *         schema:
+     *           type: integer
+     *           format: int64
+     *     responses:
+     *       200:
+     *         description: The requested movie.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               $ref: '#/components/schemas/Movie'
+     *       404:
+     *         description: The requested movie was not found.
+     */
     // Get a movie by id
     async getById(req: Request, res: Response) {
         try {
@@ -140,8 +114,36 @@ import {MovieRepository} from "../domain/data-access/movie.db";
         }
     }
 
+    /**
+     * @swagger
+     * /movies/add:
+     *     summary: Update a movie by ID.
+     *     parameters:
+     *       - name: id
+     *         in: path
+     *         description: The ID of the movie to update.
+     *         required: true
+     *         schema:
+     *           type: integer
+     *           format: int64
+     *     requestBody:
+     *       description: The movie object with updated fields.
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             $ref: '#/components/schemas/Movie'
+     *     responses:
+     *       200:
+     *         description: The updated movie.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               $ref: '#/components/schemas/Movie'
+     *       400:
+     *         description: Invalid request body.
+     */
     // Add a movie
-
     async create(req: Request, res: Response) {
         try {
             const movieData: Movie = req.body;
@@ -151,6 +153,40 @@ import {MovieRepository} from "../domain/data-access/movie.db";
             res.status(400).send(error.message);
         }
     }
+    /**
+     * @swagger
+     * /movies/update/{id}:
+     *   put:
+     *     summary: Update a movie by ID
+     *     parameters:
+     *       - name: id
+     *         in: path
+     *         description: ID of the movie to update
+     *         required: true
+     *         schema:
+     *           type: integer
+     *           format: int64
+     *     requestBody:
+     *       required: true
+     *       description: New movie data
+     *       content:
+     *         application/json:
+     *           schema:
+     *             $ref: '#/components/schemas/Movie'
+     *     responses:
+     *       200:
+     *         description: Movie updated successfully
+     *         content:
+     *           application/json:
+     *             schema:
+     *               $ref: '#/components/schemas/Movie'
+     *       400:
+     *         description: Bad request. Invalid movie data provided
+     *       404:
+     *         description: Movie not found
+     *       500:
+     *         description: Internal server error
+     */
 
     // Update a movie
     async updateById(req: Request, res: Response) {
@@ -163,6 +199,24 @@ import {MovieRepository} from "../domain/data-access/movie.db";
             res.status(400).send(error.message);
         }
     }
+    /**
+     * @swagger
+     * /movies/delete/{id}:
+     *     summary: Delete a movie by ID.
+     *     parameters:
+     *       - name: id
+     *         in: path
+     *         description: The ID of the movie to delete.
+     *         required: true
+     *         schema:
+     *           type: integer
+     *           format: int64
+     *     responses:
+     *       204:
+     *         description: The movie was successfully deleted.
+     *       404:
+     *         description: The requested movie was not found.
+     */
 
     // Delete a movie
     async deleteById(req: Request, res: Response) {
@@ -181,12 +235,12 @@ import {MovieRepository} from "../domain/data-access/movie.db";
 const movieRepository = new MovieRepository();
 const movieService = new MovieService(movieRepository);
 const movieController = new MovieController(movieService);
-const router = express.Router();
+const movieRouter = express.Router();
 
-router.get('/movies', movieController.getAll.bind(movieController));
-router.get('/movies/:id', movieController.getById.bind(movieController));
-router.post('/movies', movieController.create.bind(movieController));
-router.put('/movies/:id', movieController.updateById.bind(movieController));
-router.delete('/movies/:id', movieController.deleteById.bind(movieController));
+movieRouter.get('/movies', movieController.getAll.bind(movieController));
+movieRouter.get('/movies/:id', movieController.getById.bind(movieController));
+movieRouter.post('/movies/add', movieController.create.bind(movieController));
+movieRouter.put('/movies/update/:id', movieController.updateById.bind(movieController));
+movieRouter.delete('/movies/delete/:id', movieController.deleteById.bind(movieController));
 
-export { router };
+export { movieRouter };
