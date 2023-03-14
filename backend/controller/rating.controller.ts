@@ -39,6 +39,8 @@ export class RatingController {
      * /ratings:
      *   get:
      *     summary: Get all ratings
+     *     tags:
+     *     - Ratings
      *     description: Retrieve a list of all ratings from the database
      *     responses:
      *       200:
@@ -73,6 +75,8 @@ export class RatingController {
      * /ratings/{id}:
      *   get:
      *     summary: Get a rating by ID
+     *     tags:
+     *     - Ratings
      *     description: Get a rating from the database by its ID.
      *     parameters:
      *       - in: path
@@ -116,9 +120,12 @@ export class RatingController {
     }
     /**
      * @swagger
+     * /ratings/add:
      *   post:
      *     summary: Add a new rating
      *     description: Add a new rating to the database.
+     *     tags:
+     *       - Ratings
      *     requestBody:
      *       required: true
      *       content:
@@ -131,6 +138,7 @@ export class RatingController {
      *       '500':
      *         description: Internal server error
      */
+
     public async addRating(req: Request, res: Response): Promise<void> {
         const rating: Rating = req.body;
         try {
@@ -146,6 +154,8 @@ export class RatingController {
      *   put:
      *     summary: Update a rating by id
      *     description: Update a rating with the specified id with the new values provided in the request body
+     *     tags:
+     *       - Ratings
      *     parameters:
      *       - in: path
      *         name: id
@@ -169,6 +179,7 @@ export class RatingController {
      *       500:
      *         description: Internal server error
      */
+
     public async updateRating(req: Request, res: Response): Promise<void> {
         const id: number = parseInt(req.params.id, 10);
         const rating: Rating = req.body;
@@ -184,6 +195,8 @@ export class RatingController {
      * @swagger
      * /ratings/delete/{id}:
      *   delete:
+     *     tags:
+     *     - Ratings
      *     summary: Delete a rating by ID
      *     parameters:
      *       - in: path

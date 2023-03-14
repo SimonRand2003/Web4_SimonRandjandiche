@@ -51,6 +51,8 @@ export class UserController {
      *                 $ref: '#/components/schemas/User'
      *       500:
      *         description: Internal server error
+     *     tags:
+     *     - Users
      */
     public async getAllUsers(req: Request, res: Response): Promise<void> {
         const users = await this.userService.getAllUsers();
@@ -69,6 +71,8 @@ export class UserController {
      *           type: integer
      *           minimum: 1
      *         description: Numeric ID of the user to retrieve
+     *     tags:
+     *     - Users
      *     responses:
      *       '200':
      *         description: OK
@@ -154,6 +158,8 @@ export class UserController {
      *         description: Gebruiker niet gevonden.
      *       500:
      *         description: Interne serverfout.
+     *     tags:
+     *     - Users
      */
 
     public async updateUser(req: Request, res: Response): Promise<void> {
@@ -190,7 +196,8 @@ export class UserController {
      *         description: User not found.
      *       500:
      *         description: Internal server error.
-     *   }
+     *     tags:
+     *       - Users
      */
 
 

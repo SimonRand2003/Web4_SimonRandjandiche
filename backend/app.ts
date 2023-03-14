@@ -27,10 +27,10 @@ const swaggerSpec = swaggerJSDoc(swaggerOpts);
 
 app.use(cors());
 app.use(bodyParser.json());
-app.use('/movies', genreRouter);
-app.use('/movies', movieRouter);
-app.use('/movies', ratingRouter);
-app.use('/movies', userRouter);
+app.use('/', genreRouter);
+app.use('/', movieRouter);
+app.use('/', ratingRouter);
+app.use('/', userRouter);
 
 
 app.get('/status', (req, res) => {

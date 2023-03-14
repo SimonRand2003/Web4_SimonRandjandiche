@@ -1,8 +1,8 @@
 import { User } from "../model/User";
 
 class UserRepository {
-    private users: User[];
-    private nextId: number;
+    private users: User[] = [];
+    private nextId: number = 0;
 
 
     public addUser(user: User): void {
@@ -10,6 +10,7 @@ class UserRepository {
         this.users.push(user);
         this.nextId++;
     }
+
 
     public getUserById(id: number): User | undefined {
         return this.users.find((user) => user.id === id);

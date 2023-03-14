@@ -1,8 +1,8 @@
 import { Movie } from '../model/Movie';
 
 class MovieRepository {
-    private movies: Movie[];
-    private lastId: number;
+    private movies: Movie[] = [];
+    private lastId: number = 0;
 
 
     async getById(id: number): Promise<Movie> {

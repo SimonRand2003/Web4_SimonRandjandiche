@@ -1,8 +1,8 @@
 import { Rating } from '../model/Rating';
 
 class RatingRepository {
-    private ratings: Rating[];
-    private lastId: number;
+    private ratings: Rating[] = [];
+    private lastId: number = 0;
 
 
     async getById(id: number): Promise<Rating> {

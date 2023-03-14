@@ -46,6 +46,8 @@ export class MovieController {
      * /movies:
      *   get:
      *     summary: Get a list of all movies.
+     *     tags:
+     *     - Movies
      *     responses:
      *       200:
      *         description: A list of movies.
@@ -57,6 +59,8 @@ export class MovieController {
      *                 $ref: '#/components/schemas/Movie'
      *   post:
      *     summary: Add a new movie to the collection.
+     *     tags:
+     *     - Movies
      *     requestBody:
      *       description: The movie object to be added to the collection.
      *       required: true
@@ -85,6 +89,8 @@ export class MovieController {
      * /movies/{id}:
      *   get:
      *     summary: Get a movie by ID.
+     *     tags:
+     *     - Movies
      *     parameters:
      *       - name: id
      *         in: path
@@ -117,7 +123,10 @@ export class MovieController {
     /**
      * @swagger
      * /movies/add:
+     *  post:
      *     summary: Update a movie by ID.
+     *     tags:
+     *     - Movies
      *     parameters:
      *       - name: id
      *         in: path
@@ -158,6 +167,8 @@ export class MovieController {
      * /movies/update/{id}:
      *   put:
      *     summary: Update a movie by ID
+     *     tags:
+     *     - Movies
      *     parameters:
      *       - name: id
      *         in: path
@@ -203,6 +214,8 @@ export class MovieController {
      * @swagger
      * /movies/delete/{id}:
      *     summary: Delete a movie by ID.
+     *     tags:
+     *     - Movies
      *     parameters:
      *       - name: id
      *         in: path

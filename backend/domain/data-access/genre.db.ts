@@ -1,8 +1,8 @@
 import { Genre } from "../model/Genre";
 
 class GenreRepository {
-    private genres: Genre[];
-    private nextId: number;
+    private genres: Genre[] = [];
+    private nextId: number = 0;
 
 
     public addGenre(genre: Genre): void {

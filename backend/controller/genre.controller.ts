@@ -33,6 +33,8 @@ export class GenreController {
      * /genres:
      *   get:
      *     summary: Get a list of all genres
+     *     tags:
+     *     - Genres
      *     responses:
      *       200:
      *         description: A list of genres
@@ -59,6 +61,8 @@ export class GenreController {
      * /genres/{id}:
      *   get:
      *      summary: Get a genre by ID
+     *      tags:
+     *      - Genres
      *      responses:
      *         200:
      *           description: A genre
@@ -106,6 +110,8 @@ export class GenreController {
      * /genres/add:
      *   post:
      *      summary: Add a new genre
+     *      tags:
+     *      - Genres
      *      requestBody:
      *         required: true
      *         description: Genre object to be added
@@ -143,6 +149,8 @@ export class GenreController {
      * /genres/update/{id}:
      *   put:
      *      summary: Update an existing genre by ID
+     *      tags:
+     *      - Genres
      *      parameters:
      *         - name: id
      *           in: path
@@ -188,6 +196,8 @@ export class GenreController {
      * /genres/delete/{id}:
      *   delete:
      *      summary: Delete an existing genre based on ID
+     *      tags:
+     *      - Genres
      *      parameters:
      *         - name: id
      *           in: path
@@ -220,6 +230,7 @@ export class GenreController {
             res.status(500).json({ error: error.message });
         }
     }
+
 }
 
 // Example usage:
