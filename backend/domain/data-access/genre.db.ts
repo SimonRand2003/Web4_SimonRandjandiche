@@ -45,3 +45,65 @@ class GenreRepository {
 }
 
 export { GenreRepository };
+
+
+/*
+import { Genre } from "../model/Genre";
+import { PrismaClient } from '@prisma/client';
+
+class GenreRepository {
+    private prisma: PrismaClient;
+
+    constructor() {
+        this.prisma = new PrismaClient();
+    }
+
+    async addGenre(genre: Genre): Promise<void> {
+        await this.prisma.genre.create({
+            data: {
+                name: genre.name,
+                description: genre.description,
+            },
+        });
+    }
+
+    async getGenreById(id: number): Promise<Genre | null> {
+        const genre = await this.prisma.genre.findUnique({
+            where: { id },
+        });
+
+        return genre.id;
+    }
+
+
+
+
+    async getAllGenres(): Promise<Genre[]> {
+        const genres = await this.prisma.genre.findMany();
+        return genres as Genre[];
+    }
+
+
+
+    async updateGenre(genre: Genre): Promise<Genre> {
+        const updatedGenre = await this.prisma.genre.update({
+            where: { id: genre.id },
+            data: { name: genre.name, description: genre.description },
+        });
+        return updatedGenre;
+    }
+
+
+    async deleteGenre(id: number): Promise<void> {
+        await this.prisma.genre.delete({
+            where: { id },
+        });
+    }
+
+    async disconnect(): Promise<void> {
+        await this.prisma.$disconnect();
+    }
+}
+
+export { GenreRepository };
+*/
