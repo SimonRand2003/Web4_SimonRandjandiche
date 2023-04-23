@@ -7,7 +7,7 @@ const mapToMovie = (prismaMovie: PrismaMovie): Movie => {
         prismaMovie.title,
         prismaMovie.releaseDate,
         prismaMovie.duration,
-        null
+
     );
 };
 

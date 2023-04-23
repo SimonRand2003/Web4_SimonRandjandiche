@@ -28,12 +28,6 @@ class MovieRepository {
                 title: movie.title,
                 releaseDate: movie.releaseDate,
                 duration: movie.duration,
-                genres:{
-                    connect:{
-                        genreid: 88,
-
-                    },
-                },
             },
         });
     }
@@ -63,6 +57,7 @@ class MovieRepository {
             },
         });
         return mapToMovies(movies);
+
     }
 
 

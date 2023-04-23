@@ -25,8 +25,15 @@ import {MovieRepository} from "../domain/data-access/movie.db";
  *         id:
  *           type: number
  *           description: Unique identifier for the movie.
- *         movie:
- *           $ref: '#/components/schemas/Movie'
+ *         title:
+ *           type: string
+ *           description: The title of the movie.
+ *         releaseDate:
+ *           type: number
+ *           description: The year the movie was released.
+ *         duration:
+ *           type: number
+ *           description: The runtime of the movie in minutes.
  */
 
 
@@ -41,35 +48,37 @@ export class MovieController {
     }
     /**
      * @swagger
-     * components:
-     *   schemas:
-     *     Movie:
-     *       type: object
-     *       properties:
-     *         title:
-     *           type: string
-     *           description: The title of the movie.
-     *         releaseDate:
-     *           type: number
-     *           description: The year the movie was released.
-     *         duration:
-     *           type: number
-     *           description: The runtime of the movie in minutes.
-     *     MovieWithId:
-     *       type: object
-     *       properties:
-     *         id:
-     *           type: number
-     *           description: Unique identifier for the movie.
-     *         title:
-     *           type: string
-     *           description: The title of the movie.
-     *         releaseDate:
-     *           type: number
-     *           description: The year the movie was released.
-     *         duration:
-     *           type: number
-     *           description: The runtime of the movie in minutes.
+     * /movies:
+     *   get:
+     *     summary: Get a list of all movies.
+     *     tags:
+     *     - Movies
+     *     responses:
+     *       200:
+     *         description: A list of movies.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: array
+     *               items:
+     *                 $ref: '#/components/schemas/Movie'
+     *   post:
+     *     summary: Add a new movie to the collection.
+     *     tags:
+     *     - Movies
+     *     requestBody:
+     *       description: The movie object to be added to the collection.
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             $ref: '#/components/schemas/Movie'
+     *     responses:
+     *       201:
+     *         description: The movie was successfully added to the collection.
+     *       400:
+     *         description: Invalid request body.
+     *
      */
     // Get all movies
     async getAll(req: Request, res: Response) {
