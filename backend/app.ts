@@ -24,10 +24,7 @@ const swaggerOpts = {
   apis: ["./controller/*.ts"],
 };
 
-const YAML = require('yamljs');
-const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = YAML.load('./controller/swagger.yaml');
-
+const swaggerSpec = swaggerJSDoc(swaggerOpts);
 app.use(cors());
 app.use(bodyParser.json());
 app.use('/', genreRouter);
@@ -44,7 +41,7 @@ app.get('/', (req, res) => {
   return res.status(200).send();
 });
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.listen(port || 3000, () => {
   console.log(`Back-end is running on port ${port}.`);
