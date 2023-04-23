@@ -35,14 +35,15 @@ class UserRepository {
         return mapToUsers(users);
     }
 
-    async updateUser(user: User): Promise<void> {
+    async updateUser(id: number, user: User): Promise<void> {
         await this.prisma.user.update({
             where: {
-                userid: user.id,
+                userid: id,
             },
             data: {
                 username: user.username,
                 email: user.email,
+                birthdate: user.birthdate,
                 password: user.password,
             },
         });

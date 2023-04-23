@@ -21,6 +21,25 @@ class MovieRepository {
         });
     }
 
+    async addMovieWithGenre(movie: Movie) {
+        mapToMovie(movie)
+        await this.prisma.movie.create({
+            data: {
+                title: movie.title,
+                releaseDate: movie.releaseDate,
+                duration: movie.duration,
+                genres:{
+                    connect:{
+                        genreid: 88,
+
+                    },
+                },
+            },
+        });
+    }
+
+
+
     async getMovieById(id: number): Promise<Movie> {
         const movie = await this.prisma.movie.findUnique({
             where: {
@@ -44,6 +63,24 @@ class MovieRepository {
             },
         });
         return mapToMovies(movies);
+    }
+
+
+    async updateMovie(id: number, movie: Movie) {
+        mapToMovie(movie);
+
+        await this.prisma.movie.update({
+            where: {
+                movieid: id,
+            },
+            data: {
+                title: movie.title,
+                releaseDate: movie.releaseDate,
+                duration: movie.duration,
+            },
+        });
+
+
     }
 
 

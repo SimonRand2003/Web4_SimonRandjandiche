@@ -13,11 +13,11 @@ export class MovieService {
     }
 
     public async addMovie(movie: Movie): Promise<void> {
-        await this.movieRepository.addMovie(movie);
+        await this.movieRepository.addMovieWithGenre(movie);
     }
 
     public async updateMovie(id : number,movie: Movie): Promise<void> {
-        //await this.movieRepository.(movie);
+        await this.movieRepository.updateMovie(id,movie);
     }
 
     public async deleteMovie(movie: number): Promise<void> {

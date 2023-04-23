@@ -11,13 +11,12 @@ class Movie {
 
 
 
-    constructor(id: number, name: string, year: number, duration: number) {
+    constructor(id: number, name: string, year: number, duration: number, genres: Genre[]) {
         this.movieid = id;
         this.title = name;
-       // this.genres = genres;
         this.releaseDate = year;
         this.duration = duration;
-        //this.ratings = ratings;
+        this.genres = genres;
     }
 
     public get movieid(): number {

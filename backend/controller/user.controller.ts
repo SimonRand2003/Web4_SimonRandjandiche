@@ -165,12 +165,13 @@ export class UserController {
     public async updateUser(req: Request, res: Response): Promise<void> {
         const userId = parseInt(req.params.id, 10);
         const user = await this.userService.getUserById(userId);
+        const id: number = parseInt(req.params.id);
         if (user) {
             user.username = req.body.username || user.username;
             user.email = req.body.email || user.email;
             user.birthdate = req.body.birthdate ? new Date(req.body.birthdate) : user.birthdate;
             user.password = req.body.password || user.password;
-            await this.userService.updateUser(user);
+            await this.userService.updateUser(id,user);
             res.sendStatus(204);
         } else {
             res.sendStatus(404);

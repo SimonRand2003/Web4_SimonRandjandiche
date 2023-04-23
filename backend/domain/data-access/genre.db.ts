@@ -6,7 +6,7 @@ class GenreRepository {
     private prisma: PrismaClient;
 
     constructor() {
-        this.prisma = new PrismaClient({log: ['query']});
+        this.prisma = new PrismaClient();
     }
 
     async addGenre(genre: Genre){
@@ -39,6 +39,7 @@ class GenreRepository {
 
 
     async updateGenre(id: number,genre: Genre){
+        mapToGenre(genre);
         await this.prisma.genre.update({
             where: {
                 genreid: id,

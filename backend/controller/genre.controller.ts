@@ -131,7 +131,7 @@ export class GenreController {
      *      responses:
      *         201:
      *           description: Genre added successfully
-     *         500:
+     *         400:
      *           description: Error while adding genre
      *           content:
      *              application/json:
@@ -149,7 +149,7 @@ export class GenreController {
             await this.genreService.addGenre(genre);
             res.status(201).send();
         } catch (error) {
-            res.status(500).json({ error: error.message });
+            res.status(400).json({ error: error.message });
         }
     }
 
@@ -178,7 +178,7 @@ export class GenreController {
      *      responses:
      *         204:
      *           description: Genre updated successfully
-     *         500:
+     *         400:
      *           description: Error while updating genre
      *           content:
      *              application/json:
@@ -197,7 +197,7 @@ export class GenreController {
             await this.genreService.updateGenre(id,genre);
             res.status(204).send();
         } catch (error) {
-            res.status(500).json({ error: error.message });
+            res.status(404).json({ error: error.message });
         }
     }
 
@@ -219,7 +219,7 @@ export class GenreController {
      *      responses:
      *         204:
      *           description: Genre successfully deleted
-     *         500:
+     *         404:
      *           description: Error deleting genre
      *           content:
      *              application/json:

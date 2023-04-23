@@ -19,8 +19,17 @@ import {MovieRepository} from "../domain/data-access/movie.db";
  *         duration:
  *           type: number
  *           description: The runtime of the movie in minutes.
- *     
+ *     MovieWithId:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: number
+ *           description: Unique identifier for the movie.
+ *         movie:
+ *           $ref: '#/components/schemas/Movie'
  */
+
+
 
 
 
@@ -32,20 +41,35 @@ export class MovieController {
     }
     /**
      * @swagger
-     * /movies:
-     *   get:
-     *     summary: Get a list of all movies.
-     *     tags:
-     *     - Movies
-     *     responses:
-     *       200:
-     *         description: A list of movies.
-     *         content:
-     *           application/json:
-     *             schema:
-     *               type: array
-     *               items:
-     *                 $ref: '#/components/schemas/Movie'
+     * components:
+     *   schemas:
+     *     Movie:
+     *       type: object
+     *       properties:
+     *         title:
+     *           type: string
+     *           description: The title of the movie.
+     *         releaseDate:
+     *           type: number
+     *           description: The year the movie was released.
+     *         duration:
+     *           type: number
+     *           description: The runtime of the movie in minutes.
+     *     MovieWithId:
+     *       type: object
+     *       properties:
+     *         id:
+     *           type: number
+     *           description: Unique identifier for the movie.
+     *         title:
+     *           type: string
+     *           description: The title of the movie.
+     *         releaseDate:
+     *           type: number
+     *           description: The year the movie was released.
+     *         duration:
+     *           type: number
+     *           description: The runtime of the movie in minutes.
      */
     // Get all movies
     async getAll(req: Request, res: Response) {
@@ -77,7 +101,7 @@ export class MovieController {
      *         content:
      *           application/json:
      *             schema:
-     *               $ref: '#/components/schemas/Movie'
+     *               $ref: '#/components/schemas/MovieWithId'
      *       404:
      *         description: The requested movie was not found.
      */
@@ -206,6 +230,7 @@ export class MovieController {
     async deleteById(req: Request, res: Response) {
         try {
             const id = parseInt(req.params.id);
+            await this.movieService.getMovieById(id);
             await this.movieService.deleteMovie(id);
             res.status(204).send();
         } catch (error) {
