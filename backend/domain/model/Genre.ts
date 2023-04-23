@@ -1,19 +1,19 @@
-class Genre {
+ class Genre {
   private _id: number;
   private _name: string;
   private _description: string;
 
   constructor(id: number, name: string, description: string) {
-    this.id = id;
+    this.genreid = id;
     this.name = name;
     this.description = description;
   }
 
-  public get id(): number {
+  public get genreid(): number {
     return this._id;
   }
 
-  public set id(id: number) {
+  public set genreid(id: number) {
     this._id = id;
   }
 

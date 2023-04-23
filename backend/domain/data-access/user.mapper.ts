@@ -1,15 +1,11 @@
-import { RowDataPacket } from 'mysql2';
-import { User } from '../model/user';
-
-const mapToUsers = (rows: RowDataPacket[]): User[] => {
-    const result: User[] = [];
-
-    rows.forEach(({ id, username, email, birthdate, password }) => {
-        const user: User = new User(id, username, email, birthdate, password);
-        result.push(user);
-    });
-
-    return result;
+import { User as PrismaUser } from "@prisma/client";
+import { User } from '../model/User';
+const mapToUser = (prismaUser: PrismaUser): User => {
+    return new User(prismaUser.userid, prismaUser.username, prismaUser.email, prismaUser.birthdate, prismaUser.password);
 };
 
-export default mapToUsers;
+const mapToUsers = (prismaUsers: PrismaUser[]): User[] => {
+    return prismaUsers.map((prismaUser) => mapToUser(prismaUser));
+};
+
+export { mapToUser, mapToUsers };

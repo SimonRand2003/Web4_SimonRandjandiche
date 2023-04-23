@@ -6,19 +6,28 @@ import {GenreRepository} from "../domain/data-access/genre.db";
 
 /**
  * @swagger
- *   components:
- *    schemas:
- *      Genre:
- *          type: object
- *          properties:
- *            id:
- *              type: number
- *            name:
- *              type: string
- *              description: The name of the genre
- *            description:
- *              type: string
- *              description: A description of the genre
+ * components:
+ *   schemas:
+ *     Genre:
+ *       type: object
+ *       properties:
+ *         name:
+ *           type: string
+ *           description: The name of the genre
+ *         description:
+ *           type: string
+ *           description: A description of the genre
+ *     Genrewithid:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: number
+ *         name:
+ *           type: string
+ *           description: The name of the genre
+ *         description:
+ *           type: string
+ *           description: A description of the genre
  */
 
 
@@ -43,7 +52,7 @@ export class GenreController {
      *             schema:
      *               type: array
      *               items:
-     *                 $ref: '#/components/schemas/Genre'
+     *                 $ref: '#/components/schemas/Genrewithid'
      */
 
     public async getAllGenres(req: Request, res: Response): Promise<void> {
@@ -69,7 +78,7 @@ export class GenreController {
      *           content:
      *              application/json:
      *                  schema:
-     *                      $ref: '#/components/schemas/Genre'
+     *                      $ref: '#/components/schemas/Genrewithid'
      *         404:
      *           description: Genre not found
      *           content:
@@ -183,8 +192,9 @@ export class GenreController {
 
     public async updateGenre(req: Request, res: Response): Promise<void> {
         try {
+            const id: number = parseInt(req.params.id);
             const genre: Genre = req.body;
-            await this.genreService.updateGenre(genre);
+            await this.genreService.updateGenre(id,genre);
             res.status(204).send();
         } catch (error) {
             res.status(500).json({ error: error.message });

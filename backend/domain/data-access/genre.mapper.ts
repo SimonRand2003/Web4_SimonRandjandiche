@@ -1,15 +1,11 @@
-import { RowDataPacket } from 'mysql2';
-import { Genre } from '../model/genre';
+import { Genre as PrismaGenre } from "@prisma/client";
+import { Genre } from '../model/Genre';
+const mapToGenre = (prismaGenre: PrismaGenre): Genre => {
+    return new Genre(prismaGenre.genreid, prismaGenre.name, prismaGenre.description);
+}
 
-const mapToGenres = (rows: RowDataPacket[]): Genre[] => {
-    const result: Genre[] = [];
-
-    rows.forEach(({ id, name, description }) => {
-        const genre = new Genre(id, name, description);
-        result.push(genre);
-    });
-
-    return result;
+const mapToGenres = (prismaGenres: PrismaGenre[]): Genre[] => {
+    return prismaGenres.map((prismaGenre) => mapToGenre(prismaGenre));
 };
 
-export default mapToGenres;
+export { mapToGenre, mapToGenres };

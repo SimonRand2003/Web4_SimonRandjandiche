@@ -10,27 +10,16 @@ import {MovieRepository} from "../domain/data-access/movie.db";
  *     Movie:
  *       type: object
  *       properties:
- *         id:
- *           type: number
- *           description: Unique identifier for the movie.
- *         name:
+ *         title:
  *           type: string
  *           description: The title of the movie.
- *         releaseYear:
+ *         releaseDate:
  *           type: number
  *           description: The year the movie was released.
  *         duration:
  *           type: number
  *           description: The runtime of the movie in minutes.
- *         genre:
- *           type: object
- *           description: The genre of the movie.
- *           $ref: '#/components/schemas/Genre'
- *         rating:
- *           type: array
- *           description: The ratings for the movie.
- *           items:
- *             $ref: '#/components/schemas/Rating'
+ *     
  */
 
 
@@ -57,23 +46,6 @@ export class MovieController {
      *               type: array
      *               items:
      *                 $ref: '#/components/schemas/Movie'
-     *   post:
-     *     summary: Add a new movie to the collection.
-     *     tags:
-     *     - Movies
-     *     requestBody:
-     *       description: The movie object to be added to the collection.
-     *       required: true
-     *       content:
-     *         application/json:
-     *           schema:
-     *             $ref: '#/components/schemas/Movie'
-     *     responses:
-     *       201:
-     *         description: The movie was successfully added to the collection.
-     *       400:
-     *         description: Invalid request body.
-     *
      */
     // Get all movies
     async getAll(req: Request, res: Response) {
@@ -123,34 +95,32 @@ export class MovieController {
     /**
      * @swagger
      * /movies/add:
-     *  post:
-     *     summary: Update a movie by ID.
+     *   post:
+     *     summary: Add a new movie to the collection.
      *     tags:
-     *     - Movies
-     *     parameters:
-     *       - name: id
-     *         in: path
-     *         description: The ID of the movie to update.
-     *         required: true
-     *         schema:
-     *           type: integer
-     *           format: int64
+     *       - Movies
      *     requestBody:
-     *       description: The movie object with updated fields.
+     *       description: The movie object to be added to the collection.
      *       required: true
      *       content:
      *         application/json:
      *           schema:
      *             $ref: '#/components/schemas/Movie'
      *     responses:
-     *       200:
-     *         description: The updated movie.
+     *       201:
+     *         description: The movie was successfully added to the collection.
+     *       400:
+     *         description: Invalid request body.
+     *       500:
+     *         description: Error while adding genre
      *         content:
      *           application/json:
      *             schema:
-     *               $ref: '#/components/schemas/Movie'
-     *       400:
-     *         description: Invalid request body.
+     *               type: object
+     *               properties:
+     *                 error:
+     *                   type: string
+     *                   example: An error occurred while adding the genre.
      */
     // Add a movie
     async create(req: Request, res: Response) {
@@ -204,7 +174,7 @@ export class MovieController {
         try {
             const id = parseInt(req.params.id);
             const movieData: Movie = req.body;
-            const movie = await this.movieService.updateMovie(movieData);
+            const movie = await this.movieService.updateMovie(id,movieData);
             res.json(movie);
         } catch (error) {
             res.status(400).send(error.message);
@@ -213,6 +183,7 @@ export class MovieController {
     /**
      * @swagger
      * /movies/delete/{id}:
+     *   delete:
      *     summary: Delete a movie by ID.
      *     tags:
      *     - Movies
@@ -235,8 +206,7 @@ export class MovieController {
     async deleteById(req: Request, res: Response) {
         try {
             const id = parseInt(req.params.id);
-            const movieData: Movie = req.body;
-            await this.movieService.deleteMovie(movieData);
+            await this.movieService.deleteMovie(id);
             res.status(204).send();
         } catch (error) {
             res.status(404).send(error.message);

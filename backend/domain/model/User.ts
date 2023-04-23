@@ -1,9 +1,12 @@
+import { Movie } from './Movie';
+
 class User {
     private _id: number;
     private _username: string;
     private _email: string;
     private _birthdate: Date;
     private _password: string;
+    private _movies: Movie[];
 
     constructor(id:number,username: string, email: string, birthdate: Date, password: string) {
         this.id=id;
@@ -76,6 +79,15 @@ class User {
 
     public get password(): string {
         return this._password;
+    }
+
+
+    get movies(): Movie[] {
+        return this._movies;
+    }
+
+    set movies(value: Movie[]) {
+        this._movies = value;
     }
 }
 export { User };

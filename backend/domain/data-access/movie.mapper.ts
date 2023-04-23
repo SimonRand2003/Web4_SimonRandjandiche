@@ -1,25 +1,17 @@
-import { RowDataPacket } from 'mysql2';
-import { Movie } from '../model/movie';
-import { Rating } from '../model/rating';
+import { Movie as PrismaMovie } from "@prisma/client";
+import { Movie } from '../model/Movie';
 
-const mapToMovies = (rows: RowDataPacket[]): Movie[] => {
-    const result: Movie[] = [];
-
-    rows.forEach(({ movie_id, movie_name, genre, year, duration, rating_id, rating, comment, user_id }) => {
-        const movieIndex = result.findIndex((movie) => movie.id === movie_id);
-        const ratingObj: Rating = new Rating(rating_id, movie_id, user_id, rating, comment);
-
-        if (movieIndex === -1) {
-            const movie: Movie = new Movie(movie_name, genre, year, duration);
-            movie.id = movie_id;
-            movie.ratings = [ratingObj];
-            result.push(movie);
-        } else {
-            result[movieIndex].ratings.push(ratingObj);
-        }
-    });
-
-    return result;
+const mapToMovie = (prismaMovie: PrismaMovie): Movie => {
+    return new Movie(
+        prismaMovie.movieid,
+        prismaMovie.title,
+        prismaMovie.releaseDate,
+        prismaMovie.duration,
+    );
 };
 
-export default mapToMovies;
+const mapToMovies = (prismaMovies: PrismaMovie[]): Movie[] => {
+    return prismaMovies.map((prismaMovie) => mapToMovie(prismaMovie));
+};
+
+export { mapToMovie, mapToMovies };

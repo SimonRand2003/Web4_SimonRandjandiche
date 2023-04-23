@@ -17,7 +17,7 @@ export class UserService {
     }
 
     public async updateUser(user: User): Promise<void> {
-        await this.userRepository.update(user);
+        await this.userRepository.updateUser(user);
     }
 
     public async deleteUser(id: number): Promise<void> {

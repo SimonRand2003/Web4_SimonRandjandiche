@@ -1,109 +1,71 @@
-import { Genre } from "../model/Genre";
-
-class GenreRepository {
-    private genres: Genre[] = [];
-    private nextId: number = 0;
-
-
-    public addGenre(genre: Genre): void {
-        genre.id = this.nextId;
-        this.genres.push(genre);
-        this.nextId++;
-    }
-
-    public getGenreById(id: number): Genre | undefined {
-        return this.genres.find((genre) => genre.id === id);
-    }
-
-    public getGenreByName(name: string): Genre | undefined {
-        return this.genres.find((genre) => genre.name === name);
-    }
-
-    public getAllGenres(): Genre[] {
-        return this.genres;
-    }
-    async updateGenre(genre: Genre): Promise<Genre> {
-        const index = this.genres.findIndex(g => g.id === genre.id);
-        if (index === -1) {
-            throw new Error(`Genre with ID ${genre.id} not found.`);
-        }
-
-        this.genres[index] = genre;
-
-        return genre;
-    }
-
-    async deleteGenre(id: number): Promise<void> {
-        const index = this.genres.findIndex(g => g.id === id);
-        if (index === -1) {
-            throw new Error(`Genre with ID ${id} not found.`);
-        }
-
-        this.genres.splice(index, 1);
-    }
-
-}
-
-export { GenreRepository };
-
-
-/*
-import { Genre } from "../model/Genre";
-import { PrismaClient } from '@prisma/client';
+import {PrismaClient} from '@prisma/client';
+import {Genre} from '../model/Genre';
+import {mapToGenre, mapToGenres} from './genre.mapper';
 
 class GenreRepository {
     private prisma: PrismaClient;
 
     constructor() {
-        this.prisma = new PrismaClient();
+        this.prisma = new PrismaClient({log: ['query']});
     }
 
-    async addGenre(genre: Genre): Promise<void> {
-        await this.prisma.genre.create({
+    async addGenre(genre: Genre){
+        mapToGenre(genre);
+         await this.prisma.genre.create({
             data: {
                 name: genre.name,
                 description: genre.description,
+                genreid: genre.genreid,
             },
         });
     }
 
-    async getGenreById(id: number): Promise<Genre | null> {
+    async getGenreById(id: number): Promise<Genre> {
         const genre = await this.prisma.genre.findUnique({
-            where: { id },
+            where: {
+                genreid: id,
+            },
         });
-
-        return genre.id;
+        return genre ? mapToGenre(genre): undefined;
     }
-
-
-
 
     async getAllGenres(): Promise<Genre[]> {
         const genres = await this.prisma.genre.findMany();
-        return genres as Genre[];
+        return mapToGenres(genres)
     }
 
 
 
-    async updateGenre(genre: Genre): Promise<Genre> {
-        const updatedGenre = await this.prisma.genre.update({
-            where: { id: genre.id },
-            data: { name: genre.name, description: genre.description },
+
+
+    async updateGenre(id: number,genre: Genre){
+        await this.prisma.genre.update({
+            where: {
+                genreid: id,
+
+            },
+            data: {
+                name: genre.name,
+                description: genre.description,
+
+            },
         });
-        return updatedGenre;
     }
-
 
     async deleteGenre(id: number): Promise<void> {
         await this.prisma.genre.delete({
-            where: { id },
+            where: { genreid: id }
         });
     }
 
-    async disconnect(): Promise<void> {
+
+    async close(): Promise<void> {
         await this.prisma.$disconnect();
     }
+
+
 }
 
 export { GenreRepository };
-*/
+
+

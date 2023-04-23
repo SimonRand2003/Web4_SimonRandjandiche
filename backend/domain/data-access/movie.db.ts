@@ -1,41 +1,61 @@
+import { PrismaClient } from '@prisma/client';
 import { Movie } from '../model/Movie';
+import { mapToMovie, mapToMovies } from './movie.mapper';
+
 
 class MovieRepository {
-    private movies: Movie[] = [];
-    private lastId: number = 0;
+    private prisma: PrismaClient;
 
-
-    async getById(id: number): Promise<Movie> {
-        const movie = this.movies.find((m) => m.id === id);
-        if (!movie) {
-            throw new Error(`Movie with id ${id} not found`);
-        }
-        return movie;
+    constructor() {
+        this.prisma = new PrismaClient();
     }
 
-    async getAll(): Promise<Movie[]> {
-        return this.movies;
+    async addMovie(movie: Movie) {
+        mapToMovie(movie)
+        await this.prisma.movie.create({
+            data: {
+                title: movie.title,
+                releaseDate: movie.releaseDate,
+                duration: movie.duration,
+            },
+        });
     }
 
-    async add(movie: Movie): Promise<void> {
-        movie.id = ++this.lastId;
-        this.movies.push(movie);
+    async getMovieById(id: number): Promise<Movie> {
+        const movie = await this.prisma.movie.findUnique({
+            where: {
+                movieid: id,
+            },
+            include: {
+                genres: true,
+                ratings: true,
+                users: true,
+            },
+        });
+        return mapToMovie(movie);
     }
 
-    async update(movie: Movie): Promise<void> {
-        const index = this.movies.findIndex((m) => m.id === movie.id);
-        if (index === -1) {
-            throw new Error(`Movie with id ${movie.id} not found`);
-        }
-        this.movies[index] = movie;
+    async getAllMovies(): Promise<Movie[]> {
+        const movies = await this.prisma.movie.findMany({
+            include: {
+                genres: true,
+                ratings: true,
+                users: true,
+            },
+        });
+        return mapToMovies(movies);
     }
 
-    async remove(movie: Movie): Promise<void> {
-        const index = this.movies.findIndex((m) => m.id === movie.id);
-        if (index === -1) {
-            throw new Error(`Movie with id ${movie.id} not found`);
-        }
-        this.movies.splice(index, 1);
+
+
+    async deleteMovie(id: number): Promise<void> {
+        await this.prisma.movie.delete({
+            where: { movieid: id }
+        });
+    }
+
+    async close(): Promise<void> {
+        await this.prisma.$disconnect();
     }
 }
 

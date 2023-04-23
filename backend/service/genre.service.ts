@@ -4,11 +4,11 @@ import { GenreRepository } from '../domain/data-access/genre.db';
 export class GenreService {
     constructor(private readonly genreRepository: GenreRepository) {}
 
-    public async getAllGenres(): Promise<Genre[]> {
+    public async getAllGenres(){
         return this.genreRepository.getAllGenres();
     }
 
-    public async getGenreById(id: number): Promise<Genre | null> {
+    public async getGenreById(id: number) {
         return this.genreRepository.getGenreById(id);
     }
 
@@ -16,8 +16,9 @@ export class GenreService {
         await this.genreRepository.addGenre(genre);
     }
 
-    public async updateGenre(genre: Genre): Promise<void> {
-        await this.genreRepository.updateGenre(genre);
+    public async updateGenre(id: number,genre: Genre): Promise<void> {
+
+        await this.genreRepository.updateGenre(id,genre);
     }
 
     public async deleteGenre(id: number): Promise<void> {

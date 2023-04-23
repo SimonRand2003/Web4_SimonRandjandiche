@@ -1,0 +1,136 @@
+openapi: 3.0.0
+info:
+  title: Genre API
+  description: API for managing genres
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: Local server
+tags:
+  - name: Genres
+    description: Operations related to genres
+components:
+  schemas:
+    Genre:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the genre
+        description:
+          type: string
+          description: A description of the genre
+    Genrewithid:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+          description: The name of the genre
+        description:
+          type: string
+          description: A description of the genre
+  responses:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: The error message
+  parameters:
+    GenreId:
+      name: id
+      in: path
+      description: Genre ID
+      required: true
+      schema:
+        type: integer
+        format: int64
+paths:
+  /genres:
+    get:
+      summary: Get a list of all genres
+      tags:
+        - Genres
+      responses:
+        '200':
+          description: A list of genres
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Genrewithid'
+  /genres/add:
+    post:
+      summary: Add a new genre
+      tags:
+        - Genres
+      requestBody:
+        required: true
+        description: Genre object to be added
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Genre'
+      responses:
+        '201':
+          description: Genre added successfully
+        '500':
+          $ref: '#/components/responses/Error'
+  /genres/{id}:
+    get:
+      summary: Get a genre by ID
+      tags:
+        - Genres
+      parameters:
+        - $ref: '#/components/parameters/GenreId'
+      responses:
+        '200':
+          description: A genre
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Genrewithid'
+        '404':
+          description: Genre not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Genre with id 123 not found.
+  /genres/update/{id}:
+    put:
+      summary: Update an existing genre by ID
+      tags:
+        - Genres
+      parameters:
+        - $ref: '#/components/parameters/GenreId'
+      requestBody:
+        required: true
+        description: Updated genre object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Genre'
+      responses:
+        '204':
+          description: Genre updated successfully
+        '500':
+          $ref: '#/components/responses/Error'
+  /genres/delete/{id}:
+    delete:
+      summary: Delete an existing genre based on ID
+      tags:
+        - Genres
+      parameters:
+        - $ref: '#/components/parameters/GenreId'
+      responses:
+        '204':
+          description: Genre successfully deleted
+        '500':
+          $ref: '#/components/responses/Error'

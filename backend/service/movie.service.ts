@@ -5,22 +5,22 @@ export class MovieService {
     constructor(private readonly movieRepository: MovieRepository) {}
 
     public async getAllMovies(): Promise<Movie[]> {
-        return this.movieRepository.getAll();
+        return this.movieRepository.getAllMovies();
     }
 
     public async getMovieById(id: number): Promise<Movie | null> {
-        return this.movieRepository.getById(id);
+        return this.movieRepository.getMovieById(id);
     }
 
     public async addMovie(movie: Movie): Promise<void> {
-        await this.movieRepository.add(movie);
+        await this.movieRepository.addMovie(movie);
     }
 
-    public async updateMovie(movie: Movie): Promise<void> {
-        await this.movieRepository.update(movie);
+    public async updateMovie(id : number,movie: Movie): Promise<void> {
+        //await this.movieRepository.(movie);
     }
 
-    public async deleteMovie(movie: Movie): Promise<void> {
-        await this.movieRepository.remove(movie);
+    public async deleteMovie(movie: number): Promise<void> {
+        await this.movieRepository.deleteMovie(movie);
     }
 }

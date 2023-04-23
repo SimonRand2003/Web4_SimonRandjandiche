@@ -1,47 +1,52 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
+
 generator client {
   provider = "prisma-client-js"
 }
 
-// Data source definition
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-// Define your data model
-model User {
-  id         Int      @id @default(autoincrement())
-  username   String
-  email      String   @unique
-  birthdate  DateTime
-  password   String
-  ratings    Rating[]
-}
-
-model Rating {
-  id       Int      @id @default(autoincrement())
-  movieId  Int
-  rating   Float
-  comment  String?
-  userId   Int
-  movie    Movie    @relation(fields: [movieId], references: [id])
-  user     User     @relation(fields: [userId], references: [id])
-}
-
-model Movie {
-  id        Int      @id @default(autoincrement())
-  name      String
-  genre     String
-  year      Int
-  duration  Int
-  ratings   Rating[]
-}
-
+// Definitie van de Genre tabel
 model Genre {
-  id        Int      @id @default(autoincrement())
-  name      String
+  genreid     Int     @id @default(autoincrement())
+  name        String
   description String
+  movies      Movie[] @relation("GenreMovies")
+}
 
+// Definitie van de Movie tabel
+model Movie {
+  movieid     Int      @id @default(autoincrement())
+  title       String
+  releaseDate Int
+  duration    Int
+  genres      Genre[]  @relation("GenreMovies")
+  ratings     Rating[] @relation("MovieRatings")
+  users       User[]   @relation("UserMovies")
+}
+
+// Definitie van de Rating tabel
+model Rating {
+  ratingid Int    @id @default(autoincrement())
+  rating   Int
+  comment  String
+  movieId  Int
+  userId   Int
+  movie    Movie  @relation("MovieRatings", fields: [movieId], references: [movieid])
+  user     User   @relation("UserRatings", fields: [userId], references: [userid])
+}
+
+// Definitie van de User tabel
+model User {
+  userid    Int      @id @default(autoincrement())
+  username  String
+  email     String   @unique
+  birthdate DateTime
+  password  String
+  movies    Movie[]  @relation("UserMovies")
+  ratings   Rating[] @relation("UserRatings")
 }

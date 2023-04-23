@@ -1,59 +1,56 @@
 import { Rating } from "./Rating";
+import {Genre} from "./Genre";
 
 class Movie {
-    private _id: number;
-    private _name: string;
-    private _genre: string;
-    private _year: number;
+    private _movieid: number;
+    private _title: string;
+    private _releaseDate: number;
     private _duration: number;
+    private _genres: Genre[];
     private _ratings: Rating[];
 
-    constructor(name: string, genre: string, year: number, duration: number) {
-        this.name = name;
-        this.genre = genre;
-        this.year = year;
+
+
+    constructor(id: number, name: string, year: number, duration: number) {
+        this.movieid = id;
+        this.title = name;
+       // this.genres = genres;
+        this.releaseDate = year;
         this.duration = duration;
+        //this.ratings = ratings;
     }
 
-    public get id(): number {
-        return this._id;
+    public get movieid(): number {
+        return this._movieid;
     }
 
-    public set id(id: number) {
-        this._id = id;
+    public set movieid(id: number) {
+        this._movieid = id;
     }
 
-    public get name(): string {
-        return this._name;
+    public get title(): string {
+        return this._title;
     }
 
-    public set name(name: string) {
+    public set title(name: string) {
         if (!name || !name.trim()) {
             throw new Error('Naam mag niet leeg zijn.');
         }
-        this._name = name;
+        this._title = name;
     }
 
-    public get genre(): string {
-        return this._genre;
+
+
+
+    public get releaseDate(): number {
+        return this._releaseDate;
     }
 
-    public set genre(genre: string) {
-        if (!genre || !genre.trim()) {
-            throw new Error('Genre mag niet leeg zijn.');
-        }
-        this._genre = genre;
-    }
-
-    public get year(): number {
-        return this._year;
-    }
-
-    public set year(year: number) {
+    public set releaseDate(year: number) {
         if (year < 1800) {
             throw new Error('Jaar moet groter dan 1800 zijn.');
         }
-        this._year = year;
+        this._releaseDate = year;
     }
 
     public get duration(): number {
@@ -67,12 +64,23 @@ class Movie {
         this._duration = duration;
     }
 
-    public get ratings(): Rating[] {
+
+    get genres(): Genre[] {
+        return this._genres;
+    }
+
+    set genres(value: Genre[]) {
+        if (value.length === 0)
+            throw new Error('Een film moet minstens 1 genre hebben.');
+        this._genres = value;
+    }
+
+    get ratings(): Rating[] {
         return this._ratings;
     }
 
-    public set ratings(ratings: Rating[]) {
-        this._ratings = ratings;
+    set ratings(value: Rating[]) {
+        this._ratings = value;
     }
 }
 

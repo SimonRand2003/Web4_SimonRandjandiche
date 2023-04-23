@@ -1,15 +1,20 @@
-import { RowDataPacket } from 'mysql2';
-import { Rating } from '../model/rating';
+import { Rating as PrismaRating } from "@prisma/client";
+import { Rating } from "../model/Rating";
 
-const mapToRatings = (rows: RowDataPacket[]): Rating[] => {
-    const result: Rating[] = [];
 
-    rows.forEach(({ id, movie_id, user_id, rating, comment }) => {
-        const ratingObj: Rating = new Rating(id, movie_id, user_id, rating, comment);
-        result.push(ratingObj);
-    });
 
-    return result;
+const mapToRating = (prismaRating: PrismaRating): Rating => {
+    return new Rating(
+        prismaRating.ratingid,
+        prismaRating.rating,
+        prismaRating.comment);
+}
+const mapToRatings = (prismaRatings: PrismaRating[]): Rating[] => {
+    return prismaRatings.map((prismaRating) => mapToRating(prismaRating));
+
+
 };
 
-export default mapToRatings;
+
+export {mapToRating, mapToRatings};
+

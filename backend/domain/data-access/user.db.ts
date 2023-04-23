@@ -1,42 +1,63 @@
-import { User } from "../model/User";
+import { PrismaClient } from '@prisma/client';
+import { User } from '../model/User';
+import {mapToUser, mapToUsers} from './user.mapper';
 
 class UserRepository {
-    private users: User[] = [];
-    private nextId: number = 0;
+    private prisma: PrismaClient;
 
-
-    public addUser(user: User): void {
-        user.id = this.nextId;
-        this.users.push(user);
-        this.nextId++;
+    constructor() {
+        this.prisma = new PrismaClient();
     }
 
+    async addUser(user: User){
+        await this.prisma.user.create({
+            data: {
+                username: user.username,
+                email: user.email,
+                birthdate: user.birthdate,
+                password: user.password,
+            },
+        });
 
-    public getUserById(id: number): User | undefined {
-        return this.users.find((user) => user.id === id);
     }
 
-    public getUserByUsername(username: string): User | undefined {
-        return this.users.find((user) => user.username === username);
+    async getUserById(id: number): Promise<User | undefined> {
+        const user = await this.prisma.user.findUnique({
+            where: {
+                userid: id,
+            },
+        });
+        return user ? mapToUser(user) : undefined;
     }
 
-    public getAllUsers(): User[] {
-        return this.users;
-    }
-    public async update(user: User): Promise<void> {
-        const index = this.users.findIndex((u) => u.id === user.id);
-        if (index === -1) {
-            throw new Error(`User with id ${user.id} not found`);
-        }
-        this.users[index] = user;
+    async getAllUsers(): Promise<User[]> {
+        const users = await this.prisma.user.findMany();
+        return mapToUsers(users);
     }
 
-    public async deleteById(id: number): Promise<void> {
-        const index = this.users.findIndex((u) => u.id === id);
-        if (index === -1) {
-            throw new Error(`User with id ${id} not found`);
-        }
-        this.users.splice(index, 1);
+    async updateUser(user: User): Promise<void> {
+        await this.prisma.user.update({
+            where: {
+                userid: user.id,
+            },
+            data: {
+                username: user.username,
+                email: user.email,
+                password: user.password,
+            },
+        });
+    }
+
+    async deleteById(id: number): Promise<void> {
+        await this.prisma.user.delete({
+            where: {
+                userid: id
+            },
+        });
+    }
+
+    async close(): Promise<void> {
+        await this.prisma.$disconnect();
     }
 }
 

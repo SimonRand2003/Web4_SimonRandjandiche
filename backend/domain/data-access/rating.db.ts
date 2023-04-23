@@ -1,41 +1,65 @@
+import { PrismaClient } from '@prisma/client';
 import { Rating } from '../model/Rating';
+import { mapToRating , mapToRatings} from "./rating.mapper";
 
 class RatingRepository {
-    private ratings: Rating[] = [];
-    private lastId: number = 0;
+    private prisma: PrismaClient;
 
+    constructor() {
+        this.prisma = new PrismaClient();
+    }
 
     async getById(id: number): Promise<Rating> {
-        const rating = this.ratings.find((r) => r.id === id);
+        const rating = await this.prisma.rating.findUnique({
+            where: {
+                ratingid: id,
+            },
+        });
         if (!rating) {
             throw new Error(`Rating with id ${id} not found`);
         }
-        return rating;
+        return mapToRating(rating);
     }
 
     async getAll(): Promise<Rating[]> {
-        return this.ratings;
+        const ratings = await this.prisma.rating.findMany();
+        return mapToRatings(ratings);
     }
 
     async add(rating: Rating): Promise<void> {
-        rating.id = ++this.lastId;
-        this.ratings.push(rating);
+        await this.prisma.rating.create({
+            data: {
+                rating: rating.rating,
+                comment: rating.comment,
+                movieId: rating.movieId,
+                userId: rating.userId,
+            },
+        });
     }
 
     async update(rating: Rating): Promise<void> {
-        const index = this.ratings.findIndex((r) => r.id === rating.id);
-        if (index === -1) {
-            throw new Error(`Rating with id ${rating.id} not found`);
-        }
-        this.ratings[index] = rating;
+        await this.prisma.rating.update({
+            where: {
+                ratingid: rating.id,
+            },
+            data: {
+                rating: rating.rating,
+                userId: rating.userId,
+                movieId: rating.movieId,
+            },
+        });
     }
 
     async remove(rating: Rating): Promise<void> {
-        const index = this.ratings.findIndex((r) => r.id === rating.id);
-        if (index === -1) {
-            throw new Error(`Rating with id ${rating.id} not found`);
-        }
-        this.ratings.splice(index, 1);
+        await this.prisma.rating.delete({
+            where: {
+                ratingid: rating.id,
+            },
+        });
+    }
+
+    async close(): Promise<void> {
+        await this.prisma.$disconnect();
     }
 }
 

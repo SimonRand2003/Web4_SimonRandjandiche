@@ -1,14 +1,19 @@
+import {Movie} from "./Movie";
+import {User} from "./User";
+
 class Rating{
     private _id: number;
-    private _movieId: number;
+    private _movie: Movie;
     private _rating: number;
     private _comment: string;
+    private _user: User;
+    private _movieId: number;
     private _userId: number;
 
-    constructor(id: number, movieId: number, userId: number, rating: number, comment: string) {
+    constructor(id: number, rating: number, comment: string) {
         this.id = id;
-        this.movieId = movieId;
-        this.userId = userId;
+        //this.movieId = movieId;
+        //this.userId = userId;
         this.rating = rating;
         this.comment = comment;
     }
@@ -19,18 +24,29 @@ class Rating{
     public set id(id: number) {
         this._id = id;
     }
-    public get movieId(): number {
-        return this._movieId;
+
+    get movie(): Movie {
+        return this._movie;
     }
-    public set movieId(movieId: number){
-        this._movieId = movieId;
+
+    set movie(value: Movie) {
+        if (!value) {
+            throw new Error("movie mag niet leeg zijn");
+        }
+        this._movie = value;
     }
-    public get userId(): number {
-        return this._userId;
+
+    get user(): User {
+        return this._user;
     }
-    public set userId(userId: number){
-        this._userId = userId;
+
+    set user(value: User) {
+        if (!value) {
+            throw new Error("user mag niet leeg zijn");
+        }
+        this._user = value;
     }
+
     public get rating(): number {
         return this._rating;
     }
@@ -51,7 +67,20 @@ class Rating{
     }
 
 
+    get movieId(): number {
+        return this._movieId;
+    }
 
+    set movieId(value: number) {
+        this._movieId = value;
+    }
 
+    get userId(): number {
+        return this._userId;
+    }
+
+    set userId(value: number) {
+        this._userId = value;
+    }
 }
 export { Rating };
