@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect } from 'react';
-import Link from "next/link";
+import Link from 'next/link';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from '../../Components/Header';
 
@@ -17,7 +17,13 @@ async function getMovies() {
     return data as Movie[];
 }
 
-function MovieComponent({ movie, onAddToWatchlist }: { movie: Movie, onAddToWatchlist: (movie: Movie) => void }) {
+function MovieComponent({
+                            movie,
+                            onAddToWatchlist,
+                        }: {
+    movie: Movie;
+    onAddToWatchlist: (movie: Movie) => void;
+}) {
     const { _movieid, _title, _releaseDate, _duration } = movie;
 
     const handleAddToWatchlist = () => {
@@ -31,7 +37,12 @@ function MovieComponent({ movie, onAddToWatchlist }: { movie: Movie, onAddToWatc
             <td>{_releaseDate}</td>
             <td>{_duration}</td>
             <td>
-                <button className="btn btn-primary" onClick={handleAddToWatchlist}>Add to list</button>
+                <button
+                    className="btn btn-primary"
+                    onClick={handleAddToWatchlist}
+                >
+                    Add to list
+                </button>
             </td>
             <td className="btn btn-secondary">
                 <Link href={{ pathname: '../rate', query: { movieId: _movieid } }}>
@@ -56,12 +67,13 @@ export default function MoviesPage() {
     }, []);
 
     const handleAddToWatchlist = (movie: Movie) => {
-        setWatchlist(watchlist => [...watchlist, movie]);
+        setWatchlist((watchlist) => [...watchlist, movie]);
     };
 
     return (
+        <>
+        <Header />
         <div className="container">
-            <Header />
             <h1>Movies</h1>
             <table className="table table-striped">
                 <thead>
@@ -76,16 +88,29 @@ export default function MoviesPage() {
                 </thead>
                 <tbody>
                 {movies.map((movie) => {
-                    return <MovieComponent key={movie._movieid} movie={movie} onAddToWatchlist={handleAddToWatchlist} />;
+                    return (
+                        <MovieComponent
+                            key={movie._movieid}
+                            movie={movie}
+                            onAddToWatchlist={handleAddToWatchlist}
+                        />
+                    );
                 })}
                 </tbody>
             </table>
             <h2>Watchlist</h2>
-            <ul>
-                {watchlist.map((movie) => (
-                    <li key={movie._movieid}>{movie._title}</li>
-                ))}
-            </ul>
+            {watchlist.length > 0 ? (
+                <ul className="list-group">
+                    {watchlist.map((movie) => (
+                        <li key={movie._movieid} className="list-group-item">
+                            {movie._title}
+                        </li>
+                    ))}
+                </ul>
+            ) : (
+                <p>Your watchlist is empty</p>
+            )}
         </div>
+        </>
     );
 }

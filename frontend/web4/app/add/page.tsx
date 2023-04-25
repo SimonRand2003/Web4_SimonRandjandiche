@@ -38,8 +38,10 @@ const AddMovie = () => {
     };
 
     return (
-        <div className="container">
+        <>
             <Header />
+        <div className="container">
+
             <div className="container mt-5">
                 <h1>Voeg movie toe</h1>
                 <form onSubmit={handleSubmit}>
@@ -63,6 +65,7 @@ const AddMovie = () => {
                 </form>
             </div>
         </div>
+        </>
     );
 };
 
