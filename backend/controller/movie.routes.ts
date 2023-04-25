@@ -255,9 +255,9 @@ const movieController = new MovieRoutes(movieService);
 const movieRouter = express.Router();
 
 movieRouter.get('/movies', movieController.getAll.bind(movieController));
-movieRouter.get('/movies/id', movieController.getById.bind(movieController));
+movieRouter.get('/movies/:id', movieController.getById.bind(movieController));
 movieRouter.post('/movies/add', movieController.create.bind(movieController));
-movieRouter.put('/movies/update/id', movieController.updateById.bind(movieController));
-movieRouter.delete('/movies/delete/id', movieController.deleteById.bind(movieController));
+movieRouter.put('/movies/update/:id', movieController.updateById.bind(movieController));
+movieRouter.delete('/movies/delete/:id', movieController.deleteById.bind(movieController));
 
 export { movieRouter };
