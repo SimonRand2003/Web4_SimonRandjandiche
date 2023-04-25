@@ -14,6 +14,8 @@ const Header = () => {
     const handleLogout = () => {
         localStorage.removeItem('user');
         setUser(null);
+        window.location.href = '/Signin';
+
     };
 
     return (
@@ -29,7 +31,7 @@ const Header = () => {
                     <li>
                         <Link href="/add">Add Movie</Link>
                     </li>
-                    {!user && (
+                    {!localStorage.user && (
                         <>
                             <li>
                                 <Link href="/Signin">Sign In</Link>
@@ -39,9 +41,12 @@ const Header = () => {
                             </li>
                         </>
                     )}
-                    {user && (
+                    {localStorage.user && (
                         <li>
-                            Signed in as {user.name}{' '}
+                            
+                            Signed in as {localStorage.user.toString().split(",")[1].split(":")[1]}
+
+
                             <button onClick={handleLogout}>Log out</button>
                         </li>
                     )}
