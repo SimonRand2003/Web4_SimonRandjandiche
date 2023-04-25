@@ -45,9 +45,9 @@ const RatingPage = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            const movieId = movie._movieid
+            const movieId = movie?._id;
             const userId = parseInt(localStorage.user.toString().split(",")[0].split(":")[1])
-            console.log(movie.movieid)
+            console.log(movie?._id)
 
             const response = await fetch('http://localhost:3000/ratings/add', {
                 method: 'POST',
@@ -62,7 +62,7 @@ const RatingPage = () => {
                 }),
             });
             window.location.href = '/movie';
-        } catch (err) {
+        } catch (err: any) {
             setError(err.message);
         }
     };
@@ -73,35 +73,37 @@ const RatingPage = () => {
     }
 
     return (
-        <div className="container">
-            <Header />
-            <div>
-                <h2>Rate movie {movie._title}</h2>
-                {error && <p>{error}</p>}
-                <form onSubmit={handleSubmit}>
-                    <label>
-                        Rating:
-                        <select value={rating._rating} onChange={handleRatingChange}>
-                            <option value="">Please select a rating</option>
-                            {[...Array(10)].map((_, i) => (
-                                <option key={i} value={i + 1}>
-                                    {i + 1}
-                                </option>
-                            ))}
-                        </select>
-                    </label>
-                    <br />
-                    <label>
-                        Comment:
-                        <textarea value={rating._comment} onChange={handleCommentChange} />
-                    </label>
-                    <br />
-                    <hidden name ="movieId" value={movie._id}></hidden>
-                    <hidden name ="userId" value={localStorage.user.toString().split(",")[0].split(":")[1]}></hidden>
-                    <button type="submit">Submit</button>
-                </form>
+        <>
+        <Header />
+            <div className="container">
+                <div className="row">
+                    <div className="col-lg-6 offset-lg-3">
+                        <h2>Rate movie {movie._title}</h2>
+                        {error && <p>{error}</p>}
+                        <form onSubmit={handleSubmit}>
+                            <div className="form-group">
+                                <label htmlFor="ratingSelect">Rating:</label>
+                                <select className="form-control" id="ratingSelect" value={rating._rating} onChange={handleRatingChange}>
+                                    <option value="">Please select a rating</option>
+                                    {[...Array(10)].map((_, i) => (
+                                        <option key={i} value={i + 1}>
+                                            {i + 1}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="commentTextarea">Comment:</label>
+                                <textarea className="form-control" id="commentTextarea" value={rating._comment} onChange={handleCommentChange} />
+                            </div>
+                            <input type="hidden" name="movieId" value={movie?._id} />
+                            <input type="hidden" name="userId" value={localStorage.user.toString().split(",")[0].split(":")[1]} />
+                            <button className="btn btn-primary" type="submit">Submit</button>
+                        </form>
+                    </div>
+                </div>
             </div>
-        </div>
+        </>
     );
 };
 
