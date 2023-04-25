@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { User } from '../model/User';
 import {mapToUser, mapToUsers} from './user.mapper';
+import {Movie} from "../model/Movie";
 
 class UserRepository {
     private prisma: PrismaClient;
@@ -31,9 +32,14 @@ class UserRepository {
     }
 
     async getAllUsers(): Promise<User[]> {
-        const users = await this.prisma.user.findMany();
+        const users = await this.prisma.user.findMany({
+            include: {
+                movies: true,
+                ratings: true,
+            }});
         return mapToUsers(users);
     }
+
 
     async updateUser(id: number, user: User): Promise<void> {
         await this.prisma.user.update({

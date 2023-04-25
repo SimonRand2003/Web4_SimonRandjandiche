@@ -58,6 +58,8 @@ export class UserController {
         const users = await this.userService.getAllUsers();
         res.json(users);
     }
+
+
     /**
      * @swagger
      * /users/{id}:
@@ -83,6 +85,9 @@ export class UserController {
      *       '404':
      *         description: User not found
      */
+
+
+
     public async getUserById(req: Request, res: Response): Promise<void> {
         const userId = parseInt(req.params.id, 10);
         const user = await this.userService.getUserById(userId);
@@ -118,6 +123,7 @@ export class UserController {
             req.body.email,
             new Date(req.body.birthdate),
             req.body.password
+            ,[],[]
         );
         await this.userService.addUser(user);
         res.sendStatus(201);

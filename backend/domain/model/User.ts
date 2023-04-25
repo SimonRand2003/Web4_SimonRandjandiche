@@ -1,4 +1,5 @@
 import { Movie } from './Movie';
+import {Rating} from "./Rating";
 
 class User {
     private _id: number;
@@ -7,13 +8,16 @@ class User {
     private _birthdate: Date;
     private _password: string;
     private _movies: Movie[];
+    private _ratings: Rating[];
 
-    constructor(id:number,username: string, email: string, birthdate: Date, password: string) {
+    constructor(id:number,username: string, email: string, birthdate: Date, password: string,movies: Movie[],ratings: Rating[]) {
         this.id=id;
         this.username = username;
         this.email = email;
         this.birthdate = birthdate;
         this.password = password;
+        this.movies=movies;
+        this.ratings=ratings;
     }
     public get id(): number {
         return this._id;
@@ -88,6 +92,14 @@ class User {
 
     set movies(value: Movie[]) {
         this._movies = value;
+    }
+
+    get ratings(): Rating[] {
+        return this._ratings;
+    }
+
+    set ratings(value: Rating[]) {
+        this._ratings = value;
     }
 }
 export { User };

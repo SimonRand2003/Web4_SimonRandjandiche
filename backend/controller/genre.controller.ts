@@ -20,7 +20,7 @@ import {GenreRepository} from "../domain/data-access/genre.db";
  *     Genrewithid:
  *       type: object
  *       properties:
- *         id:
+ *         genreid:
  *           type: number
  *         name:
  *           type: string

@@ -19,22 +19,13 @@ import {MovieRepository} from "../domain/data-access/movie.db";
  *         duration:
  *           type: number
  *           description: The runtime of the movie in minutes.
- *     MovieWithId:
- *       type: object
- *       properties:
- *         id:
- *           type: number
- *           description: Unique identifier for the movie.
- *         title:
- *           type: string
- *           description: The title of the movie.
- *         releaseDate:
- *           type: number
- *           description: The year the movie was released.
- *         duration:
- *           type: number
- *           description: The runtime of the movie in minutes.
+ *         genres:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/Genrewithid'
+ *           description: The genres that the movie belongs to.
  */
+
 
 
 
@@ -62,23 +53,6 @@ export class MovieController {
      *               type: array
      *               items:
      *                 $ref: '#/components/schemas/Movie'
-     *   post:
-     *     summary: Add a new movie to the collection.
-     *     tags:
-     *     - Movies
-     *     requestBody:
-     *       description: The movie object to be added to the collection.
-     *       required: true
-     *       content:
-     *         application/json:
-     *           schema:
-     *             $ref: '#/components/schemas/Movie'
-     *     responses:
-     *       201:
-     *         description: The movie was successfully added to the collection.
-     *       400:
-     *         description: Invalid request body.
-     *
      */
     // Get all movies
     async getAll(req: Request, res: Response) {

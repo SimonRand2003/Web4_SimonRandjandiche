@@ -1,5 +1,6 @@
 import { User } from '../domain/model/User';
 import { UserRepository } from '../domain/data-access/user.db';
+import {Movie} from "@prisma/client";
 
 export class UserService {
     constructor(private readonly userRepository: UserRepository) {}
@@ -7,6 +8,8 @@ export class UserService {
     public async getAllUsers(): Promise<User[]> {
         return this.userRepository.getAllUsers();
     }
+
+
 
     public async getUserById(id: number): Promise<User | null> {
         return this.userRepository.getUserById(id);

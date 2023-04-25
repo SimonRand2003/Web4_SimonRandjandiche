@@ -10,27 +10,24 @@ class MovieRepository {
         this.prisma = new PrismaClient();
     }
 
-    async addMovie(movie: Movie) {
-        mapToMovie(movie)
+    async addMovieWithGenre(movie: Movie) {
         await this.prisma.movie.create({
             data: {
                 title: movie.title,
                 releaseDate: movie.releaseDate,
                 duration: movie.duration,
+                genres: {
+                    connect: {
+                        genreid: movie.genres[0].genreid,
+                    }
+                },
+                users: {},
+                ratings: {},
             },
         });
     }
 
-    async addMovieWithGenre(movie: Movie) {
-        mapToMovie(movie)
-        await this.prisma.movie.create({
-            data: {
-                title: movie.title,
-                releaseDate: movie.releaseDate,
-                duration: movie.duration,
-            },
-        });
-    }
+
 
 
 
@@ -62,8 +59,6 @@ class MovieRepository {
 
 
     async updateMovie(id: number, movie: Movie) {
-        mapToMovie(movie);
-
         await this.prisma.movie.update({
             where: {
                 movieid: id,

@@ -1,5 +1,6 @@
 import { Rating } from "./Rating";
-import {Genre} from "./Genre";
+import { Genre } from "./Genre";
+import {User} from "./User";
 
 class Movie {
     private _movieid: number;
@@ -8,15 +9,27 @@ class Movie {
     private _duration: number;
     private _genres: Genre[];
     private _ratings: Rating[];
+    private _users: User[];
 
 
 
-    constructor(id: number, name: string, year: number, duration: number) {
-        this.movieid = id;
-        this.title = name;
-        this.releaseDate = year;
-        this.duration = duration;
-        //this.genres = genres;
+    constructor(Movie: {movieid: number, title: string, releaseDate: number, duration: number, genres: Genre[], ratings: Rating[], users: User[]}) {
+        this.movieid = Movie.movieid;
+        this.title = Movie.title;
+        this.releaseDate = Movie.releaseDate;
+        this.duration = Movie.duration;
+        this.genres = Movie.genres;
+        this.ratings = Movie.ratings;
+        this.users = Movie.users;
+
+    }
+
+    get users(): User[] {
+        return this._users;
+    }
+
+    set users(value: User[]) {
+        this._users = value;
     }
 
     public get movieid(): number {
@@ -37,9 +50,6 @@ class Movie {
         }
         this._title = name;
     }
-
-
-
 
     public get releaseDate(): number {
         return this._releaseDate;
@@ -63,23 +73,23 @@ class Movie {
         this._duration = duration;
     }
 
-
-    get genres(): Genre[] {
+    public get genres(): Genre[] {
         return this._genres;
     }
 
-    set genres(value: Genre[]) {
-        if (value.length === 0)
+    public set genres(genres: Genre[]) {
+        if (genres.length === 0) {
             throw new Error('Een film moet minstens 1 genre hebben.');
-        this._genres = value;
+        }
+        this._genres = genres;
     }
 
-    get ratings(): Rating[] {
+    public get ratings(): Rating[] {
         return this._ratings;
     }
 
-    set ratings(value: Rating[]) {
-        this._ratings = value;
+    public set ratings(ratings: Rating[]) {
+        this._ratings = ratings;
     }
 }
 
