@@ -7,7 +7,7 @@ const SignIn = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
 
-    const handleSubmit = async (event) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement> ) => {
         event.preventDefault();
 
         // Call API to authenticate user with provided email and password

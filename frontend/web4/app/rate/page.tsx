@@ -46,9 +46,10 @@ const RatingPage = () => {
             if (!response.ok) {
                 throw new Error('Something went wrong');
             }
-        } catch (err) {
+        } catch (err: any) {
             setError(err.message);
         }
+
     };
 
     if (!movie) {
