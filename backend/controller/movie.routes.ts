@@ -40,7 +40,7 @@ import {MovieRepository} from "../domain/data-access/movie.db";
 
 
 
-export class MovieController {
+export class MovieRoutes {
     private movieService: MovieService;
 
     constructor(movieService: MovieService) {
@@ -251,13 +251,13 @@ export class MovieController {
 // Example usage:
 const movieRepository = new MovieRepository();
 const movieService = new MovieService(movieRepository);
-const movieController = new MovieController(movieService);
+const movieController = new MovieRoutes(movieService);
 const movieRouter = express.Router();
 
 movieRouter.get('/movies', movieController.getAll.bind(movieController));
-movieRouter.get('/movies/:id', movieController.getById.bind(movieController));
+movieRouter.get('/movies/id', movieController.getById.bind(movieController));
 movieRouter.post('/movies/add', movieController.create.bind(movieController));
-movieRouter.put('/movies/update/:id', movieController.updateById.bind(movieController));
-movieRouter.delete('/movies/delete/:id', movieController.deleteById.bind(movieController));
+movieRouter.put('/movies/update/id', movieController.updateById.bind(movieController));
+movieRouter.delete('/movies/delete/id', movieController.deleteById.bind(movieController));
 
 export { movieRouter };
