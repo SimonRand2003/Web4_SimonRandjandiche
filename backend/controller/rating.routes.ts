@@ -145,8 +145,7 @@ export class RatingRoutes {
             await this.ratingService.addRating(rating);
             res.sendStatus(201);
         } catch (error) {
-            res.status(500).json({ error: error.message });
-        }
+        throw new Error(error.message)      }
     }
     /**
      * @swagger
