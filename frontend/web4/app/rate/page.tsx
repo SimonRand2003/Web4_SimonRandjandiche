@@ -76,7 +76,6 @@ const RatingPage = () => {
         <div className="container">
             <Header />
             <div>
-                {localStorage.user.toString()}
                 <h2>Rate movie {movie._title}</h2>
                 {error && <p>{error}</p>}
                 <form onSubmit={handleSubmit}>

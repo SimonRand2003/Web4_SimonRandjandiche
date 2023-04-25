@@ -1,13 +1,18 @@
-import { SessionProvider } from 'next-auth/react'
-import Header from './Header'
+import { ReactNode } from 'react';
+import { SessionProvider } from 'next-auth/react';
+import Header from './Header';
 
-const Layout = ({ children }) => {
+interface LayoutProps {
+    children: ReactNode;
+}
+
+const Layout = ({ children }: LayoutProps) => {
     return (
         <SessionProvider>
             <Header />
             {children}
         </SessionProvider>
-    )
-}
+    );
+};
 
-export default Layout
+export default Layout;
