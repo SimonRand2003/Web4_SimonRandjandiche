@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 
 interface Movie {
     id: string;
-    title: string;
+    _title: string;
 }
 
 const RatingPage = () => {
@@ -19,10 +19,12 @@ const RatingPage = () => {
             .then(data => {
                 setMovie(data);
             })
+
             .catch(err => {
                 console.error(err);
             });
     }, []);
+
 
     const handleRatingChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setRating(Number(e.target.value));
@@ -40,7 +42,7 @@ const RatingPage = () => {
 
     return (
         <div>
-            <h2>Rate movie {movie.title}</h2>
+            <h2>Rate movie {movie._title}</h2>
             <form onSubmit={handleSubmit}>
                 <label>
                     Rating:

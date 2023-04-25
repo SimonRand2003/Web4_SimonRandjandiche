@@ -2,6 +2,14 @@ import express, { Request, Response } from 'express';
 import { UserService } from '../service/user.service';
 import { User } from '../domain/model/user';
 import {UserRepository} from "../domain/data-access/user.db";
+import session, { Session } from 'express-session';
+
+
+declare module 'express-session' {
+    export interface SessionData {
+        user: { [key: string]: any };
+    }
+}
 /**
  * @swagger
  *   components:
@@ -27,6 +35,8 @@ import {UserRepository} from "../domain/data-access/user.db";
  *              format: password
  *              description: The password of the user.
  */
+
+
 
 export class UserRoutes {
 
@@ -97,6 +107,37 @@ export class UserRoutes {
             res.sendStatus(404);
         }
     }
+
+    public async getUserByName(req: Request, res: Response): Promise<void> {
+        try{
+        const email = req.body.email;
+        const user = await this.userService.getUserByName(email);
+        res.json(user);
+        } catch (Error) {
+            res.sendStatus(404).send(Error.toString());
+        }
+    }
+
+
+    public async login(req: Request, res: Response): Promise<void> {
+        try {
+            const email = req.body.email;
+            const user = await this.userService.getUserByName(email);
+            if (req.body.password === user.password) {
+                // Set the user in the session
+                req.session.user = user;
+                res.json(user);
+            } else {
+                res.status(404).send("Email or Password are incorrect");
+            }
+        } catch (Error) {
+
+            res.status(404).send(Error.toString());
+        }
+    }
+
+
+
     /**
      * @swagger
      * /users/add:
@@ -117,6 +158,21 @@ export class UserRoutes {
      *       - Users
      */
     public async addUser(req: Request, res: Response): Promise<void> {
+<<<<<<< HEAD
+        try {
+            const user = new User(
+                req.body.id,
+                req.body.username,
+                req.body.email,
+                new Date(req.body.birthdate),
+                req.body.password
+            );
+            await this.userService.addUser(user);
+            res.sendStatus(201);
+        } catch (Error) {
+            res.status(500).send(Error.toString());
+        }
+=======
         const user = new User(
             req.body.id,
             req.body.username,
@@ -127,7 +183,9 @@ export class UserRoutes {
         );
         await this.userService.addUser(user);
         res.sendStatus(201);
+>>>>>>> 2bef33e6b0dd6598853f399c0ecdfe919fcd3c77
     }
+
     /**
      * @swagger
      * /users/update/{id}:
@@ -220,8 +278,18 @@ const userService = new UserService(userRepository);
 const userController = new UserRoutes(userService);
 const userRouter = express.Router();
 
+userRouter.use(
+    session({
+        secret: 'my-secret',
+        resave: false,
+        saveUninitialized: true,
+    })
+);
+
+
 userRouter.get('/users', userController.getAllUsers.bind(userController));
 userRouter.get('/users/:id', userController.getUserById.bind(userController));
+userRouter.post('/users/login', userController.login.bind(userController))
 userRouter.post('/users/add', userController.addUser.bind(userController));
 userRouter.put('/users/update/:id', userController.updateUser.bind(userController));
 userRouter.delete('/users/delete/:id', userController.deleteUser.bind(userController));

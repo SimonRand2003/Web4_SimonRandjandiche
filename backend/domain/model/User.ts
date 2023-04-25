@@ -19,6 +19,7 @@ class User {
         this.movies=movies;
         this.ratings=ratings;
     }
+
     public get id(): number {
         return this._id;
     }

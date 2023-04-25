@@ -1,0 +1,80 @@
+'use client';
+import React, { useState } from 'react';
+import Header from '../../Components/Header';
+
+const SignIn = () => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        // Call API to authenticate user with provided email and password
+        const response = await fetch('http://localhost:3000/users/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email,
+                password,
+            }),
+        });
+
+        if (response.ok) {
+            // Authentication succeeded, get the user data and store it in local storage
+            const user = await response.json();
+            console.log(user)
+            localStorage.setItem('user', JSON.stringify(user));
+            // Redirect user to dashboard
+            window.location.href = '/movie';
+        } else {
+            // Authentication failed, set error message
+            const errorMessage = await response.text();
+            setError(errorMessage);
+        }
+    };
+
+
+    return (
+        <div className="container">
+            <Header />
+            <h1>Sign In</h1>
+            {error && <div className="alert alert-danger">{error}</div>}
+            <form onSubmit={handleSubmit}>
+                <div className="mb-3">
+                    <label htmlFor="email" className="form-label">
+                        Email address
+                    </label>
+                    <input
+                        type="email"
+                        className="form-control"
+                        id="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                    />
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="password" className="form-label">
+                        Password
+                    </label>
+                    <input
+                        type="password"
+                        className="form-control"
+                        id="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                    />
+                </div>
+                <button type="submit" className="btn btn-primary">
+                    Sign In
+                </button>
+            </form>
+        </div>
+    );
+};
+
+export default SignIn;
