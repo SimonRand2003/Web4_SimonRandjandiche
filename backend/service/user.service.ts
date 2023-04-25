@@ -14,6 +14,9 @@ export class UserService {
     public async getUserById(id: number): Promise<User | null> {
         return this.userRepository.getUserById(id);
     }
+    public async getUserByName(name: string): Promise<User | null> {
+        return this.userRepository.getUserByName(name);
+    }
 
     public async addUser(user: User): Promise<void> {
         await this.userRepository.addUser(user);

@@ -30,6 +30,19 @@ class UserRepository {
         });
         return user ? mapToUser(user) : undefined;
     }
+    async getUserByName(name: string): Promise<User | undefined> {
+        const user = await this.prisma.user.findUnique({
+            where: {
+                email: name,
+            },
+        });
+        if (user){
+            return user ? mapToUser(user) : undefined;
+        }
+        else{
+            throw new Error("User not found")
+        }
+    }
 
     async getAllUsers(): Promise<User[]> {
         const users = await this.prisma.user.findMany({

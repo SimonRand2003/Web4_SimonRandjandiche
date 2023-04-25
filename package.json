@@ -1,5 +1,8 @@
 {
   "devDependencies": {
     "@types/react": "^18.0.38"
+  },
+  "dependencies": {
+    "express-session": "^1.17.3"
   }
 }
