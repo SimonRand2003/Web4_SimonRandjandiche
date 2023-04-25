@@ -1,6 +1,7 @@
 'use client';
 import React, { useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Header from '../../components/Header';
 
 interface Movie {
     _movieid: number;
@@ -46,9 +47,9 @@ export default function MoviesPage() {
         fetchData();
     }, []);
 
-
     return (
         <div className="container">
+            <Header />
             <h1>Movies</h1>
             <table className="table table-striped">
                 <thead>

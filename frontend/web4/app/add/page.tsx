@@ -1,5 +1,7 @@
+'use client';
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Header from '../../Components/Header';
 
 interface Movie {
     _movieid: number;
@@ -36,6 +38,7 @@ export default function AddMoviePage() {
 
     return (
         <div className="container">
+            <Header />
             <h1>Add Movie</h1>
             <form onSubmit={handleSubmit}>
                 <div className="mb-3">

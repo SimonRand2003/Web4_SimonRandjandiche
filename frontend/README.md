@@ -28,7 +28,7 @@ Start the development server by opening a terminal in the `frontend` folder and 
 
 Open [http://localhost:8000](http://localhost:8000) with your browser to see the result.
 
-You can start by modifying `pages/index.tsx` and develop React components. The page auto-updates as you edit the file.
+You can start by modifying `pages/page.tsx` and develop React components. The page auto-updates as you edit the file.
 
 ## Learn More
 

@@ -9,12 +9,12 @@ CREATE TABLE "Genre" (
 
 -- CreateTable
 CREATE TABLE "Movie" (
-    "movieid" SERIAL NOT NULL,
-    "name" TEXT NOT NULL,
-    "year" INTEGER NOT NULL,
-    "duration" INTEGER NOT NULL,
+                         "movieid" SERIAL NOT NULL,
+                         "title" TEXT NOT NULL,
+                         "releaseDate" INTEGER NOT NULL,
+                         "duration" INTEGER NOT NULL,
 
-    CONSTRAINT "Movie_pkey" PRIMARY KEY ("movieid")
+                         CONSTRAINT "Movie_pkey" PRIMARY KEY ("movieid")
 );
 
 -- CreateTable
