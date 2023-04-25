@@ -28,7 +28,7 @@ import {UserRepository} from "../domain/data-access/user.db";
  *              description: The password of the user.
  */
 
-export class UserController {
+export class UserRoutes {
 
     private userService: UserService;
 
@@ -217,7 +217,7 @@ export class UserController {
 
 const userRepository = new UserRepository();
 const userService = new UserService(userRepository);
-const userController = new UserController(userService);
+const userController = new UserRoutes(userService);
 const userRouter = express.Router();
 
 userRouter.get('/users', userController.getAllUsers.bind(userController));

@@ -1,5 +1,6 @@
 'use client';
 import React, { useEffect } from 'react';
+import Link from "next/link";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from '../../components/Header';
 
@@ -16,8 +17,12 @@ async function getMovies() {
     return data as Movie[];
 }
 
-function MovieComponent({ movie }: { movie: Movie }) {
+function MovieComponent({ movie, onAddToWatchlist }: { movie: Movie, onAddToWatchlist: (movie: Movie) => void }) {
     const { _movieid, _title, _releaseDate, _duration } = movie;
+
+    const handleAddToWatchlist = () => {
+        onAddToWatchlist(movie);
+    };
 
     return (
         <tr>
@@ -26,10 +31,12 @@ function MovieComponent({ movie }: { movie: Movie }) {
             <td>{_releaseDate}</td>
             <td>{_duration}</td>
             <td>
-                <button className="btn btn-primary">Add to list</button>
+                <button className="btn btn-primary" onClick={handleAddToWatchlist}>Add to list</button>
             </td>
-            <td>
-                <button className="btn btn-secondary">Rate</button>
+            <td className="btn btn-secondary">
+                <Link href={{ pathname: '../rate', query: { movieId: _movieid } }}>
+                    Rate
+                </Link>
             </td>
         </tr>
     );
@@ -37,6 +44,7 @@ function MovieComponent({ movie }: { movie: Movie }) {
 
 export default function MoviesPage() {
     const [movies, setMovies] = React.useState<Movie[]>([]);
+    const [watchlist, setWatchlist] = React.useState<Movie[]>([]);
 
     useEffect(() => {
         async function fetchData() {
@@ -46,6 +54,10 @@ export default function MoviesPage() {
 
         fetchData();
     }, []);
+
+    const handleAddToWatchlist = (movie: Movie) => {
+        setWatchlist(watchlist => [...watchlist, movie]);
+    };
 
     return (
         <div className="container">
@@ -64,10 +76,16 @@ export default function MoviesPage() {
                 </thead>
                 <tbody>
                 {movies.map((movie) => {
-                    return <MovieComponent key={movie._movieid} movie={movie} />;
+                    return <MovieComponent key={movie._movieid} movie={movie} onAddToWatchlist={handleAddToWatchlist} />;
                 })}
                 </tbody>
             </table>
+            <h2>Watchlist</h2>
+            <ul>
+                {watchlist.map((movie) => (
+                    <li key={movie._movieid}>{movie._title}</li>
+                ))}
+            </ul>
         </div>
     );
 }

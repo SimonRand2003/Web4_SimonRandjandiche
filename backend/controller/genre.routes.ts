@@ -31,7 +31,7 @@ import {GenreRepository} from "../domain/data-access/genre.db";
  */
 
 
-export class GenreController {
+export class GenreRoutes {
     private genreService: GenreService;
 
     constructor(genreService: GenreService) {
@@ -246,7 +246,7 @@ export class GenreController {
 // Example usage:
 const genreRepository = new GenreRepository();
 const genreService = new GenreService(genreRepository);
-const genreController = new GenreController(genreService);
+const genreController = new GenreRoutes(genreService);
 const genreRouter = express.Router();
 
 genreRouter.get('/genres', genreController.getAllGenres.bind(genreController));

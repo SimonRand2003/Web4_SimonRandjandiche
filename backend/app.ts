@@ -4,10 +4,10 @@ import cors from "cors";
 import * as bodyParser from "body-parser";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
-import { genreRouter } from "./controller/genre.controller";
-import { movieRouter } from "./controller/movie.controller";
-import { ratingRouter } from "./controller/rating.controller";
-import { userRouter } from "./controller/user.controller";
+import { genreRouter } from "./controller/genre.routes";
+import { movieRouter } from "./controller/movie.routes";
+import { ratingRouter } from "./controller/rating.routes";
+import { userRouter } from "./controller/user.routes";
 
 const app = express();
 dotenv.config();

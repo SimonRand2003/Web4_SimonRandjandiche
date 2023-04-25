@@ -29,7 +29,7 @@ import { RatingRepository } from '../domain/data-access/rating.db';
  */
 
 
-export class RatingController {
+export class RatingRoutes {
     private ratingService: RatingService;
     constructor(ratingService: RatingService) {
         this.ratingService = ratingService;
@@ -231,7 +231,7 @@ export class RatingController {
 
 const ratingRepository = new RatingRepository();
 const ratingService = new RatingService(ratingRepository);
-const ratingController = new RatingController(ratingService);
+const ratingController = new RatingRoutes(ratingService);
 const ratingRouter = express.Router();
 
 ratingRouter.get('/ratings', ratingController.getAllRatings.bind(ratingController));
