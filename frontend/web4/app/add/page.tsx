@@ -1,89 +1,69 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from '../../Components/Header';
 
-interface Movie {
-    _movieid: number;
-    _title: string;
-    _releaseDate: string;
-    _duration: number;
-}
+const AddMovie = () => {
+    const [title, setTitle] = useState('');
+    const [releaseDate, setReleaseDate] = useState('');
+    const [duration, setDuration] = useState('');
+    const [genreid, setGenreid] = useState('');
 
-export default function AddMoviePage() {
-    const [newMovie, setNewMovie] = React.useState<Movie>({
-        _movieid: 0,
-        _title: "",
-        _releaseDate: "",
-        _duration: 0,
-    });
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
 
-    function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
-        const { name, value } = event.target;
-        setNewMovie({ ...newMovie, [name]: value });
-    }
+        const movie = {
+            title,
+            releaseDate: parseInt(releaseDate),
+            duration: parseInt(duration),
+            genres: [{ genreid: parseInt(genreid) }],
+        };
 
-    async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-        event.preventDefault();
-        const response = await fetch("http://127.0.0.1:3000/movies", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(newMovie),
-        });
-        const data = await response.json();
-        setNewMovie({ _movieid: 0, _title: "", _releaseDate: "", _duration: 0 });
-    }
+        try {
+            const response = await fetch('http://localhost:3000/movies/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(movie)
+            });
+            if (response.ok) {
+                alert('Film toegevoegd');
+            } else {
+                console.error('Er is een fout opgetreden');
+            }
+        } catch (error) {
+            console.error('Er is een fout opgetreden', error);
+        }
+    };
 
     return (
         <div className="container">
             <Header />
-            <h1>Add Movie</h1>
-            <form onSubmit={handleSubmit}>
-                <div className="mb-3">
-                    <label htmlFor="_title" className="form-label">
-                        Title
-                    </label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        id="_title"
-                        name="_title"
-                        value={newMovie._title}
-                        onChange={handleInputChange}
-                    />
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="_releaseDate" className="form-label">
-                        Release Date
-                    </label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        id="_releaseDate"
-                        name="_releaseDate"
-                        value={newMovie._releaseDate}
-                        onChange={handleInputChange}
-                    />
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="_duration" className="form-label">
-                        Duration
-                    </label>
-                    <input
-                        type="number"
-                        className="form-control"
-                        id="_duration"
-                        name="_duration"
-                        value={newMovie._duration}
-                        onChange={handleInputChange}
-                    />
-                </div>
-                <button type="submit" className="btn btn-primary">
-                    Add Movie
-                </button>
-            </form>
+            <div className="container mt-5">
+                <h1>Voeg movie toe</h1>
+                <form onSubmit={handleSubmit}>
+                    <div className="form-group">
+                        <label htmlFor="title">Titel:</label>
+                        <input type="text" className="form-control" id="title" value={title} onChange={(e) => setTitle(e.target.value)} required />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="release-date">Release datum:</label>
+                        <input type="number" className="form-control" id="release-date" value={releaseDate} onChange={(e) => setReleaseDate(e.target.value)} required />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="duration">Duur (minuten):</label>
+                        <input type="number" className="form-control" id="duration" value={duration} onChange={(e) => setDuration(e.target.value)} required />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="genre-id">Genre ID:</label>
+                        <input type="number" className="form-control" id="genre-id" value={genreid} onChange={(e) => setGenreid(e.target.value)} required />
+                    </div>
+                    <button type="submit" className="btn btn-primary">Film toevoegen</button>
+                </form>
+            </div>
         </div>
     );
-}
+};
+
+export default AddMovie;
