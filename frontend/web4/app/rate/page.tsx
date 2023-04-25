@@ -2,13 +2,14 @@
 import { useEffect, useState } from 'react';
 
 interface Movie {
-    id: string;
+    _id: string;
     _title: string;
 }
 
 const RatingPage = () => {
     const [movie, setMovie] = useState<Movie | null>(null);
     const [rating, setRating] = useState<number | null>(null);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const pathNameArr = window.location.href.split('=');
@@ -19,21 +20,35 @@ const RatingPage = () => {
             .then(data => {
                 setMovie(data);
             })
-
             .catch(err => {
                 console.error(err);
             });
     }, []);
 
-
     const handleRatingChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setRating(Number(e.target.value));
     };
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(`Rating ${rating} for movie ${movie?.title}`);
-        // TODO: Send the rating to the server
+        try {
+            const response = await fetch('http://localhost:3000/ratings/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    rating,
+                    movie_id: movie?._id,
+                    user_id: localStorage.user.toString().split(",")[1].split(":")[1],
+                }),
+            });
+            if (!response.ok) {
+                throw new Error('Something went wrong');
+            }
+        } catch (err) {
+            setError(err.message);
+        }
     };
 
     if (!movie) {
@@ -43,6 +58,7 @@ const RatingPage = () => {
     return (
         <div>
             <h2>Rate movie {movie._title}</h2>
+            {error && <p>{error}</p>}
             <form onSubmit={handleSubmit}>
                 <label>
                     Rating:

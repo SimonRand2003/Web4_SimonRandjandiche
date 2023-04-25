@@ -5,11 +5,7 @@ import {UserRepository} from "../domain/data-access/user.db";
 import session, { Session } from 'express-session';
 
 
-declare module 'express-session' {
-    export interface SessionData {
-        user: { [key: string]: any };
-    }
-}
+
 /**
  * @swagger
  *   components:
@@ -124,8 +120,6 @@ export class UserRoutes {
             const email = req.body.email;
             const user = await this.userService.getUserByName(email);
             if (req.body.password === user.password) {
-                // Set the user in the session
-                req.session.user = user;
                 res.json(user);
             } else {
                 res.status(404).send("Email or Password are incorrect");
@@ -268,13 +262,7 @@ const userService = new UserService(userRepository);
 const userController = new UserRoutes(userService);
 const userRouter = express.Router();
 
-userRouter.use(
-    session({
-        secret: 'my-secret',
-        resave: false,
-        saveUninitialized: true,
-    })
-);
+
 
 
 userRouter.get('/users', userController.getAllUsers.bind(userController));

@@ -25,7 +25,6 @@ const SignIn = () => {
         if (response.ok) {
             // Authentication succeeded, get the user data and store it in local storage
             const user = await response.json();
-            console.log(user)
             localStorage.setItem('user', JSON.stringify(user));
             // Redirect user to dashboard
             window.location.href = '/movie';

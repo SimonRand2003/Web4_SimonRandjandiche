@@ -43,7 +43,7 @@ const Header = () => {
                     )}
                     {localStorage.user && (
                         <li>
-                            
+
                             Signed in as {localStorage.user.toString().split(",")[1].split(":")[1]}
 
 
