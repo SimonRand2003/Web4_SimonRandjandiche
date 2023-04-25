@@ -158,7 +158,7 @@ export class UserRoutes {
      *       - Users
      */
     public async addUser(req: Request, res: Response): Promise<void> {
-<<<<<<< HEAD
+
         try {
             const user = new User(
                 req.body.id,
@@ -166,24 +166,14 @@ export class UserRoutes {
                 req.body.email,
                 new Date(req.body.birthdate),
                 req.body.password
+                ,[],[]
             );
             await this.userService.addUser(user);
             res.sendStatus(201);
         } catch (Error) {
             res.status(500).send(Error.toString());
         }
-=======
-        const user = new User(
-            req.body.id,
-            req.body.username,
-            req.body.email,
-            new Date(req.body.birthdate),
-            req.body.password
-            ,[],[]
-        );
-        await this.userService.addUser(user);
-        res.sendStatus(201);
->>>>>>> 2bef33e6b0dd6598853f399c0ecdfe919fcd3c77
+
     }
 
     /**
