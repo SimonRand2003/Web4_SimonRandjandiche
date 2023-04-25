@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import Link from "next/link";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Header from '../../components/Header';
+import Header from '../../Components/Header';
 
 interface Movie {
     _movieid: number;
