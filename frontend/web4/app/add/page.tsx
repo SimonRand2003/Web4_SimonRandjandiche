@@ -1,13 +1,32 @@
 'use client';
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from '../../Components/Header';
 
+interface Genre {
+    _id: number;
+    _name: string;
+}
+async function getGenres() {
+    const response = await fetch('http://127.0.0.1:3000/genres');
+    const data = await response.json();
+    return data as Genre[];
+}
 const AddMovie = () => {
     const [title, setTitle] = useState('');
     const [releaseDate, setReleaseDate] = useState('');
     const [duration, setDuration] = useState('');
     const [genreid, setGenreid] = useState('');
+    const [genres, setGenres] = useState<Genre[]>([]);
+
+    useEffect(() => {
+        async function fetchData() {
+            const genres = await getGenres();
+            setGenres(genres);
+        }
+        fetchData();
+
+    }, []);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -59,8 +78,15 @@ const AddMovie = () => {
                     </div>
                     <div className="form-group">
                         <label htmlFor="genre-id">Genre ID:</label>
-                        <input type="number" className="form-control" id="genre-id" value={genreid} onChange={(e) => setGenreid(e.target.value)} required />
+                        <select className="form-control" id="genre-id" value={genreid} onChange={(e) => setGenreid(e.target.value)} required>
+                            {genres.map((genre) => (
+                                <option key={genre._id} value={genre._id}>
+                                    {genre._name}
+                                </option>
+                            ))}
+                        </select>
                     </div>
+
                     <button type="submit" className="btn btn-primary">Film toevoegen</button>
                 </form>
             </div>

@@ -7,7 +7,8 @@ const mapToRating = (prismaRating: PrismaRating): Rating => {
     return new Rating(
         prismaRating.ratingid,
         prismaRating.rating,
-        prismaRating.comment);
+        prismaRating.comment
+    );
 }
 const mapToRatings = (prismaRatings: PrismaRating[]): Rating[] => {
     return prismaRatings.map((prismaRating) => mapToRating(prismaRating));

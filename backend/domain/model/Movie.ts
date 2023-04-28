@@ -9,27 +9,19 @@ class Movie {
     private _duration: number;
     private _genres: Genre[];
     private _ratings: Rating[];
-    private _users: User[];
 
 
 
-    constructor(Movie: {movieid: number, title: string, releaseDate: number, duration: number, genres: Genre[], ratings: Rating[], users: User[]}) {
+
+    constructor(Movie: {movieid: number, title: string, releaseDate: number, duration: number, genres: Genre[], ratings: Rating[]}) {
         this.movieid = Movie.movieid;
         this.title = Movie.title;
         this.releaseDate = Movie.releaseDate;
         this.duration = Movie.duration;
         this.genres = Movie.genres;
         this.ratings = Movie.ratings;
-        this.users = Movie.users;
 
-    }
 
-    get users(): User[] {
-        return this._users;
-    }
-
-    set users(value: User[]) {
-        this._users = value;
     }
 
     public get movieid(): number {

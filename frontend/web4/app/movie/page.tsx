@@ -82,8 +82,8 @@ export default function MoviesPage() {
                     <th>Title</th>
                     <th>Release Date</th>
                     <th>Duration</th>
-                    <th></th>
-                    <th></th>
+                    <th>Add to list</th>
+                    <th>Rate</th>
                 </tr>
                 </thead>
                 <tbody>
