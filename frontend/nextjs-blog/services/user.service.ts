@@ -10,9 +10,40 @@ async function getMovieList(): Promise<Movie[]> {
     const data = await response.json();
     return data as Movie[];
 }
+async function login(email:string, password:string): Promise<any> {
+    const response = await fetch('http://localhost:3000/users/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            email,
+            password,
+        }),
+    });
+    return response;
+}
 
-const movieListService = {
+async function register(username:string, email:string, birthdate:string, password:string): Promise<any> {
+    const res = await fetch('http://localhost:3000/users/add', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            username,
+            email,
+            birthdate,
+            password,
+        }),
+    });
+    return res;
+}
+
+const userService = {
     getMovieList,
+    login,
+    register
 };
 
-export default movieListService;
+export default userService;

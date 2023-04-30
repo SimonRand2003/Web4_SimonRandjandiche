@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from '../../components/Header';
 import { Movie } from '../../types/interfaces';
-import movieService from '../../services/user.service';
+import userService from '../../services/user.service';
 import MovieList from '../../components/user/movieList';
 
 
@@ -16,7 +16,7 @@ const Movies: React.FC = () => {
 
     useEffect(() => {
         const fetchMovies = async () => {
-            const movies = await movieService.getMovieList();
+            const movies = await userService.getMovieList();
             setMovies(movies);
         };
         fetchMovies();
