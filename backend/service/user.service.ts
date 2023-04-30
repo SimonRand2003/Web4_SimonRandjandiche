@@ -29,4 +29,8 @@ export class UserService {
     public async deleteUser(id: number): Promise<void> {
         await this.userRepository.deleteById(id);
     }
+
+    public async getUserMoviesById(id: number): Promise<Movie[] | undefined> {
+        return this.userRepository.getUserMoviesById(id);
+    }
 }

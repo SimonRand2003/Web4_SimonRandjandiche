@@ -18,8 +18,8 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "target": "es5",
-    "jsx": "react",
-    "sourceMap": true,
+    "jsx": "preserve",
+    "sourceMap": true
   },
   "include": [
     "next-env.d.ts",

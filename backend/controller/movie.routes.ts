@@ -221,6 +221,28 @@ export class MovieController {
             res.status(404).send(error.message);
         }
     }
+
+    async addUserToMovie(req: Request, res: Response) {
+        try {
+            const id = parseInt(req.params.id);
+            const userId = parseInt(req.params.userId);
+            const movie = await this.movieService.addUserToMovie(id, userId);
+            res.json(movie);
+        } catch (error) {
+            res.status(400).send(error.message);
+        }
+    }
+
+    async removeUserFromMovie(req: Request, res: Response) {
+        try {
+            const id = parseInt(req.params.id);
+            const userId = parseInt(req.params.userId);
+            const movie = await this.movieService.removeUserFromMovie(id, userId);
+            res.json(movie);
+        } catch (error) {
+            res.status(400).send(error.message);
+        }
+    }
 }
 
 // Example usage:
@@ -233,6 +255,9 @@ movieRouter.get('/movies', movieController.getAll.bind(movieController));
 movieRouter.get('/movies/:id', movieController.getById.bind(movieController));
 movieRouter.post('/movies/add', movieController.create.bind(movieController));
 movieRouter.put('/movies/update/:id', movieController.updateById.bind(movieController));
+movieRouter.put('/movies/addUser/:id/:userId', movieController.addUserToMovie.bind(movieController));
+movieRouter.put('/movies/removeUser/:id/:userId', movieController.removeUserFromMovie.bind(movieController));
 movieRouter.delete('/movies/delete/:id', movieController.deleteById.bind(movieController));
+
 
 export { movieRouter };

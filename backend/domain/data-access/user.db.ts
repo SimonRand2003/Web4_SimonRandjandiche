@@ -1,7 +1,8 @@
 import { PrismaClient } from '@prisma/client';
 import { User } from '../model/User';
-import {mapToUser, mapToUsers} from './user.mapper';
+import {mapToUser,mapToUsers} from './user.mapper';
 import {Movie} from "../model/Movie";
+import {mapToMovies} from "./movie.mapper";
 
 class UserRepository {
     private prisma: PrismaClient;
@@ -22,11 +23,31 @@ class UserRepository {
 
     }
 
+    async getUserMoviesById(id: number): Promise<Movie[] | undefined> {
+        const movies = await this.prisma.user.findUnique({
+            where: {
+                userid: id,
+            },
+            select: {
+                movies: {
+                    include: {
+                        genres: true,
+                        ratings: true,
+                    },
+                },
+            },
+        });
+        return movies ? mapToMovies(movies.movies) : undefined;
+    }
+
     async getUserById(id: number): Promise<User | undefined> {
         const user = await this.prisma.user.findUnique({
             where: {
                 userid: id,
-            },
+            },include: {
+                movies: true,
+                ratings: true,
+            }
         });
         return user ? mapToUser(user) : undefined;
     }

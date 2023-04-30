@@ -2,18 +2,19 @@
 import React, { useEffect, useState } from 'react';
 import Header from "../../components/Header";
 import { Movie , Rating} from '../../types/interfaces';
+import {router} from "next/client";
 
 
 
 
 const RatingPage = () => {
     const [movie, setMovie] = useState<Movie | null>(null);
-    const [rating, setRating] = useState<Rating>({ rating: 0, comment: '', movieId: '', userId: '' });
+    const [rating, setRating] = useState<Rating>({ ratingid: 0, rating: 0, comment: '', movieId: '', userId: '' });
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        const pathNameArr = window.location.href.split('=');
-        const id = pathNameArr[1];
+
+        const id = router.query.movieId;
 
         fetch(`http://127.0.0.1:3000/movies/${id}`)
             .then(res => res.json())
@@ -36,7 +37,7 @@ const RatingPage = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            const movieId = movie?.id;
+            const movieId = movie?.movieid;
             const userId = parseInt(localStorage.user.toString().split(",")[0].split(":")[1])
 
             const response = await fetch('http://localhost:3000/ratings/add', {
@@ -51,7 +52,7 @@ const RatingPage = () => {
                     userId: userId,
                 }),
             });
-            window.location.href = '/movie';
+            router.push('/movie');
         } catch (err: any) {
             setError(err.message);
         }
@@ -86,7 +87,7 @@ const RatingPage = () => {
                                 <label htmlFor="commentTextarea">Comment:</label>
                                 <textarea className="form-control" id="commentTextarea" value={rating.comment} onChange={handleCommentChange} />
                             </div>
-                            <input type="hidden" name="movieId" value={movie?.id} />
+                            <input type="hidden" name="movieId" value={movie?.movieid} />
                             <input type="hidden" name="userId" value={localStorage.user.toString().split(",")[0].split(":")[1]} />
                             <button className="btn btn-primary" type="submit">Submit</button>
                         </form>

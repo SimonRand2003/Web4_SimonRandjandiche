@@ -29,6 +29,36 @@ class MovieRepository {
         });
     }
 
+    async addUserToMovie(movieId: number, userId: number) {
+        await this.prisma.movie.update({
+            where: {
+                movieid: movieId,
+            },
+            data: {
+                users: {
+                    connect: {
+                        userid: userId,
+                    },
+                },
+            },
+        });
+    }
+    async removeUserFromMovie(movieId: number, userId: number) {
+        console.log(movieId, userId);
+        await this.prisma.movie.update({
+            where: {
+                movieid: movieId,
+            },
+            data: {
+                users: {
+                    disconnect: {
+                        userid: userId,
+                    },
+                },
+            },
+        });
+    }
+
 
 
 

@@ -3,22 +3,34 @@ import { mapToRatings } from "./rating.mapper";
 import { User } from '../model/User';
 import { Movie } from '../model/Movie';
 import { Rating } from '../model/Rating';
+import {mapToJustMovies} from "./movie.mapper";
 
-const mapToUser = (prismaUser: PrismaUser): User => {
-
-
+export const mapToUser = ({
+                              userid,
+                              username,
+                              email,
+                              birthdate,
+                              password,
+                              movies,
+                              ratings,
+                          }: PrismaUser & { movies?: PrismaMovie[], ratings?: PrismaRating[] }): User => {
     return new User(
-        prismaUser.userid,
-        prismaUser.username,
-        prismaUser.email,
-        prismaUser.birthdate,
-        prismaUser.password,
-        null,null
+        userid,
+        username,
+        email,
+        birthdate,
+        password,
+        movies ? mapToJustMovies(movies) : [],
+        ratings ? mapToRatings(ratings) : [],
     );
 }
 
-const mapToUsers = (prismaUsers: PrismaUser[]): User[] => {
+export const mapToUsers = (prismaUsers: PrismaUser[]): User[] => {
     return prismaUsers.map((prismaUser) => mapToUser(prismaUser));
-};
+}
 
-export { mapToUser, mapToUsers };
+
+export default {
+    mapToUser,
+    mapToUsers
+};

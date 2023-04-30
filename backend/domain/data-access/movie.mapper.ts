@@ -24,18 +24,13 @@ export const mapToMovie = ({
 export const mapToMovies = (moviePrisma: (moviePrisma & { genres: genrePrisma[], ratings: ratingPrisma[] })[]): Movie[] => {
     return moviePrisma.map(mapToMovie);
 };
-
-export const mapFromMovie = ({ movieid, title, releaseDate, duration}: Movie): moviePrisma => {
-    return {
-        movieid,
-        title,
-        releaseDate,
-        duration,
-    };
+export const mapToJustMovies = (moviePrisma: (moviePrisma)[]): Movie[] => {
+    return moviePrisma.map(mapToMovie);
 };
 
+
 export default {
+    mapToJustMovies,
     mapToMovie,
     mapToMovies,
-    mapFromMovie,
 };

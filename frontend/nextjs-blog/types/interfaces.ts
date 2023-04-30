@@ -4,7 +4,7 @@ export interface Genre {
 }
 
 export interface Movie {
-    movieid: string;
+    movieid: number;
     title: string;
     releaseDate: string;
     duration: number;
@@ -13,7 +13,7 @@ export interface Movie {
 
 
 export interface Rating {
-    id: string;
+    ratingid: number;
     rating: number;
     comment: string;
     movieId: string;

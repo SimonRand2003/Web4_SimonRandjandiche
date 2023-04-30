@@ -58,6 +58,11 @@ const Header : React.FC = () => {
                                     <p className="nav-link">Add Movie</p>
                                 </Link>
                             </li>
+                            <li className="nav-item">
+                                <Link href="/movielist/">
+                                    <p className="nav-link">My Movie List</p>
+                                </Link>
+                            </li>
                             {!user && (
                                 <>
                                     <li className="nav-item">

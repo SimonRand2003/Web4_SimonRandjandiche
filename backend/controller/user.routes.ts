@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import { UserService } from '../service/user.service';
-import { User } from '../domain/model/user';
 import {UserRepository} from "../domain/data-access/user.db";
+import {User} from "../domain/model/User";
 
 
 
@@ -287,6 +287,12 @@ export class UserRoutes {
         await this.userService.deleteUser(userId);
         res.sendStatus(204);
     }
+
+    public async getUserMoviesById(req: Request, res: Response): Promise<void> {
+        const userId = parseInt(req.params.id, 10);
+        const user = await this.userService.getUserMoviesById(userId);
+        res.status(200).json(user);
+    }
 }
 
 const userRepository = new UserRepository();
@@ -299,6 +305,7 @@ const userRouter = express.Router();
 
 userRouter.get('/users', userController.getAllUsers.bind(userController));
 userRouter.get('/users/:id', userController.getUserById.bind(userController));
+userRouter.get('/users/getUserMoviesById/:id', userController.getUserMoviesById.bind(userController));
 userRouter.post('/users/login', userController.login.bind(userController))
 userRouter.post('/users/add', userController.addUser.bind(userController));
 userRouter.put('/users/update/:id', userController.updateUser.bind(userController));

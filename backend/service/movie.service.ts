@@ -23,4 +23,11 @@ export class MovieService {
     public async deleteMovie(movie: number): Promise<void> {
         await this.movieRepository.deleteMovie(movie);
     }
+    public async addUserToMovie(movieid: number, userid: number): Promise<void> {
+        await this.movieRepository.addUserToMovie(movieid, userid);
+    }
+    public async removeUserFromMovie(movieid: number, userid: number): Promise<void> {
+        await this.movieRepository.removeUserFromMovie(movieid, userid);
+    }
+
 }

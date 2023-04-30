@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import Header from '../../components/Header';
+import {router} from "next/client";
 
 const SignIn = () => {
     const [email, setEmail] = useState('');
@@ -27,7 +28,7 @@ const SignIn = () => {
             const user = await response.json();
             localStorage.setItem('user', JSON.stringify(user))
             // Redirect user to dashboard
-            window.location.href = '/movie';
+            router.push('/movie');
         } else {
             // Authentication failed, set error message
             const errorMessage = await response.text();
