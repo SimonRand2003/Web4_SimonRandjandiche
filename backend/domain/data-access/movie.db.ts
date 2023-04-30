@@ -11,15 +11,17 @@ class MovieRepository {
     }
 
     async addMovieWithGenre(movie: Movie) {
+        console.log(movie);
+        const genreIds = movie.genres.map((genre) => ({ genreid: genre.genreid }));
+        const releaseDate = new Date(movie.releaseDate).toISOString();
         await this.prisma.movie.create({
             data: {
                 title: movie.title,
-                releaseDate: movie.releaseDate,
+                releaseDate: releaseDate,
                 duration: movie.duration,
                 genres: {
-                    connect: {
-                        genreid: movie.genres[0].genreid,
-                    }
+                    connect: genreIds
+
                 },
                 users: {},
                 ratings: {},

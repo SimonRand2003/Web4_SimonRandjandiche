@@ -2,7 +2,6 @@ import express, { Request, Response } from 'express';
 import { UserService } from '../service/user.service';
 import { User } from '../domain/model/user';
 import {UserRepository} from "../domain/data-access/user.db";
-import session, { Session } from 'express-session';
 
 
 
@@ -104,15 +103,52 @@ export class UserRoutes {
         }
     }
 
-    public async getUserByName(req: Request, res: Response): Promise<void> {
-        try{
-        const email = req.body.email;
-        const user = await this.userService.getUserByName(email);
-        res.json(user);
-        } catch (Error) {
-            res.sendStatus(404).send(Error.toString());
-        }
-    }
+    /**
+     * @swagger
+     * /users/login:
+     *   post:
+     *     summary: Login a user
+     *     tags:
+     *       - Users
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               email:
+     *                 type: string
+     *               password:
+     *                 type: string
+     *     responses:
+     *       200:
+     *         description: Login successful
+     *         content:
+     *           application/json:
+     *             schema:
+     *               $ref: '#/components/schemas/User'
+     *       404:
+     *         description: Email or Password are incorrect
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 message:
+     *                   type: string
+     *                   example: Email or Password are incorrect
+     *       500:
+     *         description: Internal Server Error
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 message:
+     *                   type: string
+     *                   example: An error occurred while logging in.
+     */
 
 
     public async login(req: Request, res: Response): Promise<void> {
@@ -120,7 +156,7 @@ export class UserRoutes {
             const email = req.body.email;
             const user = await this.userService.getUserByName(email);
             if (req.body.password === user.password) {
-                res.json(user);
+                res.status(200).json(user);
             } else {
                 res.status(404).send("Email or Password are incorrect");
             }
@@ -215,10 +251,6 @@ export class UserRoutes {
         const user = await this.userService.getUserById(userId);
         const id: number = parseInt(req.params.id);
         if (user) {
-            user.username = req.body.username || user.username;
-            user.email = req.body.email || user.email;
-            user.birthdate = req.body.birthdate ? new Date(req.body.birthdate) : user.birthdate;
-            user.password = req.body.password || user.password;
             await this.userService.updateUser(id,user);
             res.sendStatus(204);
         } else {

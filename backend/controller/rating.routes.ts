@@ -182,9 +182,8 @@ export class RatingRoutes {
     public async updateRating(req: Request, res: Response): Promise<void> {
         const id: number = parseInt(req.params.id, 10);
         const rating: Rating = req.body;
-        rating.id = id;
         try {
-            await this.ratingService.updateRating(rating);
+            await this.ratingService.updateRating(id, rating);
             res.sendStatus(204);
         } catch (error) {
             res.status(500).json({ error: error.message });

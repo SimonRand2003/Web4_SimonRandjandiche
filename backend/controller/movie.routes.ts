@@ -14,7 +14,8 @@ import {MovieRepository} from "../domain/data-access/movie.db";
  *           type: string
  *           description: The title of the movie.
  *         releaseDate:
- *           type: number
+ *           type: string
+ *           format: date
  *           description: The year the movie was released.
  *         duration:
  *           type: number

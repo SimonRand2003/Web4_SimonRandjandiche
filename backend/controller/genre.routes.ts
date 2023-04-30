@@ -11,21 +11,21 @@ import {GenreRepository} from "../domain/data-access/genre.db";
  *     Genre:
  *       type: object
  *       properties:
- *         name:
+ *         _name:
  *           type: string
  *           description: The name of the genre
- *         description:
+ *         _description:
  *           type: string
  *           description: A description of the genre
  *     Genrewithid:
  *       type: object
  *       properties:
- *         genreid:
+ *         _genreid:
  *           type: number
- *         name:
+ *         _name:
  *           type: string
  *           description: The name of the genre
- *         description:
+ *         _description:
  *           type: string
  *           description: A description of the genre
  */
@@ -53,16 +53,31 @@ export class GenreRoutes {
      *               type: array
      *               items:
      *                 $ref: '#/components/schemas/Genrewithid'
+     *       204:
+     *         description: No content
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 message:
+     *                   type: string
+     *                   example: No genres found
      */
 
     public async getAllGenres(req: Request, res: Response): Promise<void> {
         try {
             const genres: Genre[] = await this.genreService.getAllGenres();
-            res.status(200).json(genres);
+            if (genres.length > 0) {
+                res.status(200).json(genres);
+            } else {
+                res.status(204).json({ message: "No genres found" });
+            }
         } catch (error) {
             res.status(500).json({ error: error.message });
         }
     }
+
 
 
     /**
@@ -79,7 +94,7 @@ export class GenreRoutes {
      *              application/json:
      *                  schema:
      *                      $ref: '#/components/schemas/Genrewithid'
-     *         404:
+     *         204:
      *           description: Genre not found
      *           content:
      *              application/json:
@@ -105,7 +120,7 @@ export class GenreRoutes {
             if (genre) {
                 res.status(200).json(genre);
             } else {
-                res.status(404).json({ message: `Genre with id ${id} not found.` });
+                res.status(204).json({ message: `Genre with id ${id} not found.` });
             }
         } catch (error) {
             res.status(500).json({ error: error.message });
@@ -219,7 +234,7 @@ export class GenreRoutes {
      *      responses:
      *         204:
      *           description: Genre successfully deleted
-     *         404:
+     *         400:
      *           description: Error deleting genre
      *           content:
      *              application/json:
@@ -237,7 +252,7 @@ export class GenreRoutes {
             await this.genreService.deleteGenre(id);
             res.status(204).send();
         } catch (error) {
-            res.status(500).json({ error: error.message });
+            res.status(400).json({ error: error.message });
         }
     }
 

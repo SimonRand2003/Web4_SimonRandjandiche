@@ -16,8 +16,8 @@ export class RatingService {
         await this.ratingRepository.add(rating);
     }
 
-    public async updateRating(rating: Rating): Promise<void> {
-        await this.ratingRepository.update(rating);
+    public async updateRating(id: number, rating: Rating): Promise<void> {
+        await this.ratingRepository.update(id, rating);
     }
 
     public async deleteRating(rating: Rating): Promise<void> {

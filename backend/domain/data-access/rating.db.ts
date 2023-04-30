@@ -31,21 +31,21 @@ class RatingRepository {
             data: {
                 rating: rating.rating,
                 comment: rating.comment,
-                movieId: rating.movieId,
-                userId: rating.userId,
+                movieid: rating.movieid,
+                userid: rating.userid,
             },
         });
     }
 
-    async update(rating: Rating): Promise<void> {
+    async update(id: number, rating: Rating): Promise<void> {
         await this.prisma.rating.update({
             where: {
-                ratingid: rating.id,
+                ratingid: id,
             },
             data: {
                 rating: rating.rating,
-                userId: rating.userId,
-                movieId: rating.movieId,
+                userid: rating.userid,
+                movieid: rating.movieid,
             },
         });
     }
@@ -53,7 +53,7 @@ class RatingRepository {
     async remove(rating: Rating): Promise<void> {
         await this.prisma.rating.delete({
             where: {
-                ratingid: rating.id,
+                ratingid: rating.ratingid,
             },
         });
     }

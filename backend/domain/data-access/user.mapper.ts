@@ -1,19 +1,19 @@
-import { User as PrismaUser } from "@prisma/client";
-import { Movie as PrismaMovie } from "@prisma/client";
-import { Rating as PrismaRating } from "@prisma/client";
-import {mapToMovies} from "./movie.mapper";
-import {mapToRatings} from "./rating.mapper";
+import { User as PrismaUser, Movie as PrismaMovie, Rating as PrismaRating } from "@prisma/client";
+import { mapToRatings } from "./rating.mapper";
 import { User } from '../model/User';
+import { Movie } from '../model/Movie';
+import { Rating } from '../model/Rating';
+
 const mapToUser = (prismaUser: PrismaUser): User => {
-    console.log(prismaUser[0]);
 
 
-    return new User(prismaUser.userid,
+    return new User(
+        prismaUser.userid,
         prismaUser.username,
         prismaUser.email,
         prismaUser.birthdate,
         prismaUser.password,
-        [],[]
+        null,null
     );
 }
 

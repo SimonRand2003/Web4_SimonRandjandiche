@@ -22,7 +22,7 @@ model Genre {
 model Movie {
   movieid     Int      @id @default(autoincrement())
   title       String
-  releaseDate Int
+  releaseDate DateTime
   duration    Int
   genres      Genre[]  @relation("GenreMovies")
   ratings     Rating[] @relation("MovieRatings")
@@ -34,10 +34,10 @@ model Rating {
   ratingid Int    @id @default(autoincrement())
   rating   Int
   comment  String
-  movieId  Int
-  userId   Int
-  movie    Movie  @relation("MovieRatings", fields: [movieId], references: [movieid])
-  user     User   @relation("UserRatings", fields: [userId], references: [userid])
+  movieid  Int
+  userid   Int
+  movie    Movie  @relation("MovieRatings", fields: [movieid], references: [movieid])
+  user     User   @relation("UserRatings", fields: [userid], references: [userid])
 }
 
 // Definitie van de User tabel

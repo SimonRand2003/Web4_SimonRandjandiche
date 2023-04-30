@@ -1,11 +1,17 @@
 import { Genre as PrismaGenre } from "@prisma/client";
 import { Genre } from '../model/Genre';
-const mapToGenre = (prismaGenre: PrismaGenre): Genre => {
-    return new Genre(prismaGenre.genreid, prismaGenre.name, prismaGenre.description);
-}
+export const mapToGenre = ({
+                               genreid,
+                               name,
+                               description,
+}: PrismaGenre): Genre => {
+    return new Genre(
+        genreid,
+        name,
+        description);};
 
-const mapToGenres = (prismaGenres: PrismaGenre[]): Genre[] => {
+export const mapToGenres = (prismaGenres: PrismaGenre[]): Genre[] => {
     return prismaGenres.map((prismaGenre) => mapToGenre(prismaGenre));
 };
 
-export { mapToGenre, mapToGenres };
+export default { mapToGenre, mapToGenres };

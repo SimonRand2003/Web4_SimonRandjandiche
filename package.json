@@ -1,9 +1,0 @@
-{
-  "devDependencies": {
-    "@types/next-auth": "^3.15.0",
-    "@types/react": "^18.0.38"
-  },
-  "dependencies": {
-    "express-session": "^1.17.3"
-  }
-}

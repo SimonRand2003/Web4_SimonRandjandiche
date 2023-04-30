@@ -10,14 +10,19 @@ class GenreRepository {
     }
 
     async addGenre(genre: Genre){
-        mapToGenre(genre);
-         await this.prisma.genre.create({
-            data: {
-                name: genre.name,
-                description: genre.description,
-                genreid: genre.genreid,
-            },
-        });
+        try {
+            mapToGenre(genre)
+            await this.prisma.genre.create({
+                data: {
+                    name: genre.name,
+                    description: genre.description,
+                },
+            });
+        } catch (error) {
+            console.log(error);
+            throw new Error(error.message);
+        }
+
     }
 
     async getGenreById(id: number): Promise<Genre> {
@@ -31,6 +36,7 @@ class GenreRepository {
 
     async getAllGenres(): Promise<Genre[]> {
         const genres = await this.prisma.genre.findMany();
+        let genresx = mapToGenres(genres);
         return mapToGenres(genres)
     }
 
@@ -39,6 +45,7 @@ class GenreRepository {
 
 
     async updateGenre(id: number,genre: Genre){
+        try {
         mapToGenre(genre);
         await this.prisma.genre.update({
             where: {
@@ -51,6 +58,10 @@ class GenreRepository {
 
             },
         });
+        } catch (error) {
+            console.log(error);
+            throw new Error(error.message);
+        }
     }
 
     async deleteGenre(id: number): Promise<void> {
