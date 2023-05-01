@@ -1,99 +1,58 @@
-'use client';
 import React, { useEffect, useState } from 'react';
+import { useRouter } from "next/router";
 import Header from "../../components/Header";
-import { Movie , Rating} from '../../types/interfaces';
-import {router} from "next/client";
-
-
-
+import { Movie, Rating } from '../../types/interfaces';
+import movieService from '../../services/movie.service';
+import RateMovieForm from '../../components/movie/rate';
 
 const RatingPage = () => {
     const [movie, setMovie] = useState<Movie | null>(null);
-    const [rating, setRating] = useState<Rating>({ ratingid: 0, rating: 0, comment: '', movieId: '', userId: '' });
+    const [rating, setRating] = useState<number>(0);
+    const [comment, setComment] = useState<string>("");
+    const [userid, setUserid] = useState<number>(0);
     const [error, setError] = useState<string | null>(null);
+    const router = useRouter();
 
+    const movieId = Array.isArray(router.query.movieId)
+        ? router.query.movieId[0]
+        : router.query.movieId;
+
+    const getMovie = async () => {
+        const movie = await movieService.getMovie(movieId);
+        console.log(movie);
+        setMovie(movie);
+    }
     useEffect(() => {
-
-        const id = router.query.movieId;
-
-        fetch(`http://127.0.0.1:3000/movies/${id}`)
-            .then(res => res.json())
-            .then(data => {
-                setMovie(data);
-            })
-            .catch(err => {
-                console.error(err);
-            });
-    }, []);
-
-    const handleRatingChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setRating(prevState => ({ ...prevState, rating: Number(e.target.value) }));
-    };
-
-    const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        setRating(prevState => ({ ...prevState, comment: e.target.value }));
-    };
+        if (movieId) {
+            getMovie();
+        }
+    }, [movieId]);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            const movieId = movie?.movieid;
-            const userId = parseInt(localStorage.user.toString().split(",")[0].split(":")[1])
-
-            const response = await fetch('http://localhost:3000/ratings/add', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    rating: rating.rating,
-                    comment: rating.comment,
-                    movieId: movieId,
-                    userId: userId,
-                }),
-            });
+            const movieid = movie.movieid;
+            const userid = parseInt(localStorage.user?.toString().split(",")[0].split(":")[1] ?? "");
+            setUserid(userid);
+            await movieService.rateMovie(rating, comment, movieid, userid);
             router.push('/movie');
         } catch (err: any) {
             setError(err.message);
         }
     };
 
-
-    if (!movie) {
-        return <div>Loading...</div>;
-    }
-
     return (
         <>
-        <Header />
-            <div className="container">
-                <div className="row">
-                    <div className="col-lg-6 offset-lg-3">
-                        <h2>Rate movie {movie.title}</h2>
-                        {error && <p>{error}</p>}
-                        <form onSubmit={handleSubmit}>
-                            <div className="form-group">
-                                <label htmlFor="ratingSelect">Rating:</label>
-                                <select className="form-control" id="ratingSelect" value={rating.rating} onChange={handleRatingChange}>
-                                    <option value="">Please select a rating</option>
-                                    {[...Array(10)].map((_, i) => (
-                                        <option key={i} value={i + 1}>
-                                            {i + 1}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="commentTextarea">Comment:</label>
-                                <textarea className="form-control" id="commentTextarea" value={rating.comment} onChange={handleCommentChange} />
-                            </div>
-                            <input type="hidden" name="movieId" value={movie?.movieid} />
-                            <input type="hidden" name="userId" value={localStorage.user.toString().split(",")[0].split(":")[1]} />
-                            <button className="btn btn-primary" type="submit">Submit</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
+            <Header />
+            <RateMovieForm
+                rating={rating}
+                comment={comment}
+                movie={movie}
+                setRating={setRating}
+                setComment={setComment}
+                handleSubmit={handleSubmit}
+                error={error}
+            />
         </>
     );
 };

@@ -12,16 +12,18 @@ const movies: React.FC = () => {
         const movies = await movieService.getMovies();
         setMovies(movies);
     };
-
     useEffect(() => {
         getMovies();
     }, []);
+    const handleMovieDeleted = () => {
+        getMovies();
+    };
 
     return (
         <>
             <Header></Header>
             <main>
-                <MovieOverview movies={movies}></MovieOverview>
+                <MovieOverview movies={movies} onMovieDeleted={handleMovieDeleted}></MovieOverview>
             </main>
         </>
     )

@@ -19,7 +19,6 @@ class GenreRepository {
                 },
             });
         } catch (error) {
-            console.log(error);
             throw new Error(error.message);
         }
 
@@ -59,7 +58,6 @@ class GenreRepository {
             },
         });
         } catch (error) {
-            console.log(error);
             throw new Error(error.message);
         }
     }

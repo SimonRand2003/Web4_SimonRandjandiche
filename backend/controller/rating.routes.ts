@@ -141,6 +141,7 @@ export class RatingRoutes {
 
     public async addRating(req: Request, res: Response): Promise<void> {
         const rating: Rating = req.body;
+        console.log(rating);
         try {
             await this.ratingService.addRating(rating);
             res.sendStatus(201);

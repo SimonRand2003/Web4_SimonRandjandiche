@@ -3,10 +3,8 @@ import {User} from "./User";
 
 class Rating{
     readonly ratingid: number;
-    readonly movie: Movie;
     readonly rating: number;
     readonly comment: string;
-    readonly user: User;
     readonly movieid: number;
     readonly userid: number;
 

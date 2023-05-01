@@ -1,11 +1,17 @@
-import {Movie} from "../types/interfaces";
+import {Movie, MovieNoRAting} from "../types/interfaces";
 
 async function getMovies() {
     const response = await fetch('http://127.0.0.1:3000/movies');
     const data = await response.json();
     return data as Movie[];
 }
-async function addMovie(movie: Movie){
+
+async function getMovie(id: string) {
+    const response = await fetch(`http://127.0.0.1:3000/movies/${id}`);
+    const data = await response.json();
+    return data as Movie;
+}
+async function addMovie(movie: MovieNoRAting){
     await fetch('http://localhost:3000/movies/add', {
     method: 'POST',
     headers: {
@@ -43,11 +49,40 @@ async function removeUserFromMovie(movieid: number) {
     });
 }
 
+async function deleteMovie(id: number) {
+    await fetch(`http://localhost:3000/movies/delete/${id}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+}
+
+async function rateMovie(rating: number, comment: string, movieid: number, userid: number) {
+    const response = await fetch('http://localhost:3000/ratings/add', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            rating: rating,
+            comment: comment,
+            movieid: movieid,
+            userid: userid,
+        }),
+    });
+}
+
+
+
 const movieService = {
     getMovies,
     addMovie,
     addUserToMovie,
-    removeUserFromMovie
+    removeUserFromMovie,
+    getMovie,
+    deleteMovie,
+    rateMovie,
 }
 
 export default movieService;

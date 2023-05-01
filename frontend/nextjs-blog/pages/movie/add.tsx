@@ -31,7 +31,8 @@ const AddMoviePage: React.FC = () => {
             releaseDate: releaseDate,
             duration: duration,
             genres: genreid.map((id) =>
-                ({ genreid: parseInt(id), name: '', description: '' })), // convert genre ids to genre objects
+                ({ genreid: parseInt(id), name: '', description: '' })),
+            retings: null// convert genre ids to genre objects
         };
         try {
             await movieService.addMovie(movie);

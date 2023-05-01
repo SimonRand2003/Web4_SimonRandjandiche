@@ -157,7 +157,6 @@ export class UserRoutes {
             const user = await this.userService.getUserByName(email);
             if (req.body.password === user.password) {
                 res.status(200).json(user);
-                console.log(user);
             } else {
                 res.status(404).send("Email or Password are incorrect");
             }
@@ -202,8 +201,6 @@ export class UserRoutes {
             await this.userService.addUser(user);
             const user2 = await this.userService.getUserByName(req.body.email);
             res.json(user2).status(201);
-            console.log(user2);
-
         } catch (Error) {
             res.status(500).send(Error.toString());
         }
