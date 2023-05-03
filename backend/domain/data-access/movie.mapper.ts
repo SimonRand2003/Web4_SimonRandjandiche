@@ -10,16 +10,17 @@ export const mapToMovie = ({
                                duration,
                                genres,
                                ratings,
-                           }: moviePrisma & { genres?: genrePrisma[], ratings?: ratingPrisma[] }): Movie => {
+                           }: moviePrisma & { genres?: genrePrisma[]; ratings?: ratingPrisma[] }): Movie => {
     return new Movie({
         movieid,
         title,
-        releaseDate,
+        releaseDate: releaseDate,
         duration,
         genres: genres ? mapToGenres(genres) : [],
         ratings: ratings ? mapToRatings(ratings) : [],
     });
 };
+
 
 export const mapToMovies = (moviePrisma: (moviePrisma & { genres: genrePrisma[], ratings: ratingPrisma[] })[]): Movie[] => {
     return moviePrisma.map(mapToMovie);

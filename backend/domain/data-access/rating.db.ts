@@ -31,8 +31,8 @@ class RatingRepository {
             data: {
                 rating: rating.rating,
                 comment: rating.comment,
-                movieid: rating.movieid,
-                userid: rating.userid,
+                movieId: rating.movieid,
+                userId: rating.userid,
             },
         });
     }
@@ -44,8 +44,8 @@ class RatingRepository {
             },
             data: {
                 rating: rating.rating,
-                userid: rating.userid,
-                movieid: rating.movieid,
+                userId: rating.userid,
+                movieId: rating.movieid,
             },
         });
     }

@@ -1,4 +1,6 @@
-import { Movie } from "../types/interfaces";
+import {Movie, User} from "../types/interfaces";
+import { Rating } from '../types/interfaces';
+
 
 async function getMovieList(): Promise<Movie[]> {
     const userData = localStorage.getItem('user');
@@ -10,6 +12,15 @@ async function getMovieList(): Promise<Movie[]> {
     const data = await response.json();
     return data as Movie[];
 }
+
+async function getUserinSession(): Promise<User> {
+    const userData = localStorage.getItem('user');
+    return userData as User;
+}
+
+
+
+
 async function login(email:string, password:string): Promise<any> {
     const response = await fetch('http://localhost:3000/users/login', {
         method: 'POST',
@@ -43,7 +54,8 @@ async function register(username:string, email:string, birthdate:string, passwor
 const userService = {
     getMovieList,
     login,
-    register
+    register,
+    getUserinSession,
 };
 
 export default userService;
