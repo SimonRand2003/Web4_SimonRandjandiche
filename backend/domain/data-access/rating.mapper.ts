@@ -8,8 +8,8 @@ const mapToRating = (prismaRating: PrismaRating): Rating => {
         prismaRating.ratingid,
         prismaRating.rating,
         prismaRating.comment,
-        prismaRating.movieId,
-        prismaRating.userId,
+        prismaRating.movieid,
+        prismaRating.userid,
     );
 }
 const mapToRatings = (prismaRatings: PrismaRating[]): Rating[] => {

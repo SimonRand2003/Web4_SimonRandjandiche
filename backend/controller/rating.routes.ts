@@ -226,6 +226,21 @@ export class RatingRoutes {
             res.status(500).json({ error: error.message });
         }
     }
+
+    public async getRatingByUserAndMovieId(req: Request, res: Response): Promise<void> {
+        const userId: number = parseInt(req.params.userid, 10);
+        const movieId: number = parseInt(req.params.movieid, 10);
+        try {
+            const rating: Rating | null = await this.ratingService.getRatingByUserAndMovieId(userId, movieId);
+            if (rating) {
+                res.status(200).json(rating);
+            } else {
+                res.status(404).json({ error: `Rating with user id ${userId}  and ${movieId} movieId not found` });
+            }
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
 }
 
 const ratingRepository = new RatingRepository();
@@ -235,6 +250,7 @@ const ratingRouter = express.Router();
 
 ratingRouter.get('/ratings', ratingController.getAllRatings.bind(ratingController));
 ratingRouter.get('/ratings/:id', ratingController.getRatingById.bind(ratingController));
+ratingRouter.get('/ratings/:userid/:movieid', ratingController.getRatingByUserAndMovieId.bind(ratingController));
 ratingRouter.post('/ratings/add', ratingController.addRating.bind(ratingController));
 ratingRouter.put('/ratings/update/:id', ratingController.updateRating.bind(ratingController));
 ratingRouter.delete('/ratings/delete/:id', ratingController.deleteRating.bind(ratingController));

@@ -38,6 +38,8 @@ model Rating {
   userid   Int
   movie    Movie  @relation("MovieRatings", fields: [movieid], references: [movieid])
   user     User   @relation("UserRatings", fields: [userid], references: [userid])
+
+  @@unique([userid, movieid])
 }
 
 // Definitie van de User tabel

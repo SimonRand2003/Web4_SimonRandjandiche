@@ -14,7 +14,7 @@ export const mapToMovie = ({
     return new Movie({
         movieid,
         title,
-        releaseDate: releaseDate,
+        releaseDate,
         duration,
         genres: genres ? mapToGenres(genres) : [],
         ratings: ratings ? mapToRatings(ratings) : [],

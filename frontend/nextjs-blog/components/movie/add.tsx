@@ -74,21 +74,26 @@ const AddMovieForm: React.FC<Props> = ({
             </div>
             <div className="form-group">
                 <label htmlFor="genre-id">Genres:</label>
-                {genres.map((genre) => (
-                    <div key={genre.genreid} className="form-check">
-                        <input
-                            type="checkbox"
-                            id={`genre-${genre.genreid}`}
-                            value={genre.genreid}
-                            onChange={handleGenreChange}
-                            className="form-check-input"
-                        />
-                        <label htmlFor={`genre-${genre.genreid}`} className="form-check-label">
-                            {genre.name}
-                        </label>
-                    </div>
-                ))}
+                {genres?.length > 0 ? (
+                    genres.map((genre) => (
+                        <div key={genre.genreid} className="form-check">
+                            <input
+                                type="checkbox"
+                                id={`genre-${genre.genreid}`}
+                                value={genre.genreid}
+                                onChange={handleGenreChange}
+                                className="form-check-input"
+                            />
+                            <label htmlFor={`genre-${genre.genreid}`} className="form-check-label">
+                                {genre.name}
+                            </label>
+                        </div>
+                    ))
+                ) : (
+                    <div>Er zijn geen genres om weer te geven.</div>
+                )}
             </div>
+
 
             <button type="submit" className="btn btn-primary">
                 Film toevoegen

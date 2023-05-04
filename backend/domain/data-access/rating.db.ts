@@ -31,8 +31,8 @@ class RatingRepository {
             data: {
                 rating: rating.rating,
                 comment: rating.comment,
-                movieId: rating.movieid,
-                userId: rating.userid,
+                movieid: rating.movieid,
+                userid: rating.userid,
             },
         });
     }
@@ -44,8 +44,8 @@ class RatingRepository {
             },
             data: {
                 rating: rating.rating,
-                userId: rating.userid,
-                movieId: rating.movieid,
+                userid: rating.userid,
+                movieid: rating.movieid,
             },
         });
     }
@@ -56,6 +56,20 @@ class RatingRepository {
                 ratingid: rating.ratingid,
             },
         });
+    }
+
+
+    async getRatingByUserAndMovieId(userId: number, movieId: number): Promise<Rating | null> {
+        const rating = await this.prisma.rating.findFirst({
+            where: {
+                userid: userId,
+                movieid: movieId,
+            },
+        });
+        if (!rating) {
+            return null;
+        }
+        return mapToRating(rating);
     }
 
     async close(): Promise<void> {

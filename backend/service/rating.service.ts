@@ -23,4 +23,8 @@ export class RatingService {
     public async deleteRating(rating: Rating): Promise<void> {
         await this.ratingRepository.remove(rating);
     }
+
+    public async getRatingByUserAndMovieId(userId: number, movieId: number): Promise<Rating | null> {
+        return this.ratingRepository.getRatingByUserAndMovieId(userId, movieId);
+    }
 }

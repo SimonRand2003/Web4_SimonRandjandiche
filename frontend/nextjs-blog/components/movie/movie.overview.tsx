@@ -11,24 +11,35 @@ type Props = {
     movie: Movie;
     onDelete: () => void;
     rating?: Rating;
-    onRatingAdded: () => void;
-    onRatingUpdated: () => void;
-    onRatingDeleted: () => void;
+    //onRatingAdded: () => void;
+    //onRatingUpdated: () => void;
+    //onRatingDeleted: () => void;
 };
 
 const MovieComponent: React.FC<Props> = ({
                                              movie,
                                              onDelete,
-                                             rating,
-                                             onRatingAdded,
-                                             onRatingUpdated,
-                                             onRatingDeleted,
                                          }) => {
     const router = useRouter();
     const { movieid, title, releaseDate, duration, genres } = movie;
     const genreNames = genres.map((genre) => genre.name);
     const genreString = genreNames.join(', ');
-    const formattedDate = releaseDate;
+    const formattedDate = releaseDate.split('T')[0];
+    const [rating, setRating] = useState<Rating>(undefined);
+    useEffect(() => {
+        console.log(localStorage.getItem('user'));
+        async function fetchRatings() {
+            const userData = localStorage.getItem('user');
+            const userId = JSON.parse(userData)?.userid;
+            if (!userId) {
+                return;
+            }
+            const rating = await ratingService.getRatingByUserAndMovieId(userId,movieid);
+            setRating(rating);
+        }
+        fetchRatings();
+    }, []);
+
 
     const handleAddToListClick = () => {
             movieService.addUserToMovie(movie.movieid);
@@ -38,7 +49,6 @@ const MovieComponent: React.FC<Props> = ({
     const handelDeleteClick = async () => {
         await movieService.deleteMovie(movie.movieid);
         onDelete();
-        router.push('/movie');
     };
     const handleRateClick = () => {
         router.push({ pathname: '../rate', query: { movieId: movieid } });
@@ -65,13 +75,13 @@ const MovieComponent: React.FC<Props> = ({
                 </button>
             </td>
             <td>
-                {rating ? (
-                    <button className='btn btn-secondary' onClick={handleEditRatingClick}>
+                {rating && rating.userid !== undefined ? (
+                    <button className='btn btn-secondary' style={{ width: "80px" }} onClick={handleEditRatingClick}>
                         {rating.rating}
                     </button>
                 ) : (
-                    <button className='btn btn-secondary' onClick={handleRateClick}>
-                        <a>Rate</a>
+                    <button className='btn btn-secondary' style={{ width: "80px" }} onClick={handleRateClick}>
+                        Rate
                     </button>
                 )}
             </td>
@@ -90,43 +100,6 @@ type MovieOverviewProps = {
 };
 
 const MovieOverview: React.FC<MovieOverviewProps> = ({ movies, onMovieDeleted }) => {
-    const [ratings, setRatings] = useState<Record<string, Rating>>({});
-
-    useEffect(() => {
-        console.log(localStorage.getItem('user'));
-
-
-
-        // Fetch all ratings for the current user
-        async function fetchRatings() {
-            const userData = localStorage.getItem('user');
-            const userId = JSON.parse(userData)?.userid;
-
-            if (!userId) {
-                return;
-            }
-
-            const ratings = await ratingService.getRatings();
-            console.log(ratings)
-            const ratingsById: Record<string, Rating> = {};
-            const movies = await movieService.getMovies();
-            movies.forEach((movie) => {
-                ratings.forEach((rating)=>{
-                    if (movie.movieid===rating.movieid){
-                        ratingsById[movie.movieid.toString()] = rating;
-                    }
-                })
-
-            });
-            console.log(ratingsById)
-
-            setRatings(ratingsById);
-        }
-
-        fetchRatings();
-    }, []);
-
-
 
     return (
         <div className="container">
@@ -149,7 +122,6 @@ const MovieOverview: React.FC<MovieOverviewProps> = ({ movies, onMovieDeleted })
                     <MovieComponent
                         key={movie.movieid}
                         movie={movie}
-                        rating={ratings[movie.movieid]}
                         onDelete={onMovieDeleted}
                     />
                 ))}

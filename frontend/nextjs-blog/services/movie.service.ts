@@ -7,9 +7,13 @@ async function getMovies() {
 }
 
 async function getMovie(id: string) {
-    const response = await fetch(`http://127.0.0.1:3000/movies/${id}`);
-    const data = await response.json();
-    return data as Movie;
+    try {
+        const response = await fetch(`http://127.0.0.1:3000/movies/${id}`);
+        const data = await response.json();
+        return data as Movie;
+    }catch (e) {
+        console.log(e);
+    }
 }
 async function addMovie(movie: MovieNoRAting){
     await fetch('http://localhost:3000/movies/add', {
