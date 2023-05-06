@@ -14,7 +14,6 @@ const MovieInfo: React.FC = () => {
 
     const getMovieInfo = async () => {
         const movie = await movieService.getMovie(movieId);
-        console.log(movie);
         setMovie(movie);
     }
 

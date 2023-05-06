@@ -34,8 +34,9 @@ class GenreRepository {
     }
 
     async getAllGenres(): Promise<Genre[]> {
-        const genres = await this.prisma.genre.findMany();
-        let genresx = mapToGenres(genres);
+        const genres = await this.prisma.genre.findMany({
+            orderBy: {genreid: 'asc'}
+        });
         return mapToGenres(genres)
     }
 

@@ -81,7 +81,9 @@ class MovieRepository {
                 genres: true,
                 ratings: true,
                 users: true,
-            },
+            },orderBy: {
+                movieid: 'asc',
+            }
         });
         return mapToMovies(movies);
 
@@ -89,14 +91,20 @@ class MovieRepository {
 
 
     async updateMovie(id: number, movie: Movie) {
+        const genreIds = movie.genres.map((genre) => ({ genreid: genre.genreid }));
+        const releaseDate = new Date(movie.releaseDate).toISOString();
         await this.prisma.movie.update({
             where: {
                 movieid: id,
             },
             data: {
                 title: movie.title,
-                releaseDate: movie.releaseDate,
+                releaseDate: releaseDate,
                 duration: movie.duration,
+                genres: {
+                    set: genreIds,
+                }
+
             },
         });
     }

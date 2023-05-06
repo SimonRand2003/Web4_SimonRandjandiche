@@ -77,6 +77,16 @@ async function rateMovie(rating: number, comment: string, movieid: number, useri
     });
 }
 
+async function editMovie(movie: MovieNoRAting) {
+    await fetch(`http://localhost:3000/movies/update/${movie.movieid}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(movie)
+    });
+}
+
 
 
 const movieService = {
@@ -87,6 +97,7 @@ const movieService = {
     getMovie,
     deleteMovie,
     rateMovie,
+    editMovie
 }
 
 export default movieService;

@@ -49,6 +49,16 @@ const Header : React.FC = () => {
                                 </Link>
                             </li>
                             <li className="nav-item">
+                                <Link href="/genre/">
+                                    <p className="nav-link">Genres Overview</p>
+                                </Link>
+                            </li>
+                            <li className="nav-item">
+                                <Link href="/genre/add">
+                                    <p className="nav-link">Add Genre</p>
+                                </Link>
+                            </li>
+                            <li className="nav-item">
                                 <Link href="/movie/">
                                     <p className="nav-link">Movies Overview</p>
                                 </Link>

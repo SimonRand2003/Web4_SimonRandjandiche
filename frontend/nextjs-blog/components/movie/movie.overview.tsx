@@ -57,6 +57,10 @@ const MovieComponent: React.FC<Props> = ({
         router.push({ pathname: '../rate/editRate', query: { movieId: movieid, ratingId: rating.userid } });
     };
 
+    const handelEditClick = () => {
+        router.push({ pathname: '../movie/editMovie', query: { movieId: movieid } });
+    }
+
     return (
         <tr>
             <td>{movieid}</td>
@@ -84,6 +88,11 @@ const MovieComponent: React.FC<Props> = ({
                         Rate
                     </button>
                 )}
+            </td>
+            <td>
+                <button className='btn btn-primary' onClick={handelEditClick}>
+                    <a>Edit</a>
+                </button>
             </td>
             <td>
                 <button className='btn btn-danger' onClick={handelDeleteClick}>
@@ -114,6 +123,7 @@ const MovieOverview: React.FC<MovieOverviewProps> = ({ movies, onMovieDeleted })
                     <th>Genres</th>
                     <th>Add to list</th>
                     <th>Rate</th>
+                    <th>Edit</th>
                     <th>Delete</th>
                 </tr>
                 </thead>

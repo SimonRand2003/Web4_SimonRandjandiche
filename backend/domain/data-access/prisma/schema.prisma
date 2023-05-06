@@ -19,6 +19,7 @@ model Genre {
 }
 
 // Definitie van de Movie tabel
+// Definitie van de Movie tabel
 model Movie {
   movieid     Int      @id @default(autoincrement())
   title       String
@@ -36,7 +37,7 @@ model Rating {
   comment  String
   movieid  Int
   userid   Int
-  movie    Movie  @relation("MovieRatings", fields: [movieid], references: [movieid])
+  movie    Movie  @relation("MovieRatings", fields: [movieid], references: [movieid], onDelete: Cascade)
   user     User   @relation("UserRatings", fields: [userid], references: [userid])
 
   @@unique([userid, movieid])

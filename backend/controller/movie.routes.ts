@@ -185,6 +185,7 @@ export class MovieController {
             const movie = await this.movieService.updateMovie(id,movieData);
             res.json(movie);
         } catch (error) {
+            console.log(error);
             res.status(400).send(error.message);
         }
     }

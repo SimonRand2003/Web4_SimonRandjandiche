@@ -12,6 +12,7 @@ interface Props {
     setDuration: (duration: number) => void;
     setGenreId: (genreid: string[]) => void;
     handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+    addEdit: string;
 }
 
 const AddMovieForm: React.FC<Props> = ({
@@ -25,6 +26,7 @@ const AddMovieForm: React.FC<Props> = ({
                                            setDuration,
                                            setGenreId,
                                            handleSubmit,
+                                           addEdit,
                                        }) => {
     const handleGenreChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const selectedGenreId = e.target.value;
@@ -40,7 +42,7 @@ const AddMovieForm: React.FC<Props> = ({
     return (
         <form onSubmit={handleSubmit}>
             <div className="form-group">
-                <label htmlFor="title">Titel:</label>
+                <label htmlFor="title">Title:</label>
                 <input
                     type="text"
                     className="form-control"
@@ -51,7 +53,7 @@ const AddMovieForm: React.FC<Props> = ({
                 />
             </div>
             <div className="form-group">
-                <label htmlFor="release-date">Release datum:</label>
+                <label htmlFor="release-date">Release date:</label>
                 <input
                     type="date"
                     className="form-control"
@@ -62,7 +64,7 @@ const AddMovieForm: React.FC<Props> = ({
                 />
             </div>
             <div className="form-group">
-                <label htmlFor="duration">Duur (minuten):</label>
+                <label htmlFor="duration">Duration (minutes):</label>
                 <input
                     type="number"
                     className="form-control"
@@ -82,6 +84,7 @@ const AddMovieForm: React.FC<Props> = ({
                                 id={`genre-${genre.genreid}`}
                                 value={genre.genreid}
                                 onChange={handleGenreChange}
+                                checked={genreid.includes(genre.genreid.toString())}
                                 className="form-check-input"
                             />
                             <label htmlFor={`genre-${genre.genreid}`} className="form-check-label">
@@ -90,13 +93,11 @@ const AddMovieForm: React.FC<Props> = ({
                         </div>
                     ))
                 ) : (
-                    <div>Er zijn geen genres om weer te geven.</div>
+                    <div>There are no genres to display..</div>
                 )}
             </div>
-
-
             <button type="submit" className="btn btn-primary">
-                Film toevoegen
+                {addEdit}
             </button>
         </form>
     );
