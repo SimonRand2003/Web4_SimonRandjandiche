@@ -6,6 +6,7 @@ import genreService from '../../services/genre.service';
 import movieService from '../../services/movie.service';
 import AddMovieForm from '../../components/movie/add';
 import { useRouter } from 'next/router';
+import userService from "../../services/user.service";
 
 const AddMoviePage: React.FC = () => {
     const router = useRouter();
@@ -14,7 +15,7 @@ const AddMoviePage: React.FC = () => {
     const [duration, setDuration] = useState<number>();
     const [genreid, setGenreId] = useState<string[]>([]); // initialize as an empty array
     const [genres, setGenres] = useState<Genre[]>([]);
-
+    const [errorMessage, setErrorMessage] = useState('');
     useEffect(() => {
         const fetchGenres = async () => {
             const fetchedGenres = await genreService.getGenres();
@@ -34,13 +35,24 @@ const AddMoviePage: React.FC = () => {
                 ({ genreid: parseInt(id), name: '', description: '' })),
             retings: null// convert genre ids to genre objects
         };
+
+
+
         try {
-            await movieService.addMovie(movie);
-            router.push('/movie');
-        } catch (err: any) {
-            console.error(err);
-            router.push('/movie');
+            const response = await movieService.addMovie(movie);
+            if (response.ok) {
+                router.push('/movie');
+            } else {
+                const errorMessage = await response.text();
+                setErrorMessage(errorMessage);
+            }
+        } catch (error) {
+            console.error(error);
+            setErrorMessage('Something went wrong');
         }
+
+
+
     };
 
     return (
@@ -61,6 +73,7 @@ const AddMoviePage: React.FC = () => {
                         setGenreId={setGenreId}
                         handleSubmit={handleSubmit}
                         addEdit={'Add Movie'}
+                        errorMessage={errorMessage}
                     />
                 </div>
             </div>

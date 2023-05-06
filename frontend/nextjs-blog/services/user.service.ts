@@ -15,8 +15,9 @@ async function getMovieList(): Promise<Movie[]> {
 
 async function getUserinSession(): Promise<User> {
     const userData = localStorage.getItem('user');
-    return userData as User;
+    return userData ? JSON.parse(userData) as User : null;
 }
+
 
 
 

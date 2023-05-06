@@ -15,6 +15,7 @@ const AddMoviePage: React.FC = () => {
     const [genreid, setGenreId] = useState<string[]>([]); // initialize as an empty array
     const [genres, setGenres] = useState<Genre[]>([]);
     const [titleOnce, setTitleOnce] = useState<string>('');
+    const [errorMessage, setErrorMessage] = useState('');
 
     const movieId = Array.isArray(router.query.movieId)
         ? router.query.movieId[0]
@@ -55,12 +56,18 @@ const AddMoviePage: React.FC = () => {
                 ({ genreid: parseInt(id), name: '', description: '' })),
 
         };
+
         try {
-            await movieService.editMovie(movie);
-            router.push('/movie');
-        } catch (err: any) {
-            console.error(err);
-            router.push('/movie');
+            const response = await movieService.editMovie(movie);
+            if (response.ok) {
+                router.push('/movie');
+            } else {
+                const errorMessage = await response.text();
+                setErrorMessage(errorMessage);
+            }
+        } catch (error) {
+            console.error(error);
+            setErrorMessage('Something went wrong');
         }
     };
 
@@ -82,6 +89,7 @@ const AddMoviePage: React.FC = () => {
                         setGenreId={setGenreId}
                         handleSubmit={handleSubmit}
                         addEdit={'Edit Movie'}
+                        errorMessage={errorMessage}
                     />
                 </div>
             </div>

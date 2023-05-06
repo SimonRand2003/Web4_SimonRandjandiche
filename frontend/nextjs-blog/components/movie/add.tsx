@@ -13,6 +13,7 @@ interface Props {
     setGenreId: (genreid: string[]) => void;
     handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
     addEdit: string;
+    errorMessage: string;
 }
 
 const AddMovieForm: React.FC<Props> = ({
@@ -27,6 +28,7 @@ const AddMovieForm: React.FC<Props> = ({
                                            setGenreId,
                                            handleSubmit,
                                            addEdit,
+                                           errorMessage
                                        }) => {
     const handleGenreChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const selectedGenreId = e.target.value;
@@ -43,6 +45,13 @@ const AddMovieForm: React.FC<Props> = ({
         <form onSubmit={handleSubmit}>
             <div className="form-group">
                 <label htmlFor="title">Title:</label>
+                {errorMessage && (
+                    <div className="alert alert-danger">
+                        {errorMessage.split(':').map((message, index) => (
+                            <div key={index}>{message}</div>
+                        ))}
+                    </div>
+                )}
                 <input
                     type="text"
                     className="form-control"

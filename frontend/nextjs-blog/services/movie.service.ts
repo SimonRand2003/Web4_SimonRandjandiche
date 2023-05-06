@@ -16,13 +16,14 @@ async function getMovie(id: string) {
     }
 }
 async function addMovie(movie: MovieNoRAting){
-    await fetch('http://localhost:3000/movies/add', {
+    const response = await fetch('http://localhost:3000/movies/add', {
     method: 'POST',
     headers: {
         'Content-Type': 'application/json'
     },
     body: JSON.stringify(movie)
     });
+    return response;
 }
 
 async function addUserToMovie(movieid: number) {
@@ -78,13 +79,15 @@ async function rateMovie(rating: number, comment: string, movieid: number, useri
 }
 
 async function editMovie(movie: MovieNoRAting) {
-    await fetch(`http://localhost:3000/movies/update/${movie.movieid}`, {
+    const response = await fetch(`http://localhost:3000/movies/update/${movie.movieid}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(movie)
     });
+
+    return response;
 }
 
 

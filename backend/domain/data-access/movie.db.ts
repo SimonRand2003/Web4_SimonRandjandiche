@@ -13,6 +13,8 @@ class MovieRepository {
     async addMovieWithGenre(movie: Movie) {
         const genreIds = movie.genres.map((genre) => ({ genreid: genre.genreid }));
         const releaseDate = new Date(movie.releaseDate).toISOString();
+        try {
+        mapToMovie(movie);
         await this.prisma.movie.create({
             data: {
                 title: movie.title,
@@ -26,6 +28,9 @@ class MovieRepository {
                 ratings: {},
             },
         });
+        } catch (e) {
+            throw new Error(e.toString());
+        }
     }
 
 
@@ -44,6 +49,7 @@ class MovieRepository {
         });
     }
     async removeUserFromMovie(movieId: number, userId: number) {
+
         await this.prisma.movie.update({
             where: {
                 movieid: movieId,
@@ -91,6 +97,7 @@ class MovieRepository {
 
 
     async updateMovie(id: number, movie: Movie) {
+        mapToMovie(movie);
         const genreIds = movie.genres.map((genre) => ({ genreid: genre.genreid }));
         const releaseDate = new Date(movie.releaseDate).toISOString();
         await this.prisma.movie.update({
