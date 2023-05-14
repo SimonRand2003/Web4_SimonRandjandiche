@@ -37,19 +37,24 @@ const GenreOverview: React.FC<Props> = ({
                 </tr>
                 </thead>
                 <tbody>
-                {genres.map((genre) => (
-                    <tr key={genre.genreid}>
-                        <td>{genre.genreid}</td>
-                        <td>{genre.name}</td>
-                        <td>{genre.description}</td>
-                        <td>
-                            <button className='btn btn-primary' onClick={() => handleEditClick(genre)}>Edit</button>
-                        </td>
-                        <td>
-                            <button className='btn btn-danger' onClick={() => handleDeleteClick(genre)}>Delete</button>
-                        </td>
-                    </tr>
-                ))}
+                {genres?.length > 0 ? (
+                        <div>There are no genres to display..</div>
+                ) : (
+                    genres?.map((genre) => (
+                        <tr key={genre.genreid}>
+                            <td>{genre.genreid}</td>
+                            <td>{genre.name}</td>
+                            <td>{genre.description}</td>
+                            <td>
+                                <button className='btn btn-primary' onClick={() => handleEditClick(genre)}>Edit</button>
+                            </td>
+                            <td>
+                                <button className='btn btn-danger' onClick={() => handleDeleteClick(genre)}>Delete</button>
+                            </td>
+                        </tr>
+                    ))
+                )}
+
                 </tbody>
             </table>
         </div>
