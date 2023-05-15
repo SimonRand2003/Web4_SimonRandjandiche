@@ -37,7 +37,7 @@ const GenreOverview: React.FC<Props> = ({
                 </tr>
                 </thead>
                 <tbody>
-                {genres?.length > 0 ? (
+                {genres?.length < 0 ? (
                         <div>There are no genres to display..</div>
                 ) : (
                     genres?.map((genre) => (
