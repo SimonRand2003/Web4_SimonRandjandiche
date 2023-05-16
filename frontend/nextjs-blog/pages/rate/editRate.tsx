@@ -27,7 +27,7 @@ const RatingPage = () => {
     };
 
     const getRatingId = async () => {
-        const userid = parseInt(localStorage.user?.toString().split(",")[0].split(":")[1] ?? "");
+        const userid = parseInt(sessionStorage.user?.toString().split(",")[0].split(":")[1] ?? "");
         setUserid(userid);
         const response = await ratingService.getRatingByUserAndMovieId(userid,movieId);
         if (response) {
@@ -48,7 +48,7 @@ const RatingPage = () => {
         try {
             const movieid = movie.movieid;
             const ratingid = ratingId;
-            const userid = parseInt(localStorage.user?.toString().split(",")[0].split(":")[1] ?? "");
+            const userid = parseInt(sessionStorage.user?.toString().split(",")[0].split(":")[1] ?? "");
             setUserid(userid);
             await movieService.editRateMovie(ratingid, rating, comment, movieid, userid);
             router.push('/movie');

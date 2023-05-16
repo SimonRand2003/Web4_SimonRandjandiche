@@ -3,7 +3,7 @@ import { Rating } from '../types/interfaces';
 
 
 async function getMovieList(): Promise<Movie[]> {
-    const userData = localStorage.getItem('user');
+    const userData = sessionStorage.getItem('user');
     const id = JSON.parse(userData)?.userid;
     if (!id) {
         return [];
@@ -14,7 +14,7 @@ async function getMovieList(): Promise<Movie[]> {
 }
 
 async function getUserinSession(): Promise<User> {
-    const userData = localStorage.getItem('user');
+    const userData = sessionStorage.getItem('user');
     return userData ? JSON.parse(userData) as User : null;
 }
 

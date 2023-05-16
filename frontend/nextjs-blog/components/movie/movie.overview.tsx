@@ -27,9 +27,8 @@ const MovieComponent: React.FC<Props> = ({
     const formattedDate = releaseDate.split('T')[0];
     const [rating, setRating] = useState<Rating>(undefined);
     useEffect(() => {
-        console.log(localStorage.getItem('user'));
         async function fetchRatings() {
-            const userData = localStorage.getItem('user');
+            const userData = sessionStorage.getItem('user');
             const userId = JSON.parse(userData)?.userid;
             if (!userId) {
                 return;

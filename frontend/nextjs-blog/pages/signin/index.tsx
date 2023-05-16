@@ -16,7 +16,7 @@ const SignIn = () => {
             const response = await userService.login(email, password);
             if (response.ok) {
                 const user = await response.json();
-                localStorage.setItem('user', JSON.stringify(user));
+                sessionStorage.setItem('user', JSON.stringify(user));
                 router.push('/');
             } else {
                 const errorMessage = await response.text();

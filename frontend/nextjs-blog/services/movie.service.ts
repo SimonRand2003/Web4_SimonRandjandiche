@@ -27,7 +27,7 @@ async function addMovie(movie: MovieNoRAting) {
 }
 
 async function addUserToMovie(movieid: number) {
-    const userData = localStorage.getItem('user');
+    const userData = sessionStorage.getItem('user');
     const userid = JSON.parse(userData)?.userid;
     if (!userid) {
         return;
@@ -41,7 +41,7 @@ async function addUserToMovie(movieid: number) {
 }
 
 async function removeUserFromMovie(movieid: number) {
-    const userData = localStorage.getItem('user');
+    const userData = sessionStorage.getItem('user');
     const userid = JSON.parse(userData)?.userid;
     if (!userid) {
         return;
