@@ -12,7 +12,7 @@ interface RateMovieFormProps {
     handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
 }
 
-const RateMovieForm: React.FC<RateMovieFormProps> = ({ movie, rating, comment, setRating, setComment,handleSubmit ,error}) => {
+const EditRateMovieForm: React.FC<RateMovieFormProps> = ({ movie, rating, comment, setRating, setComment,handleSubmit ,error}) => {
 
     if (!movie) {
         return <h2>Loading...</h2>;
@@ -49,4 +49,4 @@ const RateMovieForm: React.FC<RateMovieFormProps> = ({ movie, rating, comment, s
     );
 }
 
-export default RateMovieForm;
+export default EditRateMovieForm;

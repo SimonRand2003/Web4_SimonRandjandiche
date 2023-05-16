@@ -44,6 +44,7 @@ class RatingRepository {
             },
             data: {
                 rating: rating.rating,
+                comment: rating.comment,
                 userid: rating.userid,
                 movieid: rating.movieid,
             },

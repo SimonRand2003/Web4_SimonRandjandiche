@@ -183,6 +183,7 @@ export class RatingRoutes {
     public async updateRating(req: Request, res: Response): Promise<void> {
         const id: number = parseInt(req.params.id, 10);
         const rating: Rating = req.body;
+
         try {
             await this.ratingService.updateRating(id, rating);
             res.sendStatus(204);
