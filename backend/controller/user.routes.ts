@@ -5,7 +5,7 @@ import {User} from "../domain/model/User";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import {mockSession} from "next-auth/client/__tests__/helpers/mocks";
-import user = mockSession.user;
+
 
 /**
  * @swagger

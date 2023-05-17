@@ -11,21 +11,21 @@ import {GenreRepository} from "../domain/data-access/genre.db";
  *     Genre:
  *       type: object
  *       properties:
- *         _name:
+ *         name:
  *           type: string
  *           description: The name of the genre
- *         _description:
+ *         description:
  *           type: string
  *           description: A description of the genre
  *     Genrewithid:
  *       type: object
  *       properties:
- *         _genreid:
+ *         genreid:
  *           type: number
- *         _name:
+ *         name:
  *           type: string
  *           description: The name of the genre
- *         _description:
+ *         description:
  *           type: string
  *           description: A description of the genre
  */
