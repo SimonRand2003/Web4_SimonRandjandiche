@@ -38,18 +38,21 @@ class RatingRepository {
     }
 
     async update(id: number, rating: Rating): Promise<void> {
-        await this.prisma.rating.update({
-            where: {
-                ratingid: id,
-            },
-            data: {
-                rating: rating.rating,
-                comment: rating.comment,
-                userid: rating.userid,
-                movieid: rating.movieid,
-            },
-        });
+            await this.prisma.rating.update({
+                where: {
+                    ratingid: id,
+                },
+                data: {
+                    rating: rating.rating,
+                    comment: rating.comment,
+                    userid: rating.userid,
+                    movieid: rating.movieid,
+                },
+            });
     }
+
+
+
 
     async remove(rating: Rating): Promise<void> {
         await this.prisma.rating.delete({

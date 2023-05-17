@@ -2,8 +2,10 @@ import express, { Request, Response } from 'express';
 import { UserService } from '../service/user.service';
 import {UserRepository} from "../domain/data-access/user.db";
 import {User} from "../domain/model/User";
-
-
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import {mockSession} from "next-auth/client/__tests__/helpers/mocks";
+import user = mockSession.user;
 
 /**
  * @swagger
@@ -155,16 +157,24 @@ export class UserRoutes {
         try {
             const email = req.body.email;
             const user = await this.userService.getUserByName(email);
-            if (req.body.password === user.password) {
-                res.status(200).json(user);
-            } else {
-                res.status(404).send("Email or Password are incorrect");
-            }
-        } catch (Error) {
+            const isValid = await bcrypt.compare(req.body.password, user.password);
+            const userid = user.userid;
+            const username = user.username;
 
-            res.status(404).send(Error.toString());
+            if (isValid) {
+                const token = jwt.sign({ userid: user.userid }, 'your-secret-key', { expiresIn: '1h' });
+                res.status(200).json({ userid,username, token });
+            } else {
+                res.status(404).send('Email or Password are incorrect');
+            }
+
+
+        } catch (error) {
+            res.status(500).send(error.toString());
         }
     }
+
+
 
 
 
@@ -188,23 +198,26 @@ export class UserRoutes {
      *       - Users
      */
     public async addUser(req: Request, res: Response): Promise<void> {
-
         try {
+            const { userid, username, email, birthdate, password } = req.body;
+
+
+            const hashedPassword = await bcrypt.hash(password, 10);
+
             const user = new User(
-                req.body.id,
-                req.body.username,
-                req.body.email,
-                new Date(req.body.birthdate),
-                req.body.password
-                ,[],[]
+                userid,
+                username,
+                email,
+                new Date(birthdate),
+                hashedPassword,  // Store the hashed password in the user object
+                [], []
             );
             await this.userService.addUser(user);
-            const user2 = await this.userService.getUserByName(req.body.email);
-            res.json(user2).status(201);
-        } catch (Error) {
-            res.status(500).send(Error.toString());
+            const token = jwt.sign({ userid: user.userid }, 'your-secret-key', { expiresIn: '1h' });
+            res.status(201).json({ userid,username, token });
+        } catch (error) {
+            res.status(500).send(error.toString());
         }
-
     }
 
     /**
@@ -294,6 +307,11 @@ export class UserRoutes {
         const user = await this.userService.getUserMoviesById(userId);
         res.status(200).json(user);
     }
+    public async getUserName(req: Request, res: Response): Promise<void> {
+        const userId = parseInt(req.params.id, 10);
+        const user = await this.userService.getUserName(userId);
+        res.status(200).json(user);
+    }
 }
 
 const userRepository = new UserRepository();
@@ -311,5 +329,6 @@ userRouter.post('/users/login', userController.login.bind(userController))
 userRouter.post('/users/add', userController.addUser.bind(userController));
 userRouter.put('/users/update/:id', userController.updateUser.bind(userController));
 userRouter.delete('/users/delete/:id', userController.deleteUser.bind(userController));
+userRouter.get('/users/getusername/:id', userController.getUserName.bind(userController));
 
 export { userRouter };

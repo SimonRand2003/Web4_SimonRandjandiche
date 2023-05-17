@@ -2,6 +2,8 @@ import React from "react";
 import { Movie } from "../../types/interfaces";
 import { Container, Row, Col, Card, CardBody, CardTitle, CardSubtitle, CardText, ListGroup, ListGroupItem } from "reactstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+import {useEffect,useState}  from 'react';
+import userService from "../../services/user.service";
 
 type Props = {
     movie: Movie;
@@ -11,6 +13,19 @@ const MovieInfoComponent = ({ movie }: Props) => {
     const { movieid, title, releaseDate, duration, genres, ratings } = movie;
     const date = new Date(releaseDate);
     const formattedDate = date.toLocaleDateString();
+    const [usernames, setUsernames] = useState<Record<number, string>>({});
+    useEffect(() => {
+        fetchUsernames();
+    }, []);
+    async function fetchUsernames() {
+        const userIds = ratings.map((rating) => rating.userid);
+        let usernamesData: Record<number, string> = {};
+        for (let id of userIds) {
+            usernamesData[id] = await userService.getUserName(id);
+        }
+        setUsernames(usernamesData);
+    }
+
 
     return (
         <Container>
@@ -38,7 +53,7 @@ const MovieInfoComponent = ({ movie }: Props) => {
                                 {ratings.map((rating) => (
                                     <ListGroupItem key={rating.ratingid}>
                                         <CardText>
-                                            User {rating.userid} gave a rating of {rating.rating}.
+                                            User {usernames[rating.userid]} gave a rating of {rating.rating}.
                                         </CardText>
                                         <ul>
                                             <li>

@@ -12,7 +12,7 @@ async function getRating(id: number): Promise<Rating> {
     return data as Rating;
 }
 
-async function getRatingByUserAndMovieId(userid: number,movieid:number): Promise<Rating> {
+async function getRatingByUserAndMovieId(userid: string,movieid:number): Promise<Rating> {
     const response = await fetch(`http://127.0.0.1:3000/ratings/${userid}/${movieid}`);
     const data = await response.json();
     return data as Rating;

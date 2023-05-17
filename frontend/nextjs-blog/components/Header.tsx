@@ -1,113 +1,77 @@
-import Link from 'next/link';
 import React from 'react'
 import { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { User } from '../types/interfaces';
 import { useRouter } from 'next/router';
-
-
+import Navbar from 'react-bootstrap/Navbar';
+import Nav from 'react-bootstrap/Nav';
+import NavDropdown from 'react-bootstrap/NavDropdown';
+import Link from 'next/link';
 const Header : React.FC = () => {
     const router = useRouter();
-    const [user, setUser] = useState<User | null>(null);
+    const [user, setUserName] = useState<string | null>(null);
 
     useEffect(() => {
-        const userData = localStorage.getItem('user');
-        if (userData) {
-            setUser(JSON.parse(userData));
+        const username = sessionStorage.getItem('username');
+        if (username) {
+            setUserName(username);
         }
     }, []);
 
     const handleLogout = () => {
-        localStorage.removeItem('user');
-        setUser(null);
+        sessionStorage.removeItem('username');
+        sessionStorage.removeItem('userid');
+        sessionStorage.removeItem('token');
+        setUserName(null);
         router.push('/signin/');
     };
 
-    return (
-        <header>
-            <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-                <div className="container">
-                    <Link href="/">
-                        <p className="navbar-brand">Inazuma Movies</p>
-                    </Link>
-                    <button
-                        className="navbar-toggler"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#navbarNav"
-                        aria-controls="navbarNav"
-                        aria-expanded="false"
-                        aria-label="Toggle navigation"
-                    >
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
-                    <div className="collapse navbar-collapse" id="navbarNav">
-                        <ul className="navbar-nav ms-auto">
-                            <li className="nav-item">
-                                <Link href="/">
-                                    <p className="nav-link">Home</p>
-                                </Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link href="/genre/">
-                                    <p className="nav-link">Genres Overview</p>
-                                </Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link href="/genre/add">
-                                    <p className="nav-link">Add Genre</p>
-                                </Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link href="/movie/">
-                                    <p className="nav-link">Movies Overview</p>
-                                </Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link href="/movie/add">
-                                    <p className="nav-link">Add Movie</p>
-                                </Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link href="/movielist/">
-                                    <p className="nav-link">My Movie List</p>
-                                </Link>
-                            </li>
-                            {!user && (
-                                <>
-                                    <li className="nav-item">
-                                        <Link href="/signin/">
-                                            <p className="nav-link">Sign In</p>
-                                        </Link>
-                                    </li>
-                                    <li className="nav-item">
-                                        <Link href="/signup/">
-                                            <p className="nav-link">Sign Up</p>
-                                        </Link>
-                                    </li>
-                                </>
-                            )}
-                            {user && (
-                                <li className="nav-item">
-                                    <div className="nav-link">
-                                        Signed in as{' '}
-                                        {user.username}
 
-                                        <button
-                                            className="btn btn-outline-light ms-3"
-                                            onClick={handleLogout}
-                                        >
-                                            Log out
-                                        </button>
-                                    </div>
-                                </li>
-                            )}
-                        </ul>
-                    </div>
-                </div>
-            </nav>
-        </header>
+    return (
+        <Navbar bg="dark" expand="lg" variant="dark">
+            <Link href="/" className="navbar-brand" style={{ paddingLeft: '10px' }}>
+                Inazuma Movies
+            </Link>
+            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Collapse id="basic-navbar-nav">
+                <Nav className="mr-auto">
+                    <Link href="/" className="nav-link" style={{ paddingLeft: '10px' }}>
+                        Home
+                    </Link>
+                    <Link href="/genre/" className="nav-link" style={{ paddingLeft: '10px' }}>
+                        Genres Overview
+                    </Link>
+                    <Link href="/genre/add" className="nav-link" style={{ paddingLeft: '10px' }}>
+                        Add Genre
+                    </Link>
+                    <Link href="/movie/" className="nav-link" style={{ paddingLeft: '10px' }}>
+                        Movies Overview
+                    </Link>
+                    <Link href="/movie/add" className="nav-link" style={{ paddingLeft: '10px' }}>
+                        Add Movie
+                    </Link>
+                    <Link href="/movielist/" className="nav-link" style={{ paddingLeft: '10px' }}>
+                        My Movie List
+                    </Link>
+                    {!user && (
+                        <>
+                            <Link href="/signin/" className="nav-link" style={{ paddingLeft: '10px' }}>
+                                Sign In
+                            </Link>
+                            <Link href="/signup/" className="nav-link" style={{ paddingLeft: '10px' }}>
+                                Sign Up
+                            </Link>
+                        </>
+                    )}
+                    {user && (
+                        <NavDropdown title={`Signed in as ${user}`} id="basic-nav-dropdown" style={{ paddingLeft: '10px' }}>
+                            <NavDropdown.Item onClick={handleLogout}>Log out</NavDropdown.Item>
+                        </NavDropdown>
+                    )}
+                </Nav>
+            </Navbar.Collapse>
+        </Navbar>
     );
+
 };
 
 export default Header;

@@ -11,7 +11,6 @@ const RatingPage = () => {
     const [movie, setMovie] = useState<Movie | null>(null);
     const [rating, setRating] = useState<number>(0);
     const [comment, setComment] = useState<string>("");
-    const [userid, setUserid] = useState<number>(0);
     const [ratingId, setRatingId] = useState<number | null>(null);
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
@@ -22,14 +21,12 @@ const RatingPage = () => {
 
     const getMovie = async () => {
         const movie = await movieService.getMovie(movieId);
-        console.log(movie);
         setMovie(movie);
     };
 
     const getRatingId = async () => {
-        const userid = parseInt(sessionStorage.user?.toString().split(",")[0].split(":")[1] ?? "");
-        setUserid(userid);
-        const response = await ratingService.getRatingByUserAndMovieId(userid,movieId);
+        const userid = sessionStorage.getItem('userid');
+        const response = await ratingService.getRatingByUserAndMovieId(userid,parseInt(movieId ?? ""));
         if (response) {
             setRatingId(response.ratingid);
             setRating(response.rating);
@@ -48,9 +45,8 @@ const RatingPage = () => {
         try {
             const movieid = movie.movieid;
             const ratingid = ratingId;
-            const userid = parseInt(sessionStorage.user?.toString().split(",")[0].split(":")[1] ?? "");
-            setUserid(userid);
-            await movieService.editRateMovie(ratingid, rating, comment, movieid, userid);
+            const userid = parseInt(sessionStorage.getItem('userid'));
+            await movieService.editRateMovie(ratingid, rating, comment, movieid,userid);
             router.push('/movie');
         } catch (err: any) {
             setError(err.message);

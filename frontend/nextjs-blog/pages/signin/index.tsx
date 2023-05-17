@@ -15,17 +15,20 @@ const SignIn = () => {
         try {
             const response = await userService.login(email, password);
             if (response.ok) {
-                const user = await response.json();
-                sessionStorage.setItem('user', JSON.stringify(user));
+                const responseData = await response.json();
+                sessionStorage.setItem('username', responseData.username);
+                sessionStorage.setItem('userid', responseData.userid);
+                sessionStorage.setItem('token', responseData.token);
                 router.push('/');
             } else {
                 const errorMessage = await response.text();
                 setError(errorMessage);
             }
         } catch (error) {
-            setError('An error occurred while logging in. Please try again.');
+            setError(error.message);
         }
     };
+
 
     return (
         <>

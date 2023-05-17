@@ -97,6 +97,17 @@ class UserRepository {
         });
     }
 
+    async getUserName(id: number): Promise<string | undefined> {
+        const user = await this.prisma.user.findUnique({
+            where: {
+                userid: id,
+            },select: {
+                username: true,
+            },
+        });
+        return user ? user.username : undefined;
+    }
+
     async close(): Promise<void> {
         await this.prisma.$disconnect();
     }

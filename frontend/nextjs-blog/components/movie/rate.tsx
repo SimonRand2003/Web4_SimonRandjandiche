@@ -22,7 +22,7 @@ const RateMovieForm: React.FC<RateMovieFormProps> = ({ movie, rating, comment, s
             <Row className="justify-content-center">
                 <Col md={8}>
                     <h2>Rate movie: {movie.title}</h2>
-                    {error && <p>{error}</p>}
+                    {error && <p style={{ color: 'red' }}>{error}</p>}
                     <Form onSubmit={handleSubmit}>
                         <Form.Group controlId="formRating">
                             <Form.Label>Rating:</Form.Label>

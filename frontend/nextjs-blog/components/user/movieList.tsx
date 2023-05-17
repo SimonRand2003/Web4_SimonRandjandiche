@@ -18,6 +18,7 @@ const MovieComponent: React.FC<Props> = ({ movie, onRemoveMovie }) => {
     const genreString = genreNames.join(', ');
     const formattedDate = releaseDate.split('T')[0];
 
+
     const handleRemoveMovieClick = () => {
         movieService.removeUserFromMovie(movieid)
             .then(() => {

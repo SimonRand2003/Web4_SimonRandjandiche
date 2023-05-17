@@ -1,10 +1,8 @@
-import {Movie, User} from "../types/interfaces";
-import { Rating } from '../types/interfaces';
+import {Movie} from "../types/interfaces";
 
 
 async function getMovieList(): Promise<Movie[]> {
-    const userData = sessionStorage.getItem('user');
-    const id = JSON.parse(userData)?.userid;
+    const id = sessionStorage.getItem('userid');
     if (!id) {
         return [];
     }
@@ -13,17 +11,15 @@ async function getMovieList(): Promise<Movie[]> {
     return data as Movie[];
 }
 
-async function getUserinSession(): Promise<User> {
-    const userData = sessionStorage.getItem('user');
-    return userData ? JSON.parse(userData) as User : null;
+async function getUserName(id:number): Promise<string> {
+    const response = await fetch(`http://127.0.0.1:3000/users/getUserName/${id}`);
+    const data = await response.json();
+    return data as string;
 }
 
 
-
-
-
 async function login(email:string, password:string): Promise<any> {
-    const response = await fetch('http://localhost:3000/users/login', {
+    return await fetch('http://localhost:3000/users/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -33,11 +29,10 @@ async function login(email:string, password:string): Promise<any> {
             password,
         }),
     });
-    return response;
 }
 
-async function register(username:string, email:string, birthdate:string, password:string): Promise<any> {
-    const res = await fetch('http://localhost:3000/users/add', {
+async function register(username:string, email:string, birthdate:string, password:string): Promise<Response> {
+    return await fetch('http://localhost:3000/users/add', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -49,14 +44,15 @@ async function register(username:string, email:string, birthdate:string, passwor
             password,
         }),
     });
-    return res;
 }
+
 
 const userService = {
     getMovieList,
     login,
     register,
-    getUserinSession,
+    getUserName
+
 };
 
 export default userService;

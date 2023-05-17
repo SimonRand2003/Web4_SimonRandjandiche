@@ -9,7 +9,6 @@ const RatingPage = () => {
     const [movie, setMovie] = useState<Movie | null>(null);
     const [rating, setRating] = useState<number>(0);
     const [comment, setComment] = useState<string>("");
-    const [userid, setUserid] = useState<number>(0);
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
 
@@ -19,7 +18,6 @@ const RatingPage = () => {
 
     const getMovie = async () => {
         const movie = await movieService.getMovie(movieId);
-        console.log(movie);
         setMovie(movie);
     }
     useEffect(() => {
@@ -32,10 +30,18 @@ const RatingPage = () => {
         e.preventDefault();
         try {
             const movieid = movie.movieid;
-            const userid = parseInt(localStorage.user?.toString().split(",")[0].split(":")[1] ?? "");
-            setUserid(userid);
-            await movieService.rateMovie(rating, comment, movieid, userid);
-            router.push('/movie');
+            const id = parseInt(sessionStorage.getItem('userid'));
+            const response = await movieService.rateMovie(rating, comment, movieid, id);
+            console.log(response.status);
+            if (response.ok) {
+                router.push('/movie');
+            }else if (response.status === 401) {
+                setError("You are not authorized to rate this movie.");
+            }else {
+                const errorMessage = await response.text();
+                setError(errorMessage);
+            }
+
         } catch (err: any) {
             setError(err.message);
         }

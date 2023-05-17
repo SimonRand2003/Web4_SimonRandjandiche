@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import { Rating } from '../domain/model/Rating';
 import { RatingService } from '../service/rating.service';
 import { RatingRepository } from '../domain/data-access/rating.db';
-
+import { authenticateToken } from '../middleware/authenticateToken';
 
 /**
  * @swagger
@@ -141,7 +141,6 @@ export class RatingRoutes {
 
     public async addRating(req: Request, res: Response): Promise<void> {
         const rating: Rating = req.body;
-        console.log(rating);
         try {
             await this.ratingService.addRating(rating);
             res.sendStatus(201);
@@ -252,9 +251,9 @@ const ratingRouter = express.Router();
 ratingRouter.get('/ratings', ratingController.getAllRatings.bind(ratingController));
 ratingRouter.get('/ratings/:id', ratingController.getRatingById.bind(ratingController));
 ratingRouter.get('/ratings/:userid/:movieid', ratingController.getRatingByUserAndMovieId.bind(ratingController));
-ratingRouter.post('/ratings/add', ratingController.addRating.bind(ratingController));
-ratingRouter.put('/ratings/update/:id', ratingController.updateRating.bind(ratingController));
-ratingRouter.delete('/ratings/delete/:id', ratingController.deleteRating.bind(ratingController));
+ratingRouter.post('/ratings/add',authenticateToken, ratingController.addRating.bind(ratingController));
+ratingRouter.put('/ratings/update/:id',authenticateToken, ratingController.updateRating.bind(ratingController));
+ratingRouter.delete('/ratings/delete/:id',authenticateToken, ratingController.deleteRating.bind(ratingController));
 
 export { ratingRouter };
 

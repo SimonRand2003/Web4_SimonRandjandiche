@@ -12,6 +12,7 @@ export interface Movie {
     genres : Genre[] ;
     ratings: Rating[];
 }
+
 export interface MovieNoRAting {
     movieid: number;
     title: string;
@@ -25,8 +26,8 @@ export interface Rating {
     ratingid: number;
     rating: number;
     comment: string;
-    movieid: string;
-    userid: string;
+    movieid: number;
+    userid: number;
 }
 
 export interface User {

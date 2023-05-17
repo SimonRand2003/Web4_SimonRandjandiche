@@ -11,9 +11,6 @@ type Props = {
     movie: Movie;
     onDelete: () => void;
     rating?: Rating;
-    //onRatingAdded: () => void;
-    //onRatingUpdated: () => void;
-    //onRatingDeleted: () => void;
 };
 
 const MovieComponent: React.FC<Props> = ({
@@ -28,8 +25,7 @@ const MovieComponent: React.FC<Props> = ({
     const [rating, setRating] = useState<Rating>(undefined);
     useEffect(() => {
         async function fetchRatings() {
-            const userData = sessionStorage.getItem('user');
-            const userId = JSON.parse(userData)?.userid;
+            const userId = sessionStorage.getItem('userid');
             if (!userId) {
                 return;
             }

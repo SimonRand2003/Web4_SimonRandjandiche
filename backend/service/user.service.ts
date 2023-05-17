@@ -33,4 +33,7 @@ export class UserService {
     public async getUserMoviesById(id: number): Promise<Movie[] | undefined> {
         return this.userRepository.getUserMoviesById(id);
     }
+    public async getUserName(id: number): Promise<string | undefined> {
+        return this.userRepository.getUserName(id);
+    }
 }

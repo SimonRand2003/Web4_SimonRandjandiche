@@ -27,8 +27,7 @@ async function addMovie(movie: MovieNoRAting) {
 }
 
 async function addUserToMovie(movieid: number) {
-    const userData = sessionStorage.getItem('user');
-    const userid = JSON.parse(userData)?.userid;
+    const userid = sessionStorage.getItem('userid');
     if (!userid) {
         return;
     }
@@ -41,8 +40,7 @@ async function addUserToMovie(movieid: number) {
 }
 
 async function removeUserFromMovie(movieid: number) {
-    const userData = sessionStorage.getItem('user');
-    const userid = JSON.parse(userData)?.userid;
+    const userid = sessionStorage.getItem('userid');
     if (!userid) {
         return;
     }
@@ -64,10 +62,12 @@ async function deleteMovie(id: number) {
 }
 
 async function rateMovie(rating: number, comment: string, movieid: number, userid: number) {
-    const response = await fetch('http://localhost:3000/ratings/add', {
+    const token = sessionStorage.getItem('token');
+    return await fetch('http://localhost:3000/ratings/add', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
             rating: rating,
@@ -85,6 +85,7 @@ async function editRateMovie(
     movieid: number,
     userid: number
 ): Promise<void> {
+    const token = sessionStorage.getItem('token');
     const updatedRating: Rating = {
         ratingid: ratingid,
         rating: rating,
@@ -98,6 +99,7 @@ async function editRateMovie(
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(updatedRating),
         });
