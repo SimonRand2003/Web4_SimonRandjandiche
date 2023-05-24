@@ -4,8 +4,6 @@ import {UserRepository} from "../domain/data-access/user.db";
 import {User} from "../domain/model/User";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import {mockSession} from "next-auth/client/__tests__/helpers/mocks";
-
 
 /**
  * @swagger
@@ -99,7 +97,7 @@ export class UserRoutes {
         const userId = parseInt(req.params.id, 10);
         const user = await this.userService.getUserById(userId);
         if (user) {
-            res.json(user);
+            res.status(200).json(user);
         } else {
             res.sendStatus(404);
         }
@@ -170,7 +168,8 @@ export class UserRoutes {
 
 
         } catch (error) {
-            res.status(500).send(error.toString());
+            //geen specifieke error
+            res.status(500).send('Email or Password are incorrect');
         }
     }
 
@@ -199,13 +198,13 @@ export class UserRoutes {
      */
     public async addUser(req: Request, res: Response): Promise<void> {
         try {
-            const { userid, username, email, birthdate, password } = req.body;
+            const { username, email, birthdate, password } = req.body;
 
 
             const hashedPassword = await bcrypt.hash(password, 10);
 
             const user = new User(
-                userid,
+                0,
                 username,
                 email,
                 new Date(birthdate),
@@ -214,6 +213,9 @@ export class UserRoutes {
             );
             await this.userService.addUser(user);
             const token = jwt.sign({ userid: user.userid }, 'your-secret-key', { expiresIn: '1h' });
+            const user2 = await this.userService.getUserByName(email);
+            const userid = user2.userid;
+
             res.status(201).json({ userid,username, token });
         } catch (error) {
             res.status(500).send(error.toString());

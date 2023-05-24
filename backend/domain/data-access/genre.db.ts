@@ -1,6 +1,6 @@
-import {PrismaClient} from '@prisma/client';
-import {Genre} from '../model/Genre';
-import {mapToGenre, mapToGenres} from './genre.mapper';
+import { PrismaClient, Prisma } from '@prisma/client';
+import { Genre } from '../model/Genre';
+import { mapToGenre, mapToGenres } from './genre.mapper';
 
 class GenreRepository {
     private prisma: PrismaClient;
@@ -44,24 +44,26 @@ class GenreRepository {
 
 
 
-    async updateGenre(id: number,genre: Genre){
+    async updateGenre(id: number, genre: Genre) {
         try {
-        mapToGenre(genre);
-        await this.prisma.genre.update({
-            where: {
-                genreid: id,
-
-            },
-            data: {
-                name: genre.name,
-                description: genre.description,
-
-            },
-        });
+            mapToGenre(genre);
+            await this.prisma.genre.update({
+                where: {
+                    genreid: id,
+                },
+                data: {
+                    name: genre.name,
+                    description: genre.description,
+                },
+            });
         } catch (error) {
+            if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+                throw new Error('A genre with the same name already exists.');
+            }
             throw new Error(error.message);
         }
     }
+
 
     async deleteGenre(id: number): Promise<void> {
         await this.prisma.genre.delete({

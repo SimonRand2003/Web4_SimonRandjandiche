@@ -103,8 +103,15 @@ type MovieOverviewProps = {
     onMovieDeleted: () => void; // Add this line
 };
 
-const MovieOverview: React.FC<MovieOverviewProps> = ({ movies, onMovieDeleted }) => {
-
+const MovieOverview: React.FC<MovieOverviewProps> = ({ movies = [], onMovieDeleted }) => {
+    if (!Array.isArray(movies)) {
+        return (
+            <div className="container">
+                <h1>Movies</h1>
+                <p>Error: Movies data is not available</p>
+            </div>
+        );
+    }
     return (
         <div className="container">
             <h1>Movies</h1>

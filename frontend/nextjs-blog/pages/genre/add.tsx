@@ -10,20 +10,27 @@ const AddGenrePage: React.FC = () => {
     const router = useRouter();
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setErrorMessage('');
         const genre = {
             genreid: null,
             name: name,
             description: description
         };
         try {
-            await genreService.addGenre(genre);
-            router.push('/genre');
+            const response = await genreService.addGenre(genre);
+            if (response.ok) {
+                router.push('/genre');
+            }else {
+                const errorMessage = await response.text();
+                setErrorMessage(errorMessage);
+            }
         } catch (err: any) {
-            console.error(err);
-            router.push('/genre');
+            setErrorMessage(errorMessage);
         }
     };
     return (
@@ -39,6 +46,7 @@ const AddGenrePage: React.FC = () => {
                         setDescription={setDescription}
                         handleSubmit={handleSubmit}
                         addEdit={'Add Genre'}
+                        errorMessage={errorMessage}
                     />
                 </div>
             </div>

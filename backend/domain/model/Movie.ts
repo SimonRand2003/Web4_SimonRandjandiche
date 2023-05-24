@@ -1,6 +1,6 @@
 import { Rating } from "./Rating";
 import { Genre } from "./Genre";
-import {User} from "./User";
+
 
 class Movie {
     readonly movieid: number;
@@ -10,19 +10,28 @@ class Movie {
     readonly genres: Genre[];
     readonly ratings: Rating[];
 
-
     constructor(Movie: {movieid: number, title: string, releaseDate: Date, duration: number, genres: Genre[], ratings: Rating[]}) {
         const errors: string[] = [];
 
         if (Movie.title === undefined || Movie.title === "") {
             errors.push("title is not defined");
         }
+
         if (Movie.releaseDate === undefined || Movie.releaseDate === null) {
             errors.push("releaseDate is not defined");
+        } else {
+            const releaseDateObj = new Date(Movie.releaseDate);
+            const releaseYear = releaseDateObj.getFullYear();
+            const currentYear = new Date().getFullYear();
+            if (releaseYear < 1888 || releaseYear > currentYear + 1) {
+                errors.push('Release Date must be between 1888 and next year');
+            }
         }
-        if (Movie.duration === undefined || Movie.duration === null || Movie.duration <= 0) {
-            errors.push("duration cannot be empty or less than 0");
+
+        if (Movie.duration === undefined || Movie.duration === null || Movie.duration <= 0 || Movie.duration > 51420) {
+            errors.push("duration has to be between 0 and 51420");
         }
+
         if (Movie.genres.length === 0) {
             errors.push("you need to add at least one genre");
         }
@@ -38,8 +47,6 @@ class Movie {
         this.genres = Movie.genres;
         this.ratings = Movie.ratings;
     }
-
-
 }
 
 export { Movie };

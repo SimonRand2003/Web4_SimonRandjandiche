@@ -94,7 +94,7 @@ export class GenreRoutes {
      *              application/json:
      *                  schema:
      *                      $ref: '#/components/schemas/Genrewithid'
-     *         204:
+     *         404:
      *           description: Genre not found
      *           content:
      *              application/json:
@@ -120,7 +120,7 @@ export class GenreRoutes {
             if (genre) {
                 res.status(200).json(genre);
             } else {
-                res.status(204).json({ message: `Genre with id ${id} not found.` });
+                res.status(404).json({ message: `Genre with id ${id} not found.` });
             }
         } catch (error) {
             res.status(500).json({ error: error.message });

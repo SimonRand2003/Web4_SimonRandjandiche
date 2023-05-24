@@ -22,7 +22,7 @@ async function getGenre(id: string) {
 }
 
 async function addGenre(genre: Genre) {
-    const response = await fetch('http://127.0.0.1:3000/genres/add', {
+    return await fetch('http://127.0.0.1:3000/genres/add', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -42,7 +42,7 @@ async function deleteGenre(genreid: number) {
 }
 
 async function updateGenre(genre: Genre) {
-    const response = await fetch('http://127.0.0.1:3000/genres/update/' + genre.genreid, {
+    return await fetch('http://127.0.0.1:3000/genres/update/' + genre.genreid, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'

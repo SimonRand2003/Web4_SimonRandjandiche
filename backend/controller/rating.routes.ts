@@ -11,13 +11,13 @@ import { authenticateToken } from '../middleware/authenticateToken';
  *      Rating:
  *          type: object
  *          properties:
- *            id:
+ *            ratingid:
  *              type: number
  *              description: The unique identifier for the rating.
- *            movieId:
+ *            movieid:
  *              type: number
  *              description: The ID of the movie that this rating is for.
- *            userId:
+ *            userid:
  *              type: number
  *              description: The ID of the user who made the rating.
  *            rating:
@@ -145,7 +145,8 @@ export class RatingRoutes {
             await this.ratingService.addRating(rating);
             res.sendStatus(201);
         } catch (error) {
-        throw new Error(error.message)      }
+            res.status(500).json({ error: error.message });
+        }
     }
     /**
      * @swagger
@@ -227,6 +228,55 @@ export class RatingRoutes {
         }
     }
 
+    /**
+     * @swagger
+     * /ratings/{userid}/{movieid}:
+     *   get:
+     *     summary: Get a rating by user ID and movie ID.
+     *     tags:
+     *       - Ratings
+     *     parameters:
+     *       - name: userid
+     *         in: path
+     *         description: ID of the user.
+     *         required: true
+     *         schema:
+     *           type: integer
+     *           format: int64
+     *       - name: movieid
+     *         in: path
+     *         description: ID of the movie.
+     *         required: true
+     *         schema:
+     *           type: integer
+     *           format: int64
+     *     responses:
+     *       200:
+     *         description: The requested rating.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               $ref: '#/components/schemas/Rating'
+     *       404:
+     *         description: The requested rating was not found.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 error:
+     *                   type: string
+     *       500:
+     *         description: Internal Server Error.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 error:
+     *                   type: string
+     */
+
     public async getRatingByUserAndMovieId(req: Request, res: Response): Promise<void> {
         const userId: number = parseInt(req.params.userid, 10);
         const movieId: number = parseInt(req.params.movieid, 10);
@@ -235,12 +285,13 @@ export class RatingRoutes {
             if (rating) {
                 res.status(200).json(rating);
             } else {
-                res.status(404).json({ error: `Rating with user id ${userId}  and ${movieId} movieId not found` });
+                res.status(404).json({ error: `Rating with user id ${userId} and ${movieId} movieId not found` });
             }
         } catch (error) {
             res.status(500).json({ error: error.message });
         }
     }
+
 }
 
 const ratingRepository = new RatingRepository();

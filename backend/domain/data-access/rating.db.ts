@@ -27,17 +27,26 @@ class RatingRepository {
     }
 
     async add(rating: Rating): Promise<void> {
-        await this.prisma.rating.create({
-            data: {
-                rating: rating.rating,
-                comment: rating.comment,
-                movieid: rating.movieid,
-                userid: rating.userid,
-            },
-        });
+        try {
+            mapToRating(rating)
+            await this.prisma.rating.create({
+                data: {
+                    rating: rating.rating,
+                    comment: rating.comment,
+                    movieid: rating.movieid,
+                    userid: rating.userid,
+                },
+            });
+        }catch (error) {
+            throw new Error(error.message);
+        }
+
     }
 
     async update(id: number, rating: Rating): Promise<void> {
+
+        try {
+            mapToRating(rating)
             await this.prisma.rating.update({
                 where: {
                     ratingid: id,
@@ -49,6 +58,10 @@ class RatingRepository {
                     movieid: rating.movieid,
                 },
             });
+        }catch (error) {
+            throw new Error(error.message);
+        }
+
     }
 
 

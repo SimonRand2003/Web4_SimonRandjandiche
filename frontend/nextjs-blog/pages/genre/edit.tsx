@@ -11,6 +11,9 @@ const AddGenrePage: React.FC = () => {
     const [name, setName] = useState('');
     const [titleOnce , setTitleOnce] = useState('');
     const [description, setDescription] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+    const [ nameErrorMessage, setNameErrorMessage] = useState('');
+    const [descriptionErrorMessage, setDescriptionErrorMessage] = useState('');
 
     const genreid = Array.isArray(router.query.genreid)
         ? router.query.genreid[0]
@@ -29,21 +32,51 @@ const AddGenrePage: React.FC = () => {
             getGenreInfo();
         }
     }  , [genreid]);
+    const validateName = (name: string) => {
+        if (!name || name.length < 3) {
+            setNameErrorMessage('Name is required and must be at least 3 characters long');
+            return false;
+        }
+        setNameErrorMessage('');
+        return true;
+    }
+
+    const validateDescription = (description: string) => {
+        if (!description || description.length < 3) {
+            setDescriptionErrorMessage('Description is required and must be at least 3 characters long');
+            return false;
+        }
+        setDescriptionErrorMessage('');
+        return true;
+    }
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const genre = {
-            genreid: parseInt(genreid),
-            name: name,
-            description: description
-        };
-        try {
-            await genreService.updateGenre(genre);
-            router.push('/genre');
-        } catch (err: any) {
-            console.error(err);
-            router.push('/genre');
+        setErrorMessage('');    
+        const isNameValid = validateName(name);
+        const isDescriptionValid = validateDescription(description);
+        if (isNameValid && isDescriptionValid) {
+            const genre = {
+                genreid: parseInt(genreid),
+                name: name,
+                description: description
+            };
+            try {
+                const response = await genreService.updateGenre(genre);
+                if (response.ok) {
+                    router.push('/genre');
+                }else{
+                    const errorMessage = await response.text();
+                    setErrorMessage(errorMessage);
+                }
+            } catch (err: any) {
+                setErrorMessage('There was an error updating the genre. Please try again.');
+                console.error(err);
+            }
         }
     };
+
+
     return (
         <>
             <Header />
@@ -57,6 +90,9 @@ const AddGenrePage: React.FC = () => {
                         setDescription={setDescription}
                         handleSubmit={handleSubmit}
                         addEdit={'Edit Genre'}
+                        errorMessage={errorMessage}
+                        nameErrorMessage={nameErrorMessage}
+                        descriptionErrorMessage={descriptionErrorMessage}
                     />
                 </div>
             </div>

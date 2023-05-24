@@ -13,7 +13,7 @@ datasource db {
 // Definitie van de Genre tabel
 model Genre {
   genreid     Int     @id @default(autoincrement())
-  name        String
+  name        String  @unique
   description String
   movies      Movie[] @relation("GenreMovies")
 }

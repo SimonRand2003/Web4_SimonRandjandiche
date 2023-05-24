@@ -12,6 +12,10 @@ interface SignUpFormProps {
     setBirthdate: React.Dispatch<React.SetStateAction<string>>;
     setEmail: React.Dispatch<React.SetStateAction<string>>;
     handleSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
+    usernameErrorMessage: string;
+    emailErrorMessage: string;
+    birthdateErrorMessage: string;
+    passwordErrorMessage: string;
 }
 
 const SignUpForm: React.FC<SignUpFormProps> = ({
@@ -25,7 +29,12 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
                                                    setBirthdate,
                                                    setEmail,
                                                    handleSubmit,
+                                                    usernameErrorMessage,
+                                                    emailErrorMessage,
+                                                    birthdateErrorMessage,
+                                                    passwordErrorMessage
                                                }) => {
+
     return (
 
         <div className="container mt-5">
@@ -35,9 +44,18 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
                         <div className="card-body">
                             <h1 className="card-title">Sign Up</h1>
                             {errorMessage && (
-                                <div className="alert alert-danger">{errorMessage}</div>
+                                <div className="alert alert-danger">
+                                    {errorMessage.replace('Error: ', '').split(":").map((error, index) => (
+                                        <React.Fragment key={index}>
+                                            {error}
+                                            <br/>
+                                        </React.Fragment>
+                                    ))}
+                                </div>
                             )}
-                            <form onSubmit={handleSubmit}>
+
+
+                            <form onSubmit={handleSubmit} noValidate={true}>
                                 <div className="form-group">
                                     <label htmlFor="username">Username</label>
                                     <input
@@ -48,6 +66,9 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
                                         onChange={(e) => setUsername(e.target.value)}
                                         required
                                     />
+                                    {usernameErrorMessage && (
+                                        <div className="alert alert-danger">{usernameErrorMessage}</div>
+                                    )}
                                 </div>
                                 <div className="form-group">
                                     <label htmlFor="password">Password</label>
@@ -59,6 +80,9 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
                                         onChange={(e) => setPassword(e.target.value)}
                                         required
                                     />
+                                    {passwordErrorMessage && (
+                                        <div className="alert alert-danger">{passwordErrorMessage}</div>
+                                    )}
                                 </div>
                                 <div className="form-group">
                                     <label htmlFor="birthdate">Birthdate</label>
@@ -70,6 +94,9 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
                                         onChange={(e) => setBirthdate(e.target.value)}
                                         required
                                     />
+                                    {birthdateErrorMessage && (
+                                        <div className="alert alert-danger">{birthdateErrorMessage}</div>
+                                    )}
                                 </div>
                                 <div className="form-group">
                                     <label htmlFor="email">Email address</label>
@@ -81,6 +108,9 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
                                         onChange={(e) => setEmail(e.target.value)}
                                         required
                                     />
+                                    {emailErrorMessage && (
+                                        <div className="alert alert-danger">{emailErrorMessage}</div>
+                                    )}
                                 </div>
                                 <input type="hidden" name="userid" value="1" />
                                 <button type="submit" className="btn btn-primary">

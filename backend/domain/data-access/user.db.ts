@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import {Prisma, PrismaClient} from '@prisma/client';
 import { User } from '../model/User';
 import {mapToUser,mapToUsers} from './user.mapper';
 import {Movie} from "../model/Movie";
@@ -12,15 +12,21 @@ class UserRepository {
     }
 
     async addUser(user: User){
-        await this.prisma.user.create({
-            data: {
-                username: user.username,
-                email: user.email,
-                birthdate: user.birthdate,
-                password: user.password,
-            },
-        });
-
+        try {
+            await this.prisma.user.create({
+                data: {
+                    username: user.username,
+                    email: user.email,
+                    birthdate: user.birthdate,
+                    password: user.password,
+                },
+            });
+        }catch (error) {
+            if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+                throw new Error('A user with the same email already exists.');
+            }
+            throw new Error(error.message);
+        }
     }
 
     async getUserMoviesById(id: number): Promise<Movie[] | undefined> {
@@ -41,15 +47,20 @@ class UserRepository {
     }
 
     async getUserById(id: number): Promise<User | undefined> {
-        const user = await this.prisma.user.findUnique({
-            where: {
-                userid: id,
-            },include: {
-                movies: true,
-                ratings: true,
-            }
-        });
-        return user ? mapToUser(user) : undefined;
+        try {
+            const user = await this.prisma.user.findUnique({
+                where: {
+                    userid: id,
+                },include: {
+                    movies: true,
+                    ratings: true,
+                }
+            });
+            return user ? mapToUser(user) : undefined;
+        }catch (error) {
+            throw new Error(error.message);
+        }
+
     }
     async getUserByName(name: string): Promise<User | undefined> {
         const user = await this.prisma.user.findUnique({
@@ -76,17 +87,25 @@ class UserRepository {
 
 
     async updateUser(id: number, user: User): Promise<void> {
-        await this.prisma.user.update({
-            where: {
-                userid: id,
-            },
-            data: {
-                username: user.username,
-                email: user.email,
-                birthdate: user.birthdate,
-                password: user.password,
-            },
-        });
+        try {
+            await this.prisma.user.update({
+                where: {
+                    userid: id,
+                },
+                data: {
+                    username: user.username,
+                    email: user.email,
+                    birthdate: user.birthdate,
+                    password: user.password,
+                },
+            });
+        }catch (error) {
+            if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+                throw new Error('A user with the same email already exists.');
+            }
+            throw new Error(error.message);
+        }
+
     }
 
     async deleteById(id: number): Promise<void> {

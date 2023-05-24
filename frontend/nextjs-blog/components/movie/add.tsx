@@ -14,6 +14,10 @@ interface Props {
     handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
     addEdit: string;
     errorMessage: string;
+    titleErrorMessage?: string;
+    releaseDateErrorMessage?: string;
+    durationErrorMessage?: string;
+    genreErrorMessage?: string;
 }
 
 const AddMovieForm: React.FC<Props> = ({
@@ -28,7 +32,11 @@ const AddMovieForm: React.FC<Props> = ({
                                            setGenreId,
                                            handleSubmit,
                                            addEdit,
-                                           errorMessage
+                                           errorMessage,
+                                           titleErrorMessage,
+                                           releaseDateErrorMessage,
+                                           durationErrorMessage,
+                                           genreErrorMessage
                                        }) => {
     const handleGenreChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const selectedGenreId = e.target.value;
@@ -42,7 +50,7 @@ const AddMovieForm: React.FC<Props> = ({
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} noValidate={true}>
             <div className="form-group">
                 <label htmlFor="title">Title:</label>
                 {errorMessage && (
@@ -60,6 +68,9 @@ const AddMovieForm: React.FC<Props> = ({
                     onChange={(e) => setTitle(e.target.value)}
                     required
                 />
+                {titleErrorMessage && (
+                    <div className="alert alert-danger">{titleErrorMessage}</div>
+                )}
             </div>
             <div className="form-group">
                 <label htmlFor="release-date">Release date:</label>
@@ -71,6 +82,9 @@ const AddMovieForm: React.FC<Props> = ({
                     onChange={(e) => setReleaseDate(e.target.value)}
                     required
                 />
+                {releaseDateErrorMessage && (
+                    <div className="alert alert-danger">{releaseDateErrorMessage}</div>
+                )}
             </div>
             <div className="form-group">
                 <label htmlFor="duration">Duration (minutes):</label>
@@ -82,6 +96,9 @@ const AddMovieForm: React.FC<Props> = ({
                     onChange={(e) => setDuration(parseInt(e.target.value))}
                     required
                 />
+                {durationErrorMessage && (
+                    <div className="alert alert-danger">{durationErrorMessage}</div>
+                )}
             </div>
             <div className="form-group">
                 <label htmlFor="genre-id">Genres:</label>
@@ -103,6 +120,9 @@ const AddMovieForm: React.FC<Props> = ({
                     ))
                 ) : (
                     <div>There are no genres to display..</div>
+                )}
+                {genreErrorMessage && (
+                    <div className="alert alert-danger">{genreErrorMessage}</div>
                 )}
             </div>
             <button type="submit" className="btn btn-primary">

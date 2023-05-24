@@ -25,6 +25,11 @@ import {MovieRepository} from "../domain/data-access/movie.db";
  *           items:
  *             $ref: '#/components/schemas/Genrewithid'
  *           description: The genres that the movie belongs to.
+ *         ratings:
+ *           type: array
+ *           items:
+ *           $ref: '#/components/schemas/Rating'
+ *           description: The ratings that the movie has received.
  */
 
 
@@ -42,9 +47,9 @@ export class MovieController {
      * @swagger
      * /movies:
      *   get:
-     *     summary: Get a list of all movies.
+     *     summary: Get all movies.
      *     tags:
-     *     - Movies
+     *       - Movies
      *     responses:
      *       200:
      *         description: A list of movies.
@@ -54,16 +59,33 @@ export class MovieController {
      *               type: array
      *               items:
      *                 $ref: '#/components/schemas/Movie'
+     *       204:
+     *         description: No movies found.
+     *       500:
+     *         description: Internal Server Error.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 error:
+     *                   type: string
      */
-    // Get all movies
+
     async getAll(req: Request, res: Response) {
         try {
             const movies = await this.movieService.getAllMovies();
-            res.json(movies);
+            if (movies.length === 0) {
+                res.sendStatus(204);
+            } else {
+                res.status(200).json(movies);
+            }
         } catch (error) {
-            res.status(500).send(error.message);
+            res.status(500).json({ error: error.message });
         }
     }
+
+
     /**
      * @swagger
      * /movies/{id}:
@@ -94,7 +116,7 @@ export class MovieController {
         try {
             const id = parseInt(req.params.id);
             const movie = await this.movieService.getMovieById(id);
-            res.json(movie);
+            res.status(200).json(movie);
         } catch (error) {
             res.status(404).send(error.message);
         }
@@ -171,10 +193,6 @@ export class MovieController {
      *               $ref: '#/components/schemas/Movie'
      *       400:
      *         description: Bad request. Invalid movie data provided
-     *       404:
-     *         description: Movie not found
-     *       500:
-     *         description: Internal server error
      */
 
     // Update a movie
@@ -183,7 +201,7 @@ export class MovieController {
             const id = parseInt(req.params.id);
             const movieData: Movie = req.body;
             const movie = await this.movieService.updateMovie(id,movieData);
-            res.json(movie);
+            res.status(200).json(movie);
         } catch (error) {
             res.status(400).send(error.message);
         }
@@ -222,27 +240,96 @@ export class MovieController {
         }
     }
 
+    /**
+     * @swagger
+     * /movies/addUser/{id}/{userId}:
+     *   put:
+     *     summary: Add a user to a movie.
+     *     tags:
+     *       - Movies
+     *     parameters:
+     *       - name: id
+     *         in: path
+     *         description: ID of the movie.
+     *         required: true
+     *         schema:
+     *           type: integer
+     *           format: int64
+     *       - name: userId
+     *         in: path
+     *         description: ID of the user.
+     *         required: true
+     *         schema:
+     *           type: integer
+     *           format: int64
+     *     responses:
+     *       200:
+     *         description: User added successfully to the movie.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               $ref: '#/components/schemas/Movie'
+     *       400:
+     *         description: Bad request. Invalid movie ID or user ID provided.
+     */
+
+// Add a user to a movie
     async addUserToMovie(req: Request, res: Response) {
         try {
             const id = parseInt(req.params.id);
             const userId = parseInt(req.params.userId);
             const movie = await this.movieService.addUserToMovie(id, userId);
-            res.json(movie);
+            res.status(200).json(movie);
         } catch (error) {
             res.status(400).send(error.message);
         }
     }
 
+    /**
+     * @swagger
+     * /movies/removeUser/{id}/{userId}:
+     *   put:
+     *     summary: Remove a user from a movie.
+     *     tags:
+     *       - Movies
+     *     parameters:
+     *       - name: id
+     *         in: path
+     *         description: ID of the movie.
+     *         required: true
+     *         schema:
+     *           type: integer
+     *           format: int64
+     *       - name: userId
+     *         in: path
+     *         description: ID of the user.
+     *         required: true
+     *         schema:
+     *           type: integer
+     *           format: int64
+     *     responses:
+     *       200:
+     *         description: User removed successfully from the movie.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               $ref: '#/components/schemas/Movie'
+     *       400:
+     *         description: Bad request. Invalid movie ID or user ID provided.
+     */
+
+// Remove a user from a movie
     async removeUserFromMovie(req: Request, res: Response) {
         try {
             const id = parseInt(req.params.id);
             const userId = parseInt(req.params.userId);
             const movie = await this.movieService.removeUserFromMovie(id, userId);
-            res.json(movie);
+            res.status(200).json(movie);
         } catch (error) {
             res.status(400).send(error.message);
         }
     }
+
 }
 
 // Example usage:

@@ -11,9 +11,12 @@ class MovieRepository {
     }
 
     async addMovieWithGenre(movie: Movie) {
-        const genreIds = movie.genres.map((genre) => ({ genreid: genre.genreid }));
+        const genreIds = movie.genres.map((genre) => ({
+            genreid: genre.genreid,
+        }));
         const releaseDate = new Date(movie.releaseDate).toISOString();
         try {
+            console.log(movie);
         mapToMovie(movie);
         await this.prisma.movie.create({
             data: {

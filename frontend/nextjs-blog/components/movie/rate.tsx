@@ -12,7 +12,12 @@ interface RateMovieFormProps {
     handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
 }
 
-const RateMovieForm: React.FC<RateMovieFormProps> = ({ movie, rating, comment, setRating, setComment,handleSubmit ,error}) => {
+const RateMovieForm: React.FC<RateMovieFormProps> =
+    ({
+         movie, rating, comment, setRating, setComment,handleSubmit ,error
+    }) => {
+        const errorMessages = error ? JSON.parse(error as string) : {};
+
 
     if (!movie) {
         return <h2>Loading...</h2>;
@@ -22,7 +27,14 @@ const RateMovieForm: React.FC<RateMovieFormProps> = ({ movie, rating, comment, s
             <Row className="justify-content-center">
                 <Col md={8}>
                     <h2>Rate movie: {movie.title}</h2>
-                    {error && <p style={{ color: 'red' }}>{error}</p>}
+                    {errorMessages &&
+                        Object.values(errorMessages).map((message: string, index) => (
+                            <div className="alert alert-danger" key={index}>
+                                {message.split(':').map((part, index) => (
+                                    <div key={index}>{part}</div>
+                                ))}
+                            </div>
+                        ))}
                     <Form onSubmit={handleSubmit}>
                         <Form.Group controlId="formRating">
                             <Form.Label>Rating:</Form.Label>
