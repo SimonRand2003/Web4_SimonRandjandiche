@@ -1,18 +1,27 @@
-import {Movie} from "../types/interfaces";
-
-
-async function getMovieList(): Promise<Movie[]> {
+async function getMovieList(){
+    const token = sessionStorage.getItem('token');
     const id = sessionStorage.getItem('userid');
-    if (!id) {
-        return [];
-    }
-    const response = await fetch(`http://127.0.0.1:3000/users/getUserMoviesById/${id}`);
-    const data = await response.json();
-    return data as Movie[];
+    return await fetch(`http://127.0.0.1:3000/users/getUserMoviesById/${id}`,
+        {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+            }
+        });
 }
 
 async function getUserName(id:number): Promise<string> {
-    const response = await fetch(`http://127.0.0.1:3000/users/getUserName/${id}`);
+    const token = sessionStorage.getItem('token');
+
+    const response = await fetch(`http://127.0.0.1:3000/users/getUserName/${id}`,
+        {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+            }
+        });
     const data = await response.json();
     return data as string;
 }

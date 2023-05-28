@@ -7,10 +7,10 @@ class User {
     readonly email: string;
     readonly birthdate: Date;
     readonly password: string;
-    readonly movies: Movie[];
-    readonly ratings: Rating[];
+    readonly movies?: Movie[];
+    readonly ratings?: Rating[];
 
-    constructor(userid:number,username: string, email: string, birthdate: Date, password: string,movies: Movie[],ratings: Rating[]) {
+    constructor(userid:number,username: string, email: string, birthdate: Date, password: string,movies?: Movie[],ratings?: Rating[]) {
         const errors: string[] = [];
         if (username.length < 5){
             errors.push("Username must be at least 5 character long");

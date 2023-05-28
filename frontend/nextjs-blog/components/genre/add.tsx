@@ -9,7 +9,7 @@ interface Props {
     addEdit: string;
     nameErrorMessage?: string;
     descriptionErrorMessage?: string;
-    errorMessage?: string | ReactNode;
+    errorMessage?: string ;
 
 }
 
@@ -24,19 +24,17 @@ const AddGenreForm: React.FC<Props> = ({
                                            descriptionErrorMessage,
                                            errorMessage
                                        }) => {
-    const errorMessages = errorMessage ? JSON.parse(errorMessage as string) : {};
 
     return (
         <form onSubmit={handleSubmit} noValidate={true}>
             <div className="form-group">
-                {errorMessages &&
-                    Object.values(errorMessages).map((message: string, index) => (
-                        <div className="alert alert-danger" key={index}>
-                            {message.split(':').map((part, index) => (
-                                <div key={index}>{part}</div>
-                            ))}
-                        </div>
-                    ))}
+                {errorMessage &&
+                    <div className="alert alert-danger">
+                        {errorMessage.split('\n').map((error, index) =>
+                            <span key={index}>{error}<br /></span>
+                        )}
+                    </div>
+                }
                 <label htmlFor="name">Name:</label>
                 <input
                     type="text"

@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import { Rating } from '../domain/model/Rating';
 import { RatingService } from '../service/rating.service';
 import { RatingRepository } from '../domain/data-access/rating.db';
-import { authenticateToken } from '../middleware/authenticateToken';
+
 
 /**
  * @swagger
@@ -299,12 +299,12 @@ const ratingService = new RatingService(ratingRepository);
 const ratingController = new RatingRoutes(ratingService);
 const ratingRouter = express.Router();
 
-ratingRouter.get('/ratings', ratingController.getAllRatings.bind(ratingController));
-ratingRouter.get('/ratings/:id', ratingController.getRatingById.bind(ratingController));
-ratingRouter.get('/ratings/:userid/:movieid', ratingController.getRatingByUserAndMovieId.bind(ratingController));
-ratingRouter.post('/ratings/add',authenticateToken, ratingController.addRating.bind(ratingController));
-ratingRouter.put('/ratings/update/:id',authenticateToken, ratingController.updateRating.bind(ratingController));
-ratingRouter.delete('/ratings/delete/:id',authenticateToken, ratingController.deleteRating.bind(ratingController));
+ratingRouter.get('/', ratingController.getAllRatings.bind(ratingController));
+ratingRouter.get('/:id', ratingController.getRatingById.bind(ratingController));
+ratingRouter.get('/:userid/:movieid', ratingController.getRatingByUserAndMovieId.bind(ratingController));
+ratingRouter.post('/add', ratingController.addRating.bind(ratingController));
+ratingRouter.put('/update/:id', ratingController.updateRating.bind(ratingController));
+ratingRouter.delete('/delete/:id', ratingController.deleteRating.bind(ratingController));
 
 export { ratingRouter };
 

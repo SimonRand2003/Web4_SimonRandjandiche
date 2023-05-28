@@ -1,32 +1,41 @@
-import {Movie, MovieNoRAting, Rating} from "../types/interfaces";
+import {MovieNoRAting, Rating} from "../types/interfaces";
 
 async function getMovies() {
-    const response = await fetch('http://127.0.0.1:3000/movies');
-    const data = await response.json();
-    return data as Movie[];
+    const token = sessionStorage.getItem('token');
+    return  await fetch('http://127.0.0.1:3000/movies',
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
 }
 
 async function getMovie(id: string) {
-    try {
-        const response = await fetch(`http://127.0.0.1:3000/movies/${id}`);
-        const data = await response.json();
-        return data as Movie;
-    } catch (error) {
-        throw new Error(`An error occurred while fetching movie: ${error}`);
-    }
+    const token = sessionStorage.getItem('token');
+    return await fetch(`http://127.0.0.1:3000/movies/${id}`,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
 }
 
 async function addMovie(movie: MovieNoRAting) {
+    const token = sessionStorage.getItem('token');
+
     return fetch('http://localhost:3000/movies/add', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(movie)
     });
 }
 
 async function addUserToMovie(movieid: number) {
+    const token = sessionStorage.getItem('token');
+
     const userid = sessionStorage.getItem('userid');
     if (!userid) {
         return;
@@ -34,12 +43,15 @@ async function addUserToMovie(movieid: number) {
     await fetch(`http://localhost:3000/movies/addUser/${movieid}/${userid}`, {
         method: 'PUT',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
         }
     });
 }
 
 async function removeUserFromMovie(movieid: number) {
+    const token = sessionStorage.getItem('token');
+
     const userid = sessionStorage.getItem('userid');
     if (!userid) {
         return;
@@ -47,21 +59,26 @@ async function removeUserFromMovie(movieid: number) {
     await fetch(`http://localhost:3000/movies/removeUser/${movieid}/${userid}`, {
         method: 'PUT',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
         }
     });
 }
 
 async function deleteMovie(id: number) {
+    const token = sessionStorage.getItem('token');
+
     await fetch(`http://localhost:3000/movies/delete/${id}`, {
         method: 'DELETE',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
         }
     });
 }
 
 async function rateMovie(rating: number, comment: string, movieid: number, userid: number) {
+
     const token = sessionStorage.getItem('token');
     return await fetch('http://localhost:3000/ratings/add', {
         method: 'POST',
@@ -84,7 +101,7 @@ async function editRateMovie(
     comment: string,
     movieid: number,
     userid: number
-): Promise<void> {
+): Promise<Response> {
     const token = sessionStorage.getItem('token');
     const updatedRating: Rating = {
         ratingid: ratingid,
@@ -93,9 +110,7 @@ async function editRateMovie(
         movieid: movieid,
         userid: userid,
     };
-
-    try {
-        const response = await fetch(`http://localhost:3000/ratings/update/${ratingid}`, {
+        return await fetch(`http://localhost:3000/ratings/update/${ratingid}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -103,31 +118,23 @@ async function editRateMovie(
             },
             body: JSON.stringify(updatedRating),
         });
-
-        if (response.ok) {
-            console.log('Rating updated successfully');
-        } else {
-            console.error('Failed to update rating');
-        }
-    } catch (error) {
-        console.error('An error occurred while updating the rating:', error);
-    }
 }
 
 
 
 
 
+
 async function editMovie(movie: MovieNoRAting) {
-    const response = await fetch(`http://localhost:3000/movies/update/${movie.movieid}`, {
+    const token = sessionStorage.getItem('token');
+    return await fetch(`http://localhost:3000/movies/update/${movie.movieid}`, {
         method: 'PUT',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(movie)
     });
-
-    return response;
 }
 
 

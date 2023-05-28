@@ -81,7 +81,7 @@ class MovieRepository {
                 ratings: true,
             },
         });
-        return mapToMovie(movie);
+        return movie ? mapToMovie(movie) : undefined;
     }
 
     async getAllMovies(): Promise<Movie[]> {

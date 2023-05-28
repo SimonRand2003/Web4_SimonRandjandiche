@@ -51,7 +51,7 @@ const SignIn = () => {
                     setError(errorMessage);
                 }
             } catch (error) {
-                setError(error.message);
+                setError("An error occurred on the server. Please try again later.");
             }
         }
     };

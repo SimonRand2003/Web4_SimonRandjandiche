@@ -17,8 +17,21 @@ const RatingPage = () => {
         : router.query.movieId;
 
     const getMovie = async () => {
-        const movie = await movieService.getMovie(movieId);
-        setMovie(movie);
+        try {
+            const response = await movieService.getMovie(movieId);
+            if (!response.ok) {
+                if (response.status === 401) {
+                    router.push('../error');
+                }
+
+            }else {
+                const movie = await response.json();
+                setMovie(movie);
+            }
+        }catch (error) {
+            setError('An error occurred on the server. Please try again later.');
+        }
+
     }
     useEffect(() => {
         if (movieId) {

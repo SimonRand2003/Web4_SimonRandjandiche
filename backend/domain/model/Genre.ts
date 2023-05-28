@@ -13,7 +13,7 @@
             errors.push("Description must be at least 4 characters long");
       }
       if (errors.length > 0) {
-          throw new Error(errors.join(":"));
+          throw new Error(errors.join('\n'));
       }
       this.name = name;
       this.description = description;

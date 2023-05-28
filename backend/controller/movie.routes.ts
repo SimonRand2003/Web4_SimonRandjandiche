@@ -107,7 +107,7 @@ export class MovieController {
      *         content:
      *           application/json:
      *             schema:
-     *               $ref: '#/components/schemas/MovieWithId'
+     *               $ref: '#/components/schemas/Movie'
      *       404:
      *         description: The requested movie was not found.
      */
@@ -115,10 +115,15 @@ export class MovieController {
     async getById(req: Request, res: Response) {
         try {
             const id = parseInt(req.params.id);
-            const movie = await this.movieService.getMovieById(id);
-            res.status(200).json(movie);
+            const movie:Movie | null = await this.movieService.getMovieById(id);
+            if (!movie) {
+                res.status(404).json({ message: `Movie with id ${id} not found.` });
+            }else {
+                res.status(200).json(movie);
+
+            }
         } catch (error) {
-            res.status(404).send(error.message);
+            res.status(500).send(error.message);
         }
     }
 
@@ -338,13 +343,13 @@ const movieService = new MovieService(movieRepository);
 const movieController = new MovieController(movieService);
 const movieRouter = express.Router();
 
-movieRouter.get('/movies', movieController.getAll.bind(movieController));
-movieRouter.get('/movies/:id', movieController.getById.bind(movieController));
-movieRouter.post('/movies/add', movieController.create.bind(movieController));
-movieRouter.put('/movies/update/:id', movieController.updateById.bind(movieController));
-movieRouter.put('/movies/addUser/:id/:userId', movieController.addUserToMovie.bind(movieController));
-movieRouter.put('/movies/removeUser/:id/:userId', movieController.removeUserFromMovie.bind(movieController));
-movieRouter.delete('/movies/delete/:id', movieController.deleteById.bind(movieController));
+movieRouter.get('/', movieController.getAll.bind(movieController));
+movieRouter.get('/:id', movieController.getById.bind(movieController));
+movieRouter.post('/add', movieController.create.bind(movieController));
+movieRouter.put('/update/:id', movieController.updateById.bind(movieController));
+movieRouter.put('/addUser/:id/:userId', movieController.addUserToMovie.bind(movieController));
+movieRouter.put('/removeUser/:id/:userId', movieController.removeUserFromMovie.bind(movieController));
+movieRouter.delete('/delete/:id', movieController.deleteById.bind(movieController));
 
 
 export { movieRouter };

@@ -66,10 +66,20 @@ class GenreRepository {
 
 
     async deleteGenre(id: number): Promise<void> {
+        const genre = await this.prisma.genre.findUnique({
+            where: { genreid: id },
+            include: { movies: true },
+        });
+
+        if (genre.movies.length > 0) {
+            throw new Error('This genre is still in use and cannot be deleted.');
+        }
+
         await this.prisma.genre.delete({
             where: { genreid: id }
         });
     }
+
 
 
     async close(): Promise<void> {

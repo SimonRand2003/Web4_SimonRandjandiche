@@ -16,16 +16,29 @@ const AddMoviePage: React.FC = () => {
     const [genreid, setGenreId] = useState<string[]>([]); // initialize as an empty array
     const [genres, setGenres] = useState<Genre[]>([]);
     const [errorMessage, setErrorMessage] = useState('');
+    const [autorized, setAutorized] = useState(false);
     const [titleErrorMessage, setTitleErrorMessage] = useState('');
     const [releaseDateErrorMessage, setReleaseDateErrorMessage] = useState('');
     const [durationErrorMessage, setDurationErrorMessage] = useState('');
     const [genreErrorMessage, setGenreErrorMessage] = useState('');
+    const fetchGenres = async () => {
+        try {
+            const response = await genreService.getGenres();
+            if (response.ok) {
+                const genres = await response.json();
+                setAutorized(true)
+                setGenres(genres);
+            }else if (response.status === 401) {
+                setAutorized(false);
+            }else {
+                setAutorized(false);
+            }
+        }catch (error) {
+            setErrorMessage("Unable to load genres. Please try again later.");
+        }
+    };
 
     useEffect(() => {
-        const fetchGenres = async () => {
-            const fetchedGenres = await genreService.getGenres();
-            setGenres(fetchedGenres);
-        };
         fetchGenres();
     }, []);
 
@@ -104,37 +117,38 @@ const AddMoviePage: React.FC = () => {
         }
     };
 
-
-
     return (
         <>
             <Header />
             <div className="container">
                 <div className="container mt-5">
                     <h1>Add a movie</h1>
-                    <AddMovieForm
-                        title={title}
-                        releaseDate={releaseDate}
-                        duration={duration}
-                        genreid={genreid}
-                        genres={genres}
-                        setTitle={setTitle}
-                        setReleaseDate={setReleaseDate}
-                        setDuration={setDuration}
-                        setGenreId={setGenreId}
-                        handleSubmit={handleSubmit}
-                        addEdit={'Add Movie'}
-                        errorMessage={errorMessage}
-                        titleErrorMessage={titleErrorMessage}
-                        releaseDateErrorMessage={releaseDateErrorMessage}
-                        durationErrorMessage={durationErrorMessage}
-                        genreErrorMessage={genreErrorMessage}
-                    />
-
+                    {autorized ?
+                        <AddMovieForm
+                            title={title}
+                            releaseDate={releaseDate}
+                            duration={duration}
+                            genreid={genreid}
+                            genres={genres}
+                            setTitle={setTitle}
+                            setReleaseDate={setReleaseDate}
+                            setDuration={setDuration}
+                            setGenreId={setGenreId}
+                            handleSubmit={handleSubmit}
+                            addEdit={'Add Movie'}
+                            errorMessage={errorMessage}
+                            titleErrorMessage={titleErrorMessage}
+                            releaseDateErrorMessage={releaseDateErrorMessage}
+                            durationErrorMessage={durationErrorMessage}
+                            genreErrorMessage={genreErrorMessage}
+                        /> :
+                        <div className="alert alert-danger">You are not authorized to add a movie.</div>
+                    }
                 </div>
             </div>
         </>
     );
+
 };
 
 export default AddMoviePage;

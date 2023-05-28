@@ -11,6 +11,7 @@ type Props = {
     movie: Movie;
     onDelete: () => void;
     rating?: Rating;
+    error?: string;
 };
 
 const MovieComponent: React.FC<Props> = ({
@@ -101,9 +102,19 @@ const MovieComponent: React.FC<Props> = ({
 type MovieOverviewProps = {
     movies: Movie[];
     onMovieDeleted: () => void; // Add this line
+    error?: string;
 };
 
-const MovieOverview: React.FC<MovieOverviewProps> = ({ movies = [], onMovieDeleted }) => {
+const MovieOverview: React.FC<MovieOverviewProps> = ({ movies = [], onMovieDeleted,error }) => {
+    if (error) {
+        return (
+            <div className="container">
+                <h1>Movies</h1>
+                <div className="alert alert-danger">{error}</div>
+            </div>
+        );
+    }
+
     if (!Array.isArray(movies)) {
         return (
             <div className="container">

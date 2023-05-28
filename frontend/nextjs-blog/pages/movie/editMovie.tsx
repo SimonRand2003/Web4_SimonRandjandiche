@@ -22,26 +22,45 @@ const AddMoviePage: React.FC = () => {
         : router.query.movieId;
 
     const getMovieInfo = async () => {
-        const movie = await movieService.getMovie(movieId);
-        setTitle(movie.title);
-        setTitleOnce(movie.title)
-        const formattedDate = movie.releaseDate.split('T')[0];
-        setReleaseDate(formattedDate);
-        setDuration(movie.duration);
-        setGenreId(movie.genres.map((genre) => genre.genreid.toString()));
-    }
+        if (!movieId) {
+            return;
+        }
+        try {
+            const response = await movieService.getMovie(movieId);
+            if (!response.ok) {
+                if (response.status === 401) {
+                    router.push('/error');
+                }
+            }else {
+                const movie = await response.json();
+                setTitle(movie.title);
+                setTitleOnce(movie.title)
+                const formattedDate = movie.releaseDate.split('T')[0];
+                setReleaseDate(formattedDate);
+                setDuration(movie.duration);
+                setGenreId(movie.genres.map((genre) => genre.genreid.toString()));
+            }
+        }catch (error) {
+            setErrorMessage('An error occurred on the server. Please try again later.');
+        }
 
+    }
+    const fetchGenres = async () => {
+        try {
+            const response = await genreService.getGenres();
+            if (response.ok) {
+                const genres = await response.json();
+                setGenres(genres);
+            }
+        }catch (error) {
+            setErrorMessage('An error occurred on the server. Please try again later.');
+        }
+
+    };
 
     useEffect(() => {
-        const fetchGenres = async () => {
-            const fetchedGenres = await genreService.getGenres();
-            setGenres(fetchedGenres);
-        };
         fetchGenres();
-
-        if (movieId) {
-            getMovieInfo();
-        }
+        getMovieInfo();
     }, [movieId]);
 
 
@@ -53,7 +72,7 @@ const AddMoviePage: React.FC = () => {
             releaseDate: releaseDate,
             duration: duration,
             genres: genreid.map((id) =>
-                ({ genreid: parseInt(id), name: '', description: '' })),
+                ({ genreid: parseInt(id), name: 'dummy', description: 'dummy' })),
 
         };
 

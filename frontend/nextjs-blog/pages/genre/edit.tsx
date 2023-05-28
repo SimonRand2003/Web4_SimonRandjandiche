@@ -14,17 +14,35 @@ const AddGenrePage: React.FC = () => {
     const [errorMessage, setErrorMessage] = useState('');
     const [ nameErrorMessage, setNameErrorMessage] = useState('');
     const [descriptionErrorMessage, setDescriptionErrorMessage] = useState('');
-
+    const [authorized , setAuthorized ] = useState(true);
     const genreid = Array.isArray(router.query.genreid)
         ? router.query.genreid[0]
         : router.query.genreid;
 
 
     const getGenreInfo = async () => {
-        const genre = await genreService.getGenre(genreid);
-        setName(genre.name);
-        setDescription(genre.description);
-        setTitleOnce(genre.name);
+        setErrorMessage('');
+        try {
+            const response = await genreService.getGenre(genreid);
+            if (response.ok) {
+                const genre = await response.json();
+                setName(genre.name);
+                setDescription(genre.description);
+                setTitleOnce(genre.name);
+            }else {
+                if (response.status === 401) {
+                    setAuthorized(false);
+                }else {
+                    const errorMessage = await response.json();
+                    setErrorMessage(errorMessage.error);
+                }
+
+            }
+        }catch (err: any) {
+            setErrorMessage('There was an error retrieving the genre. Please try again.');
+        }
+
+
     }
 
     useEffect(() => {
@@ -65,9 +83,11 @@ const AddGenrePage: React.FC = () => {
                 const response = await genreService.updateGenre(genre);
                 if (response.ok) {
                     router.push('/genre');
-                }else{
-                    const errorMessage = await response.text();
-                    setErrorMessage(errorMessage);
+                }else if (response.status === 401){
+                    setAuthorized(false);
+                }else {
+                    const errorMessage = await response.json();
+                    setErrorMessage(errorMessage.error);
                 }
             } catch (err: any) {
                 setErrorMessage('There was an error updating the genre. Please try again.');
@@ -82,22 +102,29 @@ const AddGenrePage: React.FC = () => {
             <Header />
             <div className="container">
                 <div className="container mt-5">
-                    <h1>Edit the genre: {titleOnce}</h1>
-                    <AddGenreForm
-                        name={name}
-                        description={description}
-                        setName={setName}
-                        setDescription={setDescription}
-                        handleSubmit={handleSubmit}
-                        addEdit={'Edit Genre'}
-                        errorMessage={errorMessage}
-                        nameErrorMessage={nameErrorMessage}
-                        descriptionErrorMessage={descriptionErrorMessage}
-                    />
+                    {authorized  ? (
+                        <>
+                            <h1>Edit the genre: {titleOnce}</h1>
+                            <AddGenreForm
+                                name={name}
+                                description={description}
+                                setName={setName}
+                                setDescription={setDescription}
+                                handleSubmit={handleSubmit}
+                                addEdit={'Edit Genre'}
+                                errorMessage={errorMessage}
+                                nameErrorMessage={nameErrorMessage}
+                                descriptionErrorMessage={descriptionErrorMessage}
+                            />
+                        </>
+                    ) : (
+                        <p className="alert alert-danger">You are not authorized to edit a genre</p>
+                    )}
                 </div>
             </div>
         </>
     );
+
 };
 
 export default AddGenrePage;

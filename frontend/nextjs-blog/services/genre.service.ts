@@ -1,51 +1,61 @@
 import {Genre} from "../types/interfaces";
 
 async function getGenres() {
-    const response = await fetch('http://127.0.0.1:3000/genres');
-    try {
-        const data = await response.json();
-        return data as Genre[];
-    }catch (e) {
-        console.log(e);
-    }
-
+    const token = sessionStorage.getItem('token');
+    return  await fetch('http://127.0.0.1:3000/genres',
+        {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+            },
+        });
 }
 async function getGenre(id: string) {
-    const response = await fetch('http://127.0.0.1:3000/genres/' + id);
-    try {
-        const data = await response.json();
-        return data as Genre;
-    }catch (e) {
-        console.log(e);
-    }
-
+    const token = sessionStorage.getItem('token');
+    return await fetch('http://127.0.0.1:3000/genres/' + id,
+        {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+            }
+        });
 }
 
 async function addGenre(genre: Genre) {
+    const token = sessionStorage.getItem('token');
+
     return await fetch('http://127.0.0.1:3000/genres/add', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(genre)
     });
 }
 
 async function deleteGenre(genreid: number) {
-    const response = await fetch('http://127.0.0.1:3000/genres/delete/' + genreid, {
+    const token = sessionStorage.getItem('token');
+    return await fetch('http://127.0.0.1:3000/genres/delete/' + genreid, {
         method: 'DELETE',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
 
         }
     });
 }
 
 async function updateGenre(genre: Genre) {
+    const token = sessionStorage.getItem('token');
+
     return await fetch('http://127.0.0.1:3000/genres/update/' + genre.genreid, {
         method: 'PUT',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(genre)
     });

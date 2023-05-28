@@ -11,6 +11,7 @@ const AddGenrePage: React.FC = () => {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const [autorized, setAutorized] = useState(true);
 
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -25,12 +26,14 @@ const AddGenrePage: React.FC = () => {
             const response = await genreService.addGenre(genre);
             if (response.ok) {
                 router.push('/genre');
+            }else if (response.status === 401){
+                setAutorized(false);
             }else {
-                const errorMessage = await response.text();
-                setErrorMessage(errorMessage);
+                const errorMessage = await response.json();
+                setErrorMessage(errorMessage.error);
             }
         } catch (err: any) {
-            setErrorMessage(errorMessage);
+            setErrorMessage("An error occurred on the server. Please try again later.");
         }
     };
     return (
@@ -39,6 +42,7 @@ const AddGenrePage: React.FC = () => {
             <div className="container">
                 <div className="container mt-5">
                     <h1>Add a genre</h1>
+                    {autorized ? null : <p className="alert alert-danger">You are not authorized to add a genre</p>}
                     <AddGenreForm
                         name={name}
                         description={description}

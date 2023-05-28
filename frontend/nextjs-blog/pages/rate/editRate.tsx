@@ -6,6 +6,7 @@ import movieService from '../../services/movie.service';
 import EditRateMovieForm from "../../components/movie/editrate";
 import ratingService from "../../services/rating.service";
 import collectSiblings from "dom-helpers/collectSiblings";
+import * as zlib from "zlib";
 
 const RatingPage = () => {
     const [movie, setMovie] = useState<Movie | null>(null);
@@ -20,8 +21,20 @@ const RatingPage = () => {
         : router.query.movieId;
 
     const getMovie = async () => {
-        const movie = await movieService.getMovie(movieId);
-        setMovie(movie);
+        if (!movieId) return;
+        try {
+            const response = await movieService.getMovie(movieId);
+            if (!response.ok) {
+                if (response.status === 401) {
+                    router.push('../error');
+                }
+            }else {
+                const movie = await response.json();
+                setMovie(movie);
+            }
+        }catch (error) {
+            setError('An error occurred on the server. Please try again later.');
+        }
     };
 
     const getRatingId = async () => {
@@ -46,7 +59,15 @@ const RatingPage = () => {
             const movieid = movie.movieid;
             const ratingid = ratingId;
             const userid = parseInt(sessionStorage.getItem('userid'));
-            await movieService.editRateMovie(ratingid, rating, comment, movieid,userid);
+            const response = await movieService.editRateMovie(ratingid, rating, comment, movieid,userid);
+            if (!response.ok) {
+                if (response.status === 401) {
+                    router.push('../error');
+                }else {
+                    const errorMessage = await response.text();
+                    setError(errorMessage);
+                }
+            }
             router.push('/movie');
         } catch (err: any) {
             setError(err.message);

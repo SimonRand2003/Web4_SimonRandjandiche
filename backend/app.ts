@@ -8,10 +8,12 @@ import { genreRouter } from "./controller/genre.routes";
 import { movieRouter } from "./controller/movie.routes";
 import { ratingRouter } from "./controller/rating.routes";
 import { userRouter } from "./controller/user.routes";
+import { expressjwt } from "express-jwt"; // Update the import statement
 
 const app = express();
 dotenv.config();
 const port = process.env.APP_PORT || 3000;
+const jwtSecret = process.env.JWT_SECRET;
 
 const swaggerOpts = {
   definition: {
@@ -27,11 +29,18 @@ const swaggerOpts = {
 const swaggerSpec = swaggerJSDoc(swaggerOpts);
 app.use(cors());
 app.use(bodyParser.json());
-app.use('/', genreRouter);
-app.use('/', movieRouter);
-app.use('/', ratingRouter);
-app.use('/', userRouter);
 
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use(
+    expressjwt({ secret: jwtSecret ,algorithms:["HS256"]}).unless({
+      path: ["/status","/", "/users/login","/users/add", "/api-docs"],
+    })
+);
+
+app.use('/genres', genreRouter);
+app.use('/movies', movieRouter);
+app.use('/ratings', ratingRouter);
+app.use('/users', userRouter);
 
 app.get('/status', (req, res) => {
   res.json({ message: 'Backend is running...' });
@@ -41,10 +50,20 @@ app.get('/', (req, res) => {
   return res.status(200).send();
 });
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 
 app.listen(port || 3000, () => {
   console.log(`Back-end is running on port ${port}.`);
 });
 
+app.use((error: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
 
+  if (error.name === 'UnauthorizedError'){
+    res.status(401).json({status : 'unauthorized', message : error.message});
+  }else if (error.name === 'ArgumentError'){
+    res.status(400).json({status : 'error', message : error.message});
+  }else{
+    next();
+  }
+
+});

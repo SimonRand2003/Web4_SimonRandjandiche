@@ -11,6 +11,7 @@ type Props = {
 type MovieOverviewProps = {
     movies: Movie[];
     onRemoveMovie: (movieId: number) => void;
+    error?: string;
 };
 const MovieComponent: React.FC<Props> = ({ movie, onRemoveMovie }) => {
     const { movieid, title, releaseDate, duration, genres } = movie;
@@ -47,10 +48,18 @@ const MovieComponent: React.FC<Props> = ({ movie, onRemoveMovie }) => {
 
 
 
-const MovieList: React.FC<MovieOverviewProps> = ({ movies, onRemoveMovie }) => {
+const MovieList: React.FC<MovieOverviewProps> = ({ movies, onRemoveMovie ,error}) => {
+    if (error) {
+        return (
+            <div className="container">
+                <h1>Movie List</h1>
+                <div className="alert alert-danger">{error}</div>
+            </div>
+        );
+    }
     return (
         <div className="container">
-            <h1>Movies</h1>
+            <h1>Movie List</h1>
             <table className="table table-striped">
                 <thead>
                 <tr>

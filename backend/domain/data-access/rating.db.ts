@@ -27,6 +27,11 @@ class RatingRepository {
     }
 
     async add(rating: Rating): Promise<void> {
+        console.log(rating);
+        console.log(rating.comment);
+        console.log(rating.movieid);
+        console.log(rating.userid);
+
         try {
             mapToRating(rating)
             await this.prisma.rating.create({

@@ -75,7 +75,7 @@ const SignUp = () => {
                     setErrorMessage(errorMessage);
                 }
             } catch (error) {
-                setErrorMessage(error.message);
+                setErrorMessage("An error occurred on the server. Please try again later.");
             }
         }
     };

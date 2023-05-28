@@ -154,23 +154,15 @@ export class UserRoutes {
     public async login(req: Request, res: Response): Promise<void> {
         try {
             const email = req.body.email;
+            const password = req.body.password;
+            const token = await this.userService.authenticate({email, password})
             const user = await this.userService.getUserByName(email);
-            const isValid = await bcrypt.compare(req.body.password, user.password);
             const userid = user.userid;
             const username = user.username;
-
-            if (isValid) {
-                const token = jwt.sign({ userid: user.userid }, 'your-secret-key', { expiresIn: '1h' });
-                res.status(200).json({ userid,username, token });
-            } else {
-                res.status(404).send('Email or Password are incorrect');
+            res.status(200).json({ userid,username, token });
+            } catch (error) {
+                res.status(401).send('Email or Password are incorrect');
             }
-
-
-        } catch (error) {
-            //geen specifieke error
-            res.status(500).send('Email or Password are incorrect');
-        }
     }
 
 
@@ -199,28 +191,17 @@ export class UserRoutes {
     public async addUser(req: Request, res: Response): Promise<void> {
         try {
             const { username, email, birthdate, password } = req.body;
-
-
-            const hashedPassword = await bcrypt.hash(password, 10);
-
-            const user = new User(
-                0,
-                username,
-                email,
-                new Date(birthdate),
-                hashedPassword,  // Store the hashed password in the user object
-                [], []
-            );
-            await this.userService.addUser(user);
-            const token = jwt.sign({ userid: user.userid }, 'your-secret-key', { expiresIn: '1h' });
+            const userInput = { username, email, birthdate, password };
+            const user = await this.userService.addUser(userInput);
             const user2 = await this.userService.getUserByName(email);
+            const token = await this.userService.authenticate({email, password})
             const userid = user2.userid;
-
             res.status(201).json({ userid,username, token });
         } catch (error) {
             res.status(500).send(error.toString());
         }
     }
+
 
     /**
      * @swagger
@@ -304,16 +285,75 @@ export class UserRoutes {
         res.sendStatus(204);
     }
 
+    /**
+     * @swagger
+     * /users/getUserMoviesById/{id}:
+     *   get:
+     *     summary: Get user movies by ID
+     *     parameters:
+     *       - in: path
+     *         name: id
+     *         required: true
+     *         schema:
+     *           type: integer
+     *           minimum: 1
+     *         description: Numeric ID of the user to retrieve movies for
+     *     tags:
+     *     - Users
+     *     responses:
+     *       '200':
+     *         description: OK
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: array
+     *               items:
+     *                 $ref: '#/components/schemas/User'
+     *       '404':
+     *         description: User not found
+     */
+
     public async getUserMoviesById(req: Request, res: Response): Promise<void> {
         const userId = parseInt(req.params.id, 10);
         const user = await this.userService.getUserMoviesById(userId);
         res.status(200).json(user);
     }
+
+    /**
+     * @swagger
+     * /users/getUserName/{id}:
+     *   get:
+     *     summary: Get username by ID
+     *     parameters:
+     *       - in: path
+     *         name: id
+     *         required: true
+     *         schema:
+     *           type: integer
+     *           minimum: 1
+     *         description: Numeric ID of the user to retrieve username for
+     *     tags:
+     *     - Users
+     *     responses:
+     *       '200':
+     *         description: OK
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 username:
+     *                   type: string
+     *       '404':
+     *         description: User not found
+     */
+
     public async getUserName(req: Request, res: Response): Promise<void> {
         const userId = parseInt(req.params.id, 10);
         const user = await this.userService.getUserName(userId);
         res.status(200).json(user);
     }
+
 }
 
 const userRepository = new UserRepository();
@@ -325,12 +365,12 @@ const userRouter = express.Router();
 
 
 userRouter.get('/users', userController.getAllUsers.bind(userController));
-userRouter.get('/users/:id', userController.getUserById.bind(userController));
-userRouter.get('/users/getUserMoviesById/:id', userController.getUserMoviesById.bind(userController));
-userRouter.post('/users/login', userController.login.bind(userController))
-userRouter.post('/users/add', userController.addUser.bind(userController));
-userRouter.put('/users/update/:id', userController.updateUser.bind(userController));
-userRouter.delete('/users/delete/:id', userController.deleteUser.bind(userController));
-userRouter.get('/users/getusername/:id', userController.getUserName.bind(userController));
+userRouter.get('/:id', userController.getUserById.bind(userController));
+userRouter.get('/getUserMoviesById/:id', userController.getUserMoviesById.bind(userController));
+userRouter.post('/login', userController.login.bind(userController))
+userRouter.post('/add', userController.addUser.bind(userController));
+userRouter.put('/update/:id', userController.updateUser.bind(userController));
+userRouter.delete('/delete/:id', userController.deleteUser.bind(userController));
+userRouter.get('/getusername/:id', userController.getUserName.bind(userController));
 
 export { userRouter };

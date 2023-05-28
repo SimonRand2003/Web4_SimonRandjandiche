@@ -52,6 +52,9 @@ CREATE TABLE "_UserMovies" (
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Genre_name_key" ON "Genre"("name");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Rating_userid_movieid_key" ON "Rating"("userid", "movieid");
 
 -- CreateIndex

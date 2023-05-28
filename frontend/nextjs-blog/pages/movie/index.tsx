@@ -8,9 +8,27 @@ import  movieService from '../../services/movie.service';
 
 const movies: React.FC = () => {
     const [movies, setMovies] = React.useState<Movie[]>([]);
+    const [error, setError] = React.useState<string | null>(null);
+
     const getMovies = async () => {
-        const movies = await movieService.getMovies();
-        setMovies(movies);
+        try {
+            const response = await movieService.getMovies();
+            if (!response.ok) {
+                if (response.status === 401) {
+                    setError("You are not authorized to view this page. Please log in.");
+                } else {
+                    const errorMessage = await response.text();
+                    setError(errorMessage);
+                }
+            }else
+            {
+                const movies = await response.json();
+                setMovies(movies);
+            }
+        }catch (error) {
+            setError('An error occurred on the server. Please try again later.');
+        }
+
     };
     useEffect(() => {
         getMovies();
@@ -23,7 +41,11 @@ const movies: React.FC = () => {
         <>
             <Header></Header>
             <main>
-                <MovieOverview movies={movies} onMovieDeleted={handleMovieDeleted}></MovieOverview>
+                <MovieOverview movies={movies}
+                               onMovieDeleted={handleMovieDeleted}
+                               error={error}
+                ></MovieOverview>
+
             </main>
         </>
     )

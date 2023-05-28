@@ -28,8 +28,18 @@ import {GenreRepository} from "../domain/data-access/genre.db";
  *         description:
  *           type: string
  *           description: A description of the genre
+ *   responses:
+ *     Unauthorized:
+ *       description: Unauthorized
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               message:
+ *                 type: string
+ *                 example: Unauthorized access
  */
-
 
 export class GenreRoutes {
     private genreService: GenreService;
@@ -63,7 +73,10 @@ export class GenreRoutes {
      *                 message:
      *                   type: string
      *                   example: No genres found
+     *       401:
+     *         $ref: '#/components/responses/Unauthorized'
      */
+
 
     public async getAllGenres(req: Request, res: Response): Promise<void> {
         try {
@@ -264,10 +277,10 @@ const genreService = new GenreService(genreRepository);
 const genreController = new GenreRoutes(genreService);
 const genreRouter = express.Router();
 
-genreRouter.get('/genres', genreController.getAllGenres.bind(genreController));
-genreRouter.get('/genres/:id', genreController.getGenreById.bind(genreController));
-genreRouter.post('/genres/add', genreController.addGenre.bind(genreController));
-genreRouter.put('/genres/update/:id', genreController.updateGenre.bind(genreController));
-genreRouter.delete('/genres/delete/:id', genreController.deleteGenre.bind(genreController));
+genreRouter.get('/', genreController.getAllGenres.bind(genreController));
+genreRouter.get('/:id', genreController.getGenreById.bind(genreController));
+genreRouter.post('/add', genreController.addGenre.bind(genreController));
+genreRouter.put('/update/:id', genreController.updateGenre.bind(genreController));
+genreRouter.delete('/delete/:id', genreController.deleteGenre.bind(genreController));
 
 export { genreRouter };

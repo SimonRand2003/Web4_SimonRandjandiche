@@ -127,14 +127,9 @@ async function seed() {
                     }
             });
         }
-
-
-
-
-
-        console.log("Demo-gegevens zijn succesvol ingevoegd.");
+        console.log("dummy data has been successfully inserted.");
     } catch (error) {
-        console.error("Er is een fout opgetreden bij het invoegen van demo-gegevens:", error);
+        console.error("An error occurred while inserting dummy data:", error);
     } finally {
         await prisma.$disconnect();
     }

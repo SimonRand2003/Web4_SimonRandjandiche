@@ -3,6 +3,7 @@ import { User } from '../model/User';
 import {mapToUser,mapToUsers} from './user.mapper';
 import {Movie} from "../model/Movie";
 import {mapToMovies} from "./movie.mapper";
+import { parseISO } from 'date-fns';
 
 class UserRepository {
     private prisma: PrismaClient;
@@ -11,23 +12,24 @@ class UserRepository {
         this.prisma = new PrismaClient();
     }
 
-    async addUser(user: User){
+    async addUser({ username, email, birthdate, password }) {
         try {
             await this.prisma.user.create({
                 data: {
-                    username: user.username,
-                    email: user.email,
-                    birthdate: user.birthdate,
-                    password: user.password,
+                    username: username,
+                    email: email,
+                    birthdate: new Date(birthdate), // Pass the Date object directly
+                    password: password,
                 },
             });
-        }catch (error) {
+        } catch (error) {
             if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
                 throw new Error('A user with the same email already exists.');
             }
             throw new Error(error.message);
         }
     }
+
 
     async getUserMoviesById(id: number): Promise<Movie[] | undefined> {
         const movies = await this.prisma.user.findUnique({
