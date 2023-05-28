@@ -27,13 +27,8 @@ class RatingRepository {
     }
 
     async add(rating: Rating): Promise<void> {
-        console.log(rating);
-        console.log(rating.comment);
-        console.log(rating.movieid);
-        console.log(rating.userid);
-
         try {
-            mapToRating(rating)
+            mapToRating(rating);
             await this.prisma.rating.create({
                 data: {
                     rating: rating.rating,
@@ -42,10 +37,12 @@ class RatingRepository {
                     userid: rating.userid,
                 },
             });
-        }catch (error) {
+        } catch (error) {
+            if (error.code === 'P2002') {
+                throw new Error('Duplicate rating. A rating with the same user and movie already exists.');
+            }
             throw new Error(error.message);
         }
-
     }
 
     async update(id: number, rating: Rating): Promise<void> {
